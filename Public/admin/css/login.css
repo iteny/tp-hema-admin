@@ -1,0 +1,218 @@
+*{padding:0;margin:0;}
+ul,li{list-style: none;}
+body{
+    background: #008eb7;
+}
+#container{
+    
+    /*margin-top: 10em;*/
+    position:absolute;top:40%;left: 50%;margin-left:-200px;margin-top:-100px;
+    
+    width: 350px;
+    height: 300px;
+    /*border: 1px solid red;*/
+}
+#login-logo{margin-bottom: 15px;}
+#login-logo h1.login-logo-image {
+    /*background: url(../img/logo.png) no-repeat left center;*/
+    /*overflow: hidden;*/
+    /*height: 125px;*/
+    color: white;
+    font-family: "Microsoft YaHei" ! important; font-weight: bold;
+    text-align: center;
+    /*text-indent: -3000px;*/
+}
+.input, .inputs {
+    display: inline-block;
+    text-align: left;
+    padding: 0 9px;
+    line-height: 30px;
+    border: 0;
+    vertical-align: baseline;
+    -webkit-background-clip: padding-box;
+    -webkit-border-radius: 4px;
+    -moz-border-radius: 4px;
+    border-radius: 4px;
+    -webkit-transition: -webkit-box-shadow 400ms;
+    -moz-transition: -moz-box-shadow 400ms;
+    -ms-transition: box-shadow 400ms;
+    -o-transition: box-shadow 400ms;
+    transition: box-shadow 400ms;
+    -webkit-box-shadow: inset 0 0 0 1px rgba(51, 153, 255, 0), inset 0 2px 5px rgba(0, 0, 0, 0.35), 0 1px 1px rgba(255, 255, 255, 0.5), 0 0 0 rgba(51, 153, 255, 0);
+    -moz-box-shadow: inset 0 0 0 1px rgba(51, 153, 255, 0), inset 0 2px 5px rgba(0, 0, 0, 0.35), 0 1px 1px rgba(255, 255, 255, 0.5), 0 0 0 rgba(51, 153, 255, 0);
+    box-shadow: inset 0 0 0 1px rgba(51, 153, 255, 0), inset 0 2px 5px rgba(0, 0, 0, 0.35), 0 1px 1px rgba(255, 255, 255, 0.5), 0 0 0 rgba(51, 153, 255, 0);
+}
+.inputs {
+    display: block;
+    padding: 0;
+    height: auto;
+    list-style-type: none;
+    margin-left: 0;
+    background: rgba(45,45,45,.15)
+    color: white;
+    border:1px solid rgba(255,255,255,.15)
+
+}
+.inputs.black-input > li {
+    box-shadow: inset 0 -1px 0 rgba(0, 0, 0, 0.15);
+    -webkit-box-shadow: inset 0 -1px 0 rgba(0, 0, 0, 0.15);
+    -moz-box-shadow: inset 0 -1px 0 rgba(0, 0, 0, 0.15);
+    box-shadow: inset 0 -1px 0 rgba(0, 0, 0, 0.15);
+}
+.inputs > li:first-child {
+    -webkit-box-shadow: inset 0 -1px 0 rgba(0, 0, 0, 0.15);
+    -moz-box-shadow: inset 0 -1px 0 rgba(0, 0, 0, 0.15);
+    box-shadow: inset 0 -1px 0 rgba(0, 0, 0, 0.15);
+}
+.inputs.large > li {
+
+    line-height: 60px;
+    padding: 0 19px;
+}
+.inputs.black-input > li:first-child {
+    /*-webkit-box-shadow: inset 0 1px 0 rgba(255, 255, 255, 1.85);
+    -moz-box-shadow: inset 0 -1px 0 rgba(0, 0, 0, 0.85);
+    box-shadow: inset 0 -1px 0 rgba(0, 0, 0, 0.85);*/
+}
+input {
+    -webkit-appearance: textfield;
+    background-color: white;
+    border-image-source: initial;
+    border-image-slice: initial;
+    border-image-width: initial;
+    border-image-outset: initial;
+    border-image-repeat: initial;
+    -webkit-rtl-ordering: logical;
+    -webkit-user-select: text;
+    cursor: auto;
+    padding: 1px;
+    border-width: 2px;
+    border-style: inset;
+    border-color: initial;
+    border: none;
+}
+.input-unstyled {
+    padding: 0 3px;
+    vertical-align: baseline;
+    height: 16px;
+    line-height: 16px;
+    border-width: 0;
+    color: white;
+    -webkit-appearance: none;
+    -webkit-border-radius: 0;
+    -moz-border-radius: 0;
+    border-radius: 0;
+    -webkit-box-shadow: none;
+    -moz-box-shadow: none;
+    box-shadow: none;
+    background: none;
+}
+.large > li > .input-unstyled {
+    padding-top: 17px;
+    padding-bottom: 17px;
+}
+ input{width: 250px;font-size: 18px;outline:none;
+  font-family: "Microsoft YaHei" ! important; font-weight: bold}
+ul{margin-bottom: 15px;}
+.icon-user:before {
+    content: '\e80a';
+}
+@font-face {font-family: 'iconfont';
+    src: url('../font/iconfont.eot'); /* IE9*/
+    src: url('../font/iconfont.eot?#iefix') format('embedded-opentype'), /* IE6-IE8 */
+    url('../font/iconfont.woff') format('woff'), /* chrome、firefox */
+    url('../font/iconfont.ttf') format('truetype'), /* chrome、firefox、opera、Safari, Android, iOS 4.2+*/
+    url('../font/iconfont.svg#iconfont') format('svg'); /* iOS 4.1- */
+}
+.iconfont{
+    font-family:"iconfont" !important;
+    font-size:16px;font-style:normal;
+    -webkit-font-smoothing: antialiased;
+    -webkit-text-stroke-width: 0.2px;
+    -moz-osx-font-smoothing: grayscale;}
+.input.focus, .inputs.focus {
+    -webkit-box-shadow: inset 0 0 0 1px rgba(51, 153, 255, 1), inset 0 2px 5px rgba(0, 0, 0, 0.35), 0 1px 1px rgba(255, 255, 255, 0.5), 0 0 5px rgba(51, 153, 255, 0.75);
+    -moz-box-shadow: inset 0 0 0 1px rgba(51, 153, 255, 1), inset 0 2px 5px rgba(0, 0, 0, 0.35), 0 1px 1px rgba(255, 255, 255, 0.5), 0 0 5px rgba(51, 153, 255, 0.75);
+    box-shadow: inset 0 0 0 1px rgba(51, 153, 255, 1), inset 0 2px 5px rgba(0, 0, 0, 0.35), 0 1px 1px rgba(255, 255, 255, 0.5), 0 0 5px rgba(51, 153, 255, 0.75);
+}
+.button {
+    font-family: "Microsoft YaHei" ! important; font-weight: bold
+    display: inline-block;
+    zoom: 1;
+    vertical-align: baseline;
+    position: relative;
+    text-align: center;
+    font-weight: bold;
+    text-transform: none;
+    padding: 0 11px;
+    font-size: 13px;
+    line-height: 28px;
+    height: 28px;
+    -webkit-background-clip: padding-box;
+    -webkit-box-sizing: content-box;
+    -moz-box-sizing: content-box;
+    box-sizing: content-box;
+    min-width: 6px;
+    border-width: 1px;
+    border-style: solid;
+    -webkit-background-clip: padding-box;
+    -webkit-border-radius: 2px;
+    -moz-border-radius: 2px;
+    border-radius: 2px;
+    -webkit-appearance: none;
+    background-position: center center !important;
+}
+.button {
+    color: white;
+    background: #ef4300;   
+    border:1px solid #ff730e
+}
+.button.full-width {
+    width: 100%;
+    margin: 0;
+    height: auto;
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+}
+.button.huge, .huge .button {
+    padding: 0 18px;
+    font-size: 18px;
+    line-height: 46px;
+    height: 46px;
+    min-width: 10px;
+    margin-top: 0;
+    margin-bottom: 0;
+    -webkit-background-clip: padding-box;
+    -webkit-border-radius: 2px;
+    -moz-border-radius: 2px;
+    border-radius: 2px;
+}
+button.button:hover{   
+-moz-box-shadow:
+        0 15px 30px 0 rgba(255,255,255,.15) inset,
+        0 2px 7px 0 rgba(0,0,0,.2);
+    -webkit-box-shadow:
+        0 15px 30px 0 rgba(255,255,255,.15) inset,
+        0 2px 7px 0 rgba(0,0,0,.2);
+    box-shadow:
+        0 15px 30px 0 rgba(255,255,255,.15) inset,
+        0 2px 7px 0 rgba(0,0,0,.2);
+}
+button.button.glossy:hover{
+    -moz-box-shadow:
+        0 15px 30px 0 rgba(255,255,255,.15) inset,
+        0 2px 7px 0 rgba(0,0,0,.2);
+    -webkit-box-shadow:
+        0 15px 30px 0 rgba(255,255,255,.15) inset,
+        0 2px 7px 0 rgba(0,0,0,.2);
+    box-shadow:
+        0 15px 30px 0 rgba(255,255,255,.15) inset,
+        0 2px 7px 0 rgba(0,0,0,.2);
+}
+:-moz-placeholder{color: white;}
+::-moz-placeholder{ color: white;}
+input:-ms-input-placeholder,
+textarea:-ms-input-placeholder{color: white;}
+input::-webkit-input-placeholder,
+textarea::-webkit-input-placeholder{color: white;}
