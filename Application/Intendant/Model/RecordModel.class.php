@@ -29,7 +29,7 @@ final class RecordModel{
 		    	'ip' => $area['ip'],
 		    	'time' => time(),
 		    	'country' => $area['country'],
-		    	'useragent' => $_SERVER['HTTP_USER_AGENT'],
+		    	'useragent' => getBrowser(),
 		    	'info' => "提示语：{$message}<br/>模块：" . MODULE_NAME . ",控制器：" . CONTROLLER_NAME . ",方法：" . ACTION_NAME . "<br/>请求方式：{$fangs}",
 		    	'get' => $_SERVER['HTTP_REFERER'],
 		    	'status' => $status,

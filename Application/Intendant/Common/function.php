@@ -13,6 +13,22 @@ function get_all_child($array,$id)
 	}
 	return $arr;
 }
+//获取浏览器版本号
+function getBrowser(){
+	$agent=$_SERVER["HTTP_USER_AGENT"];
+    if(strpos($agent,'MSIE')!==false || strpos($agent,'rv:11.0')) //ie11判断
+    return strstr($agent,'MSIE');
+    else if(strpos($agent,'Firefox')!==false)
+    return strstr($agent,'Firefox');
+    else if(strpos($agent,'Chrome')!==false)
+    return strstr($agent,'Chrome');
+    else if(strpos($agent,'Opera')!==false)
+    return strstr($agent,'Opera');
+    else if((strpos($agent,'Chrome')==false)&&strpos($agent,'Safari')!==false)
+    return strstr($agent,'Safari');
+    else 
+    return '未知浏览器';
+}
 /**
  * [doReturn 返回前端ajax处理数据结果]
  * @param  string $success [成功信息]

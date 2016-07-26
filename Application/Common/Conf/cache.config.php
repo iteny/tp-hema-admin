@@ -21,10 +21,16 @@ return array(
 	//后台角色授权列表缓存时间
 	'ADMIN_ROLE_AUTH_TIME' => 1000,
 	//后台数据分页数量
-	'ADMIN_PAGE_NUM' => 20,
+	'ADMIN_PAGE_NUM' => 15,
 	//开发日志管理缓存时间
 	'ADMIN_VERSION_MANAGE_TIME' => 1000,
+	//登录日志管理缓存时间
+	'ADMIN_LOGIN_MANAGE_TIME' => 1000,
 	//后台缓存配置
 	'AUTH_MENU_TIME' => 1, //后台规则菜单缓存时间
+	'DATA_CACHE_TYPE' => 'Redis',
+    'MEMCACHE_HOST' => '127.0.0.1',
+    'MEMBACHE_PORT' => 6379,
+    // 'DATA_CACHE_PREFIX' =>  'xfnmc',     // 缓存前缀
 
 );

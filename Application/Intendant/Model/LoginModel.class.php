@@ -134,7 +134,7 @@ class LoginModel{
             "loginip" => $area['ip'],
             "area" => $area['area'] == '' ? '对方在服务器本地登录' : $area['area'],
             "country" => $area['country'],
-            "useragent" => $_SERVER['HTTP_USER_AGENT']
+            "useragent" => getBrowser()
 
         ];
         M('LoginLog')->add($data);

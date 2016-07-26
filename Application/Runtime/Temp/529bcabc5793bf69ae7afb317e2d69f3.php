@@ -1,3 +1,0 @@
-<?php
-//000000000300a:16:{s:12:"操作系统";s:5:"Linux";s:17:"主机名IP端口";s:27:"sina.com (192.168.0.111:80)";s:12:"运行环境";s:11:"nginx/1.8.0";s:15:"PHP运行方式";s:8:"fpm-fcgi";s:12:"程序目录";s:33:"/home/wwwroot/thinkphp-hema-admin";s:11:"MYSQL版本";s:14:"mysqlnd 5.0.11";s:11:"GD库版本";s:26:"bundled (2.1.0 compatible)";s:18:"上传附件限制";s:3:"50M";s:18:"执行时间限制";s:6:"300秒";s:12:"剩余空间";s:9:"15505.87M";s:15:"服务器时间";s:25:"2016年7月21日 21:06:55";s:12:"北京时间";s:25:"2016年7月21日 21:06:55";s:18:"采集函数检测";s:6:"支持";s:16:"register_globals";s:3:"OFF";s:16:"magic_quotes_gpc";s:2:"NO";s:20:"magic_quotes_runtime";s:2:"NO";}
-?>

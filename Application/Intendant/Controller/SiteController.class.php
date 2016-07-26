@@ -580,7 +580,118 @@ class SiteController extends AuthController {
 					}
 				}						
 			}
-			exit(json_encode(($msg)));
+			exit(json_encode($msg));
 		}
+	}
+	public function loginLog(){
+		$p = !empty(I('p')) ? I('p') : 1;
+		$username = I('username');
+        $start_time = I('start_time');
+        $end_time = I('end_time');
+        $loginip = I('loginip');
+        $status = I('status');
+        if (!empty($username)) {
+            $where['username'] = array('like', '%' . $username . '%');
+        }
+        if (!empty($start_time) && !empty($end_time)) {
+            $start_time = strtotime($start_time);
+            $end_time = strtotime($end_time) + 86399;
+            $where['logintime'] = array(array('GT', $start_time), array('LT', $end_time), 'AND');
+        }
+        if (!empty($loginip)) {
+            $where['loginip '] = array('like', "%{$loginip}%");
+        }
+        if ($status != '') {
+            $where['status'] = $status;
+        }
+        $search = md5(serialize($where));        
+		$data = S('loginlog');		
+	    $login = $data['login-list.cache'.$p.$search];
+	    $show = $data['login-list-page.cache'.$p.$search];
+	    unset($data);
+	    if($login == null){
+			$count = M('LoginLog')->where($where)->count();
+			$Page  = new \Think\Page($count,C('ADMIN_PAGE_NUM'));// 实例化分页类 传入总记录数和每页显示的记录数(25)
+			$total = ceil($count / C('ADMIN_PAGE_NUM'));
+			$Page->setConfig('theme','%HEADER% %FIRST% %UP_PAGE% %LINK_PAGE% %DOWN_PAGE% %END%');
+			$Page->setConfig('prev','上一页');
+	        $Page->setConfig('next','下一页');
+	        $Page->setConfig('first','第一页');
+	        $Page->setConfig('last','最后一页');
+	        $login = M('LoginLog')->where($where)->order('id desc')->limit($Page->firstRow.','.$Page->listRows)->select();
+	        $show = $Page->show();// 分页显示输出
+	        $data['login-list.cache'.$p.$search] =$login;
+	        $data['login-list-page.cache'.$p.$search] =$show;  	
+	        S('loginlog',$data,C('ADMIN_LOGIN_MANAGE_TIME'));     
+	    }
+        $this->assign("loginlist", $login);
+        $this->assign("page", $show);
+		$this->display();
+	}
+	// 删除上月登录日志
+	public function delLoginLog()
+	{
+		$status = M('LoginLog')->where(array("logintime" => array("lt", time() - (86400 * 30))))->delete();
+        $msg = returnMsg("删除登录日志成功！","删除登录日志失败！",$status);
+        if($status){
+        	S('loginlog',null);
+        }
+		exit(json_encode($msg));		
+	}
+	//操作日志管理
+	public function operateLog(){
+		$p = !empty(I('p')) ? I('p') : 1;
+		$username = I('username');
+        $start_time = I('start_time');
+        $end_time = I('end_time');
+        $ip = I('ip');
+        $status = I('status');
+        if (!empty($username)) {
+            $where['username'] = array('like', '%' . $username . '%');
+        }
+        if (!empty($start_time) && !empty($end_time)) {
+            $start_time = strtotime($start_time);
+            $end_time = strtotime($end_time) + 86399;
+            $where['time'] = array(array('GT', $start_time), array('LT', $end_time), 'AND');
+        }
+        if (!empty($loginip)) {
+            $where['ip '] = array('like', "%{$ip}%");
+        }
+        if ($status != '') {
+            $where['status'] = $status;
+        }
+        $search = md5(serialize($where));        
+		$data = S('operatelog');		
+	    $operate = $data['operate-list.cache'.$p.$search];
+	    $show = $data['operate-list-page.cache'.$p.$search];
+	    unset($data);
+	    if($operate == null){
+			$count = M('OperateLog')->where($where)->count();
+			$Page  = new \Think\Page($count,C('ADMIN_PAGE_NUM'));// 实例化分页类 传入总记录数和每页显示的记录数(25)
+			$total = ceil($count / C('ADMIN_PAGE_NUM'));
+			$Page->setConfig('theme','%HEADER% %FIRST% %UP_PAGE% %LINK_PAGE% %DOWN_PAGE% %END%');
+			$Page->setConfig('prev','上一页');
+	        $Page->setConfig('next','下一页');
+	        $Page->setConfig('first','第一页');
+	        $Page->setConfig('last','最后一页');
+	        $operate = M('OperateLog')->where($where)->order('id desc')->limit($Page->firstRow.','.$Page->listRows)->select();
+	        $show = $Page->show();// 分页显示输出
+	        $data['operate-list.cache'.$p.$search] =$login;
+	        $data['operate-list-page.cache'.$p.$search] =$show;  	
+	        S('operatelog',$data,C('ADMIN_LOGIN_MANAGE_TIME'));     
+	    }
+        $this->assign("operatelist", $operate);
+        $this->assign("page", $show);
+		$this->display();
+	}
+	// 删除上月操作日志
+	public function delOperateLog()
+	{
+		$status = M('OperateLog')->where(array("time" => array("lt", time() - (86400 * 30))))->delete();
+        $msg = returnMsg("删除操作日志成功！","删除操作日志失败！",$status);
+        if($status){
+        	S('operatelog',null);
+        }
+		exit(json_encode($msg));		
 	}
 }
