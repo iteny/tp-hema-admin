@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>操作日志</title>
+    <title>操作日志管理</title>
     <link href="/public/admin/css/frame.css" rel="stylesheet">
 </head>
 <body>

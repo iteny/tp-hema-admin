@@ -75,7 +75,7 @@
 <script src="/public/common/js/layer/layer.js"></script>
 <script src="/public/admin/js/admin.common.js"></script>
 <script src="/public/admin/js/common.ajax.js"></script>
-<script src="/public/common/js/poshytip/src/jquery.poshytip.min.js"></script>
+<!-- <script src="/public/common/js/poshytip/src/jquery.poshytip.min.js"></script> -->
 <script type="text/javascript">
 $(function(){
   var $form = $('form[name=export]'),

@@ -10,6 +10,7 @@ body{
     color: #666;
     list-style: none;
 }
+a,em,i{text-decoration: none;}
 ul,li{list-style: none;padding: 0;margin:0;}
 @font-face {font-family: 'iconfont';
 src: url('../font/iconfont.eot'); /* IE9*/
@@ -108,7 +109,7 @@ list-style-type: none;
     overflow: hidden;
     text-indent: 15px;
 }
-#menu li em{padding-left: 20px;}
+#menu li em{padding-left: 20px;font-style: normal;}
 #menu li a{
     color:white;
 }
@@ -146,7 +147,7 @@ list-style-type: none;
 }
 #menu h2.open .iconfont{}
 #menu h2 a{color:white;}
-#menu h2  em{padding-left: 10px;}
+#menu h2  em{padding-left: 10px;font-style: normal;}
 #menu h2  a {
     display: block;
     height: 38px;
