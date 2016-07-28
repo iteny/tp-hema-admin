@@ -830,8 +830,165 @@ class SiteController extends AuthController {
                 $rate = floor(100 * ($start[0] / $start[1]));
                 $this->success("正在备份...({$rate}%)", '', array('tab' => $tab));
             }
-
         } else { //出错
+            $this->error('参数错误！');
+        }
+    }
+    //清除正在执行的备份任务
+	public function delBackupLock()
+	{
+		unlink(C('DATA_BACKUP_PATH') . 'backup.lock');
+		$this->success('清除正在执行的备份任务成功！');
+	}
+	/**
+     * 优化表
+     * @param  String $tables 表名
+     * @author 麦当苗儿 <zuojiazi@vip.qq.com>
+     */
+    public function optimize($tables = null){
+        if($tables) {
+            $Db   = Db::getInstance();
+            if(is_array($tables)){
+                $tables = implode('`,`', $tables);
+                $list = $Db->query("OPTIMIZE TABLE `{$tables}`");
+
+                if($list){
+                    $this->success("数据表优化完成！");
+                } else {
+                    $this->error("数据表优化出错请重试！");
+                }
+            } else {
+                $list = $Db->query("OPTIMIZE TABLE `{$tables}`");
+                if($list){
+                    $this->success("数据表'{$tables}'优化完成！");
+                } else {
+                    $this->error("数据表'{$tables}'优化出错请重试！");
+                }
+            }
+        } else {
+            $this->error("请指定要优化的表！");
+        }
+    }
+
+    /**
+     * 修复表
+     * @param  String $tables 表名
+     * @author 麦当苗儿 <zuojiazi@vip.qq.com>
+     */
+    public function repair($tables = null){
+        if($tables) {
+            $Db   = Db::getInstance();
+            if(is_array($tables)){
+                $tables = implode('`,`', $tables);
+                $list = $Db->query("REPAIR TABLE `{$tables}`");
+
+                if($list){
+                    $this->success("数据表修复完成！");
+                } else {
+                    $this->error("数据表修复出错请重试！");
+                }
+            } else {
+                $list = $Db->query("REPAIR TABLE `{$tables}`");
+                if($list){
+                    $this->success("数据表'{$tables}'修复完成！");
+                } else {
+                    $this->error("数据表'{$tables}'修复出错请重试！");
+                }
+            }
+        } else {
+            $this->error("请指定要修复的表！");
+        }
+    }
+    /**
+     * 删除备份文件
+     * @param  Integer $time 备份时间
+     * @author 麦当苗儿 <zuojiazi@vip.qq.com>
+     */
+    public function delData($id = 0){
+        if($id){
+            $name  = $id . '-*.sql*';
+            $path  = realpath(C('DATA_BACKUP_PATH')) . DIRECTORY_SEPARATOR . $name;
+            array_map("unlink", glob($path));
+            if(count(glob($path))){
+                $this->error('备份文件删除失败，请检查权限！');
+            } else {
+                $this->success('备份文件删除成功！');
+            }
+        } else {
+            $this->error('参数错误！');
+        }
+    }
+    /**
+     * 还原数据库
+     * @author 麦当苗儿 <zuojiazi@vip.qq.com>
+     */
+    public function import($time = 0, $part = null, $start = null){
+        if(is_numeric($time) && is_null($part) && is_null($start)){ //初始化
+            //获取备份文件信息
+            $name  = date('Ymd-His', $time) . '-*.sql*';
+            $path  = realpath(C('DATA_BACKUP_PATH')) . DIRECTORY_SEPARATOR . $name;
+            $files = glob($path);
+            $list  = array();
+            foreach($files as $name){
+                $basename = basename($name);
+                $match    = sscanf($basename, '%4s%2s%2s-%2s%2s%2s-%d');
+                $gz       = preg_match('/^\d{8,8}-\d{6,6}-\d+\.sql.gz$/', $basename);
+                $list[$match[6]] = array($match[6], $name, $gz);
+            }
+            ksort($list);
+
+            //检测文件正确性
+            $last = end($list);
+            if(count($list) === $last[0]){
+                session('backup_list', $list); //缓存备份列表
+                $this->success('初始化完成！', '', array('part' => 1, 'start' => 0));
+            } else {
+                $this->error('备份文件可能已经损坏，请检查！');
+            }
+        } elseif(is_numeric($part) && is_numeric($start)) {
+            $list  = session('backup_list');
+            $db = new Database($list[$part], array(
+                'path'     => realpath(C('DATA_BACKUP_PATH')) . DIRECTORY_SEPARATOR,
+                'compress' => $list[$part][2]));
+
+            $start = $db->import($start);
+
+            if(false === $start){
+                $this->error('还原数据出错！');
+            } elseif(0 === $start) { //下一卷
+                if(isset($list[++$part])){
+                    $data = array('part' => $part, 'start' => 0);
+                    $this->success("正在还原...#{$part}", '', $data);
+                } else {
+                    session('backup_list', null);
+                    $this->success('还原完成！');
+                }
+            } else {
+                $data = array('part' => $part, 'start' => $start[0]);
+                if($start[1]){
+                    $rate = floor(100 * ($start[0] / $start[1]));
+                    $this->success("正在还原...#{$part} ({$rate}%)", '', $data);
+                } else {
+                    $data['gz'] = 1;
+                    $this->success("正在还原...#{$part}", '', $data);
+                }
+            }
+
+        } else {
+            $this->error('参数错误！');
+        }
+    }
+    public function sendEmail($time){
+    	if($time){
+    		$subject = '你好，下面是数据备份文件';
+            $name  = date('Ymd-His', $time) . '-*.sql*';
+            $path  = realpath(C('DATA_BACKUP_PATH')) . DIRECTORY_SEPARATOR . $name;
+            $forpath = glob($path);
+            foreach($forpath as $k => $v)
+            {
+            	\Intendant\Model\EmailModel::sendEmail('河马叔叔','8192332@qq.com','',$v,$subject);
+            }
+        } else {
             $this->error('参数错误！');
         }
     }

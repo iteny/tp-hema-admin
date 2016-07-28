@@ -13,7 +13,7 @@
 <div id="frame-toolbar">
     <ul>
         <li><a class="active" href="/Intendant/Site/dataBase/type/export"><i class="iconfont" style="color:white;font-size: 16px;">&#xe611;</i>&nbsp;&nbsp;数据备份</a></li>
-        <li><a class="ajax-del" data-type="登录日志" data-title="一个月前" href="/Intendant/Site/dataBase/type/import"><i class="iconfont" style="color:white;font-size: 16px;">&#xe610;</i>&nbsp;&nbsp;还原数据</a></li>
+        <li><a data-type="登录日志" data-title="一个月前" href="/Intendant/Site/dataBase/type/import"><i class="iconfont" style="color:white;font-size: 16px;">&#xe610;</i>&nbsp;&nbsp;还原数据</a></li>
     </ul>
 </div>
 <div id="frame-content">
@@ -62,10 +62,10 @@
         </div>
         <div class="frame-table-btn">
             <button class="btn ajax-export" href="/Intendant/Site/batchDelVersion" data-type="用户" type="submit">开始备份</button>
-            <button class="btn ajax-batch-del" href="/Intendant/Site/batchDelVersion" data-type="用户" type="submit">优化表</button>
-            <button class="btn ajax-batch-del" href="/Intendant/Site/batchDelVersion" data-type="用户" type="submit">修复表</button>
-            <button class="btn ajax-batch-del" href="/Intendant/Site/batchDelVersion" data-type="用户" type="submit">清除正在执行的备份任务</button>
-            <button class="btn ajax-batch-del" style="float:right;margin-right: 40px;">数据库中共有<?php echo ($tables); ?>张表，共计<?php echo ($total); ?></button>
+            <button class="btn ajax-optimize" href="/Intendant/Site/optimize" data-type="用户" type="submit">优化表</button>
+            <button class="btn ajax-repair" href="/Intendant/Site/repair" data-type="用户" type="submit">修复表</button>
+            <button class="btn ajax-del-lock" href="/Intendant/Site/delBackupLock" data-type="用户" type="submit">清除正在执行的备份任务</button>
+            <button class="btn" style="float:right;margin-right: 40px;">数据库中共有<?php echo ($tables); ?>张表，共计<?php echo ($total); ?></button>
         </div>
     </form>
 </div>
@@ -75,11 +75,29 @@
 <script src="/public/common/js/layer/layer.js"></script>
 <script src="/public/admin/js/admin.common.js"></script>
 <script src="/public/admin/js/common.ajax.js"></script>
-<!-- <script src="/public/common/js/poshytip/src/jquery.poshytip.min.js"></script> -->
+<script src="/public/common/js/poshytip/src/jquery.poshytip.min.js"></script>
 <script type="text/javascript">
 $(function(){
   var $form = $('form[name=export]'),
-      $export = $(".ajax-export");
+      $export = $(".ajax-export"),
+      $optimize = $(".ajax-optimize"),
+      $repair = $(".ajax-repair"),
+      $del = $(".ajax-del-lock");
+  $optimize.add($repair).add($del).click(function(){
+      $.post($(this).attr('href'), $form.serialize(), function(data){
+          if(data.status){
+              admin.countdown(3);
+              admin.alert('操作提示', ''+data.info+'<div>程序将在<b style="color:green;" id="second_show">03秒</b>后为你跳转！</div>', 1, '3000');
+          } else {
+              admin.alert('操作提示',data.info,2,'3000');
+          }
+          setTimeout(function(){
+            // $('#top-alert').find('button').click();
+            $(that).removeClass('disabled').prop('disabled',false);
+        },1500);
+      }, "json");
+      return false;
+  });
   $export.click(function(e){
       e.preventDefault();
       if($("input:checkbox[name='tables[]']:checked").length <= 0){
@@ -127,7 +145,7 @@ $(function(){
                   admin.countdown(3);
                   admin.alert('操作提示', '数据备份成功!'+'<div>程序将在<b style="color:green;" id="second_show">03秒</b>后为你跳转！</div>', 1, '3000');
                   setTimeout(function () {
-                      window.location.href = '/Intendant/Site/dataBase/type/export';
+                      window.location.href = '/Intendant/Site/dataBase/type/import';
                   }, 3000);
                   window.onbeforeunload = function(){ return null }
                   return;

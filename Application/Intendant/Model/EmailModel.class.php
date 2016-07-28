@@ -71,7 +71,7 @@ class EmailModel{
 		// 配置邮件服务器，得到传输对象
 		$sendtime = time();
 	    $time = date('Y-m-d',time());
-		$transport = \Swift_SmtpTransport::newInstance('smtp.163.com',25);
+		$transport = \Swift_SmtpTransport::newInstance('smtp.'.C('YOUR_EMAIL_SMTP'),C('YOUR_EMAIL_PORT'));
 		// 设置登录名和密码
 		$transport->setUsername(C('YOUR_EMAIL'));
 		$transport->setPassword(C('YOUR_EMAIL_PWD'));

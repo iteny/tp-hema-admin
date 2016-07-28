@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>数据还原</title>
+	<link href="/public/admin/css/frame.css" rel="stylesheet">
+</head>
+<body>
+<div id="frame-top">
+    当前位置&nbsp;<i class="iconfont" style="color:#666;font-size: 12px;">&#xe60e;</i>&nbsp;&nbsp;设置&nbsp;&nbsp;<i class="iconfont" style="color:#666;font-size: 12px;">&#xe60f;</i>&nbsp;&nbsp;站长设置&nbsp;&nbsp;<i class="iconfont" style="color:#666;font-size: 12px;">&#xe60f;</i>&nbsp;&nbsp;还原备份列表
+</div>
+<div id="frame-toolbar">
+    <ul>
+        <li><a href="/Intendant/Site/dataBase/type/export"><i class="iconfont" style="color:white;font-size: 16px;">&#xe611;</i>&nbsp;&nbsp;数据备份</a></li>
+        <li><a class="active" data-type="登录日志" data-title="一个月前" href="/Intendant/Site/dataBase/type/import"><i class="iconfont" style="color:white;font-size: 16px;">&#xe610;</i>&nbsp;&nbsp;还原数据</a></li>
+    </ul>
+</div>	
+<div id="frame-content">
+    <form name="export" class="ajax-form" action="/Intendant/Site/export" method="post">
+        <div class="frame-table-list">
+            <table width="100%">
+                <colgroup>
+		          <col width="40">
+		          <col width="40">
+		          <col width="40">
+		          <col width="170">
+		          <col width="100">
+		          <!-- <col width="50"> -->
+		          <col width="10">
+		          <col width="260">
+		          </colgroup>
+                <thead>
+                <tr>
+	              <td width="200" align="center">备份名称</td>
+	              <td width="80" align="center">卷数</td>
+	              <td width="80" align="center">压缩</td>
+	              <td width="80" align="center">数据大小</td>
+	              <td width="200" align="center">备份时间</td>
+	              <td width="80" align="center">状态</td>
+	              <td width="120" align="center">操作</td>
+	            </tr>
+                </thead>
+                <tbody>
+                <volist name="lists" id="vo">
+	            <tr>
+	              <td align="center">{$vo.time|date='Ymd-His',###}</td>
+	              <td align="center">{$vo.part}</td>
+	              <td align="center">{$vo.compress}</td>
+	              <td align="center">{$vo.size|format_size}</td>
+	              <td align="center">{$key}</td>
+	              <td align="center">-</td>
+	              <td align="center">
+	              <a class="ajax-import blue" href="/Intendant/Site/sendEmail/time/{$vo.time}"><i class="iconfont" style="color:white;font-size: 16px;">&#xe610;</i>&nbsp;&nbsp;发送的指定邮箱</a>&nbsp;&nbsp;&nbsp;
+	              <a class="ajax-import blue" href="/Intendant/Site/import/time/{$vo.time}"><i class="iconfont" style="color:white;font-size: 16px;">&#xe615;</i>&nbsp;&nbsp;还原</a>&nbsp;&nbsp;&nbsp;
+	              <a class="ajax-del red" data-title="{$vo.time|date='Ymd-His',###}" data-type="备份文件" href="/Intendant/Site/delData" data-id="{$vo.time|date='Ymd-His',###}"><i class="iconfont" style="color:white;font-size: 16px;">&#xe614;</i>&nbsp;&nbsp;删除</a> </td>
+	              <!-- <td align="center" class="action">
+	                  <a class="db-import" href="{:U('sendEmail')}/time/{$vo.time}">发送的指定邮箱</a>&nbsp;|&nbsp;
+	                  <a class="db-import" href="{:U('import')}/time/{$vo.time}">还原</a>&nbsp;|&nbsp;
+	                  <a class="J_ajax_del" data="{$vo.time}" datatitle="{$vo.time|date='Ymd-His',###}" href="{:U('delData')}">删除</a>
+	              </td> -->
+	            </tr>
+                </volist>
+                </tbody>
+            </table>
+        </div>
+        
+    </form>
+</div>
+</body>
+<script src="/public/common/js/jquery/jquery-1.12.3.min.js"></script>
+<script src="/public/common/js/layer/layer.js"></script>
+<script src="/public/admin/js/admin.common.js"></script>
+<script src="/public/admin/js/common.ajax.js"></script>
+<script src="/public/common/js/poshytip/src/jquery.poshytip.min.js"></script>
+<script type="text/javascript">
+$(function(){
+	$(".ajax-import").click(function(){
+        var self = this, status = ".";
+        $.get(self.href, success, "json");
+        window.onbeforeunload = function(){ return "正在还原数据库，请不要关闭！" }
+        return false;
+
+        function success(data){
+            if(data.status){
+                if(data.gz){
+                    data.info += status;
+                    if(status.length === 5){
+                        status = ".";
+                    } else {
+                        status += ".";
+                    }
+                }
+                $(self).parent().prev().text(data.info);
+                if(data.part){
+                    $.get(self.href,
+                        {"part" : data.part, "start" : data.start},
+                        success,
+                        "json"
+                    );
+                }  else {
+                    window.onbeforeunload = function(){ return null; }
+                }
+            } else {
+                admin.alert('提示',data.info,2,'3000');
+            }
+        }
+    });
+});
+</script>
+</html>
