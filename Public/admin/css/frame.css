@@ -64,7 +64,7 @@ body{
     font-size: 14px;
     font-weight: bold;
 }
-#frame-toolbar ul li a.active{
+#frame-toolbar ul li a.active,#frame-toolbar ul li a.selected{
     background: #337ab7;
     border-color: #2e6da4;
 }
@@ -284,6 +284,8 @@ td, th, div {
 .frame-table-list .search-content input{
     padding: 6px 4px;
 }
+.frame-table-list label{float: left;display: block;margin-right: 10px;}
+/*input.labelauty + label{padding: 10px;}*/
 .ztree * {
     padding: 0;
     margin: 0;

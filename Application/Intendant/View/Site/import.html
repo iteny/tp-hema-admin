@@ -52,12 +52,7 @@
 	              <td align="center">
 	              <a class="ajax-import blue" href="/Intendant/Site/sendEmail/time/{$vo.time}"><i class="iconfont" style="color:white;font-size: 16px;">&#xe610;</i>&nbsp;&nbsp;发送的指定邮箱</a>&nbsp;&nbsp;&nbsp;
 	              <a class="ajax-import blue" href="/Intendant/Site/import/time/{$vo.time}"><i class="iconfont" style="color:white;font-size: 16px;">&#xe615;</i>&nbsp;&nbsp;还原</a>&nbsp;&nbsp;&nbsp;
-	              <a class="ajax-del red" data-title="{$vo.time|date='Ymd-His',###}" data-type="备份文件" href="/Intendant/Site/delData" data-id="{$vo.time|date='Ymd-His',###}"><i class="iconfont" style="color:white;font-size: 16px;">&#xe614;</i>&nbsp;&nbsp;删除</a> </td>
-	              <!-- <td align="center" class="action">
-	                  <a class="db-import" href="{:U('sendEmail')}/time/{$vo.time}">发送的指定邮箱</a>&nbsp;|&nbsp;
-	                  <a class="db-import" href="{:U('import')}/time/{$vo.time}">还原</a>&nbsp;|&nbsp;
-	                  <a class="J_ajax_del" data="{$vo.time}" datatitle="{$vo.time|date='Ymd-His',###}" href="{:U('delData')}">删除</a>
-	              </td> -->
+	              <a class="ajax-del red" data-title="{$vo.time|date='Ymd-His',###}" data-type="备份文件" href="/Intendant/Site/delData" data-id="{$vo.time|date='Ymd-His',###}"><i class="iconfont" style="color:white;font-size: 16px;">&#xe614;</i>&nbsp;&nbsp;删除</a> </td>           
 	            </tr>
                 </volist>
                 </tbody>

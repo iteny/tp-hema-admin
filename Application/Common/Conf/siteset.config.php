@@ -1,26 +1,32 @@
 <?php
 return array (
-  'INTENDANT_NAME' => 'HemaCMS管理系统1123速读法',
-  // 'SITEURL' => '',
-  // 'SITEFILEURL' => '',
-  // 'SITEEMAIL' => '',
-  // 'SITEKEYWORDS' => '',
-  // 'SITEINFO' => '',
-  // 'DOMAINACCESS' => '1',
-  // 'GENERATE' => '1',
-  // 'CHECKCODE_TYPE' => '0',
-  // 'SITENAME' => '',
-  // //数据库备份根路径,路径必须以 / 结尾
-  // 'DATA_BACKUP_PATH' => './Data/',
-  // //数据库备份卷大小,该值用于限制压缩后的分卷最大长度。单位：B；建议设置20M
-  // 'DATA_BACKUP_PART_SIZE' => 20971520,
-  // //数据库备份文件是否启用压缩,0:不压缩1:启用压缩,压缩备份文件需要PHP环境支持gzopen,gzwrite函数
-  // 'DATA_BACKUP_COMPRESS' => 1,
-  // //数据库备份文件压缩级别,1:普通4:一般9:最高,数据库备份文件的压缩级别，该配置在开启压缩时生效
-  // 'DATA_BACKUP_COMPRESS_LEVEL' => 9,
-  // 'FILE_BACKUP_PATH' => './FileZip/', //文件备份路径
-  // 'YOUR_EMAIL' => '',//你的邮箱
-  // 'YOUR_EMAIL_PWD',//你的邮箱密码
-  // 'SETCONFIG' => 'setconfig',
+  'USER_STATE_LOCK' => 1,
+  'USER_LOCK_CNT' => 3,
+  'USER_LOCK_TIME' => 1800,
+  'AUTH_SUPERADMIN' => '2,1,3,4',
+  'RULE_ID_TIME' => '4444',
+  'RULE_MENU_TIME' => '1000',
+  'OPERATE_LOG' => 'true',
+  'ADMIN_USER_MANAGE_TIME' => 1000,
+  'ADMIN_ROLE_MANAGE_TIME' => 1000,
+  'ADMIN_ROLE_AUTH_TIME' => 1000,
+  'ADMIN_PAGE_NUM' => 15,
+  'ADMIN_VERSION_MANAGE_TIME' => 1000,
+  'ADMIN_LOGIN_MANAGE_TIME' => 1000,
+  'AUTH_MENU_TIME' => 1,
+  'DATA_CACHE_TYPE' => 'Redis',
+  'MEMCACHE_HOST' => '127.0.0.1',
+  'MEMBACHE_PORT' => 6379,
+  'DATA_BACKUP_PATH' => './Data/',
+  'DATA_BACKUP_PART_SIZE' => 20971520,
+  'DATA_BACKUP_COMPRESS' => 1,
+  'DATA_BACKUP_COMPRESS_LEVEL' => 9,
+  'FILE_BACKUP_PATH' => './FileZip/',
+  'YOUR_EMAIL_SMTP' => '163.com',
+  'YOUR_EMAIL_PORT' => 25,
+  'YOUR_EMAIL' => 'iteny@163.com',
+  'YOUR_EMAIL_PWD' => 'a58025329',
+  'SETCONFIG' => 'setconfig',
+  'STATUS' => 'false',
 );
 ?>

@@ -484,11 +484,11 @@ class SiteController extends AuthController {
 				$tableRule = M("AuthRule")->field("id,title as name,pid")->order('sort asc')->select();	
 				$tableGroup = M("AuthGroup")->find($id);
 				$RuleIds = explode(",",$tableGroup['rules']);
-				$data = treeState($tableRule,$RuleIds);	
-				$auth = json_encode($data);
+				$auth = treeState($tableRule,$RuleIds);	
 				S($roleAuthkey,$auth,C('ADMIN_ROLE_AUTH_TIME'));
 			}
-			$this->json = $auth;
+			// p($auth);
+			$this->json = json_encode($auth);
 			$this->id = $id;
 			$this->title = I('title');
 			$this->display();
@@ -992,4 +992,100 @@ class SiteController extends AuthController {
             $this->error('参数错误！');
         }
     }
+    //列出以打包文件与图片的压缩包
+    public function fileBackup()
+    {
+    	$data = getFileBackupList();
+        $this->assign("lists", $data['list']);
+        $this->assign("total", $data['size']);
+        $this->assign("files", count($data['list']));
+		$this->display();
+    }
+    //zip打包图片文件和文件
+    public function zipFileBackup()
+    {
+    	$time = time();
+    	$filename=  C('FILE_BACKUP_PATH') .'/' . date("Ymd-His",time()) .'.zip'; //最终生成的文件名（含路径）
+		if(file_exists($filename)){
+		    unlink($filename);
+		}
+		$zip=new \ZipArchive();
+		if($zip->open($filename,\ZIPARCHIVE::CREATE)!==TRUE){
+		    $this->ajaxReturn(array(
+				'status' => 1,
+				'info' => '无法打开文件，或者文件创建失败',
+			));
+		}
+		addFileToZip('Uploads/',$zip)	;
+		$zip->close();//关闭
+		$time = time() - $time;
+		if(!file_exists($filename)){
+		    $this->ajaxReturn(array(
+				'status' => 1,
+				'info' => '无法找到文件',
+			));
+		}
+		else
+		{
+			$this->ajaxReturn(array(
+				'status' => 1,
+				'info' => "成功备份文件与图片。耗时：{$time} 秒",
+				'url' => U('SysData/imgFileList'),
+			));
+		}
+    }
+    //发送文件备份文件email
+    public function sendFileZip($file = 0)
+    {
+        if($file){
+        	$subject = '你好，下面是文件备份';
+        	$path  = realpath(C('FILE_BACKUP_PATH')) . DIRECTORY_SEPARATOR . $file . '.zip';
+            \Intendant\Model\EmailModel::sendEmail('河马叔叔','8192332@qq.com','',$path,$subject);
+        } else {
+            $this->error('参数错误！');
+        }
+    }
+    //删除已备份的文件ZIP
+    public function delFileBackup() {
+        if(!IS_AJAX) E('页面不存在');
+        $time = time();
+        $file = I('id');
+        if (empty($file) || count($file) == 0)
+        {
+        	$this->ajaxReturn(array(
+				'status' => 0,
+				'info' => "请先选择要删除的文件",
+			));die;
+        }
+        delDirAndFile(C('FILE_BACKUP_PATH') . $file);
+        $time = time() - $time;
+        $this->ajaxReturn(array(
+			'status' => 1,
+			'info' => "已删除：" . $file . "耗时：{$time} 秒",
+			'url' => U('SysData/imgFileList'),
+		));
+    }
+    // 站点配置
+	public function config(){
+		$this->display();
+	}
+	//系统设置
+	public function setConfig()
+	{
+		if(IS_POST && I('setconfig'))
+		{
+			$file = APP_PATH . '/Common/Conf/siteset.config.php';
+			$config = array_merge(include $file, array_change_key_case($_POST, CASE_UPPER));
+			$str = "<?php\r\nreturn " . var_export($config, true) . ";\r\n?>";
+			// p($str);die;
+			if (file_put_contents($file, $str)) {
+				$status = true;
+				$msg = returnMsg("修改配置成功","修改配置失败",$status);
+			} else {
+				$status = false;
+				$msg = returnMsg("修改配置成功","修改配置失败",$status);
+			}
+			$this->ajaxReturn($msg);
+		}
+	}
 }

@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>图片与文件备份</title>
+	<link href="/public/admin/css/frame.css" rel="stylesheet">
+</head>
+<body>
+<div id="frame-top">
+    当前位置&nbsp;<i class="iconfont" style="color:#666;font-size: 12px;">&#xe60e;</i>&nbsp;&nbsp;设置&nbsp;&nbsp;<i class="iconfont" style="color:#666;font-size: 12px;">&#xe60f;</i>&nbsp;&nbsp;站长设置&nbsp;&nbsp;<i class="iconfont" style="color:#666;font-size: 12px;">&#xe60f;</i>&nbsp;&nbsp;文件备份列表
+</div>
+<div id="frame-toolbar">
+    <ul>
+        <li><a class="active" href="/Intendant/Site/fileBackup/type/export"><i class="iconfont" style="color:white;font-size: 16px;">&#xe611;</i>&nbsp;&nbsp;文件备份</a></li>
+    </ul>
+</div>	
+<div id="frame-content">
+    <form name="export" class="ajax-form" action="/Intendant/Site/" method="post">
+        <div class="frame-table-list">
+            <table width="100%">
+                <colgroup>
+                    <col width="40">
+          			<col width="40">
+          			<col width="270">
+          			<col width="170">
+          			<col width="80">
+          			<col width="160">                
+                </colgroup>
+                <thead>
+                <tr>
+                    <td width="200" align="center">文件压缩包名称</td>
+	              	<td width="200" align="center">打包时间</td>
+	              	<td width="200" align="center">文件大小</td>
+	              	<td width="200" align="center">操作</td>
+                </tr>
+                </thead>
+                <tbody>
+                <volist name="lists" id="vo">
+	            <tr>
+	              <td align="center">{$vo.file}</td>
+	              <td align="center">{$vo.time}</td>
+	              <td align="center">{$vo.size}</td>
+	              <td align="center" class="action">
+	              	<a class="ajax-import blue" href="/Intendant/Site/sendFileZip/file/{$vo.file}"><i class="iconfont" style="color:white;font-size: 16px;">&#xe610;</i>&nbsp;&nbsp;发送的指定邮箱</a>&nbsp;&nbsp;&nbsp;
+	              	<a class="ajax-del red" data-title="{$vo.file}" data-type="备份文件" href="/Intendant/Site/delFileBackup" data-id="{$vo.file}"><i class="iconfont" style="color:white;font-size: 16px;">&#xe614;</i>&nbsp;&nbsp;删除</a>      
+	              </td>
+	            </tr>
+	            </volist>
+                </tbody>
+            </table>
+        </div>
+        <div class="frame-table-btn">
+            <button class="btn ajax-file" href="/Intendant/Site/zipFileBackup" data-type="文件备份" type="submit">开始备份文件</button>           
+            <button class="btn" style="float:right;margin-right: 40px;">服务器共有{$files}个文件备份，共计{$total}</button>
+        </div>
+    </form>
+</div>
+</body>
+<script src="/public/common/js/jquery/jquery-1.12.3.min.js"></script>
+<script src="/public/common/js/layer/layer.js"></script>
+<script src="/public/admin/js/admin.common.js"></script>
+<script src="/public/admin/js/common.ajax.js"></script>
+<script src="/public/common/js/poshytip/src/jquery.poshytip.min.js"></script>
+<script type="text/javascript">
+$(function(){
+	$('.ajax-file').on('click', function (e) {
+      e.preventDefault();
+      var btn = $(this);
+          // form = btn.parents('form.J_ajaxForm');
+        if(btn.attr("disabledSubmit")){
+          btn.text('请勿重复提交...').prop('disabled', true).addClass('disabled');
+          return false;
+      }
+      btn.attr("disabledSubmit",true);
+        $.ajax({
+        url: btn.attr('href'),
+        dataType:'json',
+        type:'POST',
+        beforeSend: function(){
+          layer.load(1);
+        },
+        success: function(data){
+          layer.close(layer.load(1));
+          if(!data.status){
+            admin.alert('提示信息',data.info,2,'3000');
+
+          } else {
+            admin.alert('提示信息',data.info,1,'3000');
+            setTimeout(function(){
+                admin.reloadPage(window);
+            },3000);
+          }
+        },
+        error: function(data){
+          layer.close(layer.load(1));
+          admin.alert('提示信息',data.responseText,1,'3000');
+        }
+      });
+    });
+    $(".db-import").click(function(){
+        var self = this, status = ".";
+        $.get(self.href, success, "json");
+        window.onbeforeunload = function(){ return "正在发送文件备份到邮箱，请不要关闭！" }
+        return false;
+
+        function success(data){
+            if(data.status){
+                if(data.gz){
+                    data.info += status;
+                    if(status.length === 5){
+                        status = ".";
+                    } else {
+                        status += ".";
+                    }
+                }
+                $(self).parent().prev().text(data.info);
+                if(data.part){
+                    $.get(self.href,
+                        {"part" : data.part, "start" : data.start},
+                        success,
+                        "json"
+                    );
+                }  else {
+                    window.onbeforeunload = function(){ return null; }
+                }
+            } else {
+                admin.alert('提示',data.info,2,'3000');
+            }
+        }
+    });
+});
+</script>
+</html>
