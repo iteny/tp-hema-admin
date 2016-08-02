@@ -94,33 +94,36 @@ $(function(){
           admin.alert('提示信息',data.responseText,1,'3000');
         }
       });
-    });
-    $(".db-import").click(function(){
+    });    
+    $('.db-import').on('click', function (e) {
+      e.preventDefault();
         var self = this, status = ".";
         $.get(self.href, success, "json");
         window.onbeforeunload = function(){ return "正在发送文件备份到邮箱，请不要关闭！" }
         return false;
 
         function success(data){
+          alert('111');
             if(data.status){
-                if(data.gz){
-                    data.info += status;
-                    if(status.length === 5){
-                        status = ".";
-                    } else {
-                        status += ".";
-                    }
-                }
-                $(self).parent().prev().text(data.info);
-                if(data.part){
-                    $.get(self.href,
-                        {"part" : data.part, "start" : data.start},
-                        success,
-                        "json"
-                    );
-                }  else {
-                    window.onbeforeunload = function(){ return null; }
-                }
+              admin.alert('提示',data.info,1,'3000');
+                // if(data.gz){
+                //     data.info += status;
+                //     if(status.length === 5){
+                //         status = ".";
+                //     } else {
+                //         status += ".";
+                //     }
+                // }
+                // $(self).parent().prev().text(data.info);
+                // if(data.part){
+                //     $.get(self.href,
+                //         {"part" : data.part, "start" : data.start},
+                //         success,
+                //         "json"
+                //     );
+                // }  else {
+                //     window.onbeforeunload = function(){ return null; }
+                // }
             } else {
                 admin.alert('提示',data.info,2,'3000');
             }

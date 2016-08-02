@@ -25,10 +25,50 @@
         	<div id="website">
 	            <div class="input-title">站长设置</div>
 	            <table cellpadding="0" cellspacing="0" class="table_form" width="100%">
-	                <tbody>                
+	                <tbody>
+	                <tr>
+	                    <td width="240">后台登录帐号锁定:</td>
+	                    <td>
+	                    <input type="radio" name="USER_STATE_LOCK" value="1" data-labelauty="开启" <if condition="$Think.config.USER_STATE_LOCK eq 1">checked</if> />
+	                    <input type="radio" name="USER_STATE_LOCK" value="0" data-labelauty="关闭" <if condition="$Think.config.USER_STATE_LOCK eq 0">checked</if> /></td>    
+	                </tr>  
+	                <tr>
+	                    <td width="240">后台登录帐号密码错误几次锁定:</td>
+	                    <td>
+	                    <select name="USER_LOCK_CNT" class="length_3">              	
+	                    	<option value="3" <if condition='$Think.config.USER_LOCK_CNT eq 3'>selected</if>>3次</option>
+	                    	<option value="6" <if condition='$Think.config.USER_LOCK_CNT eq 6'>selected</if>>6次</option>
+	                    	<option value="10" <if condition='$Think.config.USER_LOCK_CNT eq 10'>selected</if>>10次</option>
+	                    	<option value="20" <if condition='$Think.config.USER_LOCK_CNT eq 20'>selected</if>>20次</option>      	
+	                    </select>
+	                    </td>	                    
+	                </tr>  
+	                <tr>
+	                    <td width="240">密码错误锁定时间:</td>
+	                    <td>
+	                    <select name="USER_LOCK_TIME" class="length_3">                	
+	                    	<option value="300" <if condition='$Think.config.USER_LOCK_TIME eq 300'>selected</if>>5分钟</option>
+	                    	<option value="1800" <if condition='$Think.config.USER_LOCK_TIME eq 1800'>selected</if>>半小时</option>
+	                    	<option value="3600" <if condition='$Think.config.USER_LOCK_TIME eq 3600'>selected</if>>1小时</option>
+	                    	<option value="10800" <if condition='$Think.config.USER_LOCK_TIME eq 10800'>selected</if>>3小时</option>
+	                    	<option value="21600" <if condition='$Think.config.USER_LOCK_TIME eq 21600'>selected</if>>6小时</option>
+	                    	<option value="43200" <if condition='$Think.config.USER_LOCK_TIME eq 43200'>selected</if>>12小时</option>
+	                    	<option value="43200" <if condition='$Think.config.USER_LOCK_TIME eq 43200'>selected</if>>1天</option>
+	                    	<option value="0" <if condition='$Think.config.USER_LOCK_TIME eq 0'>selected</if>>不过期</option>
+	                    </select>
+	                    </td>
+	                </tr> 
+	                <tr>
+	                    <td width="240">开启操作日志:</td>
+	                    <td>
+	                    <input type="radio" name="OPERATE_LOG" value="true" data-labelauty="开启" <if condition="$Think.config.OPERATE_LOG eq 'true'">checked</if> />
+	                    <input type="radio" name="OPERATE_LOG" value="false" data-labelauty="关闭" <if condition="$Think.config.OPERATE_LOG eq 'false'">checked</if> /></td>    
+	                </tr>               
 	                <tr>
 	                    <td>超级管理员的ID组:</td>
-	                    <td><input type="text" class="input length_5" name="AUTH_SUPERADMIN" value="{$Think.config.AUTH_SUPERADMIN}" id="AUTH_SUPERADMIN"></td>
+	                    <td><input type="text" class="input length_5" name="AUTH_SUPERADMIN" value="{$Think.config.AUTH_SUPERADMIN}" id="user_ids" readonly="readonly" style="background: #999;border: 1px solid #ededed;" />
+	                    <a class="btn" style="padding:5px 12px;height: 32px;" onclick="Admin_User_Ids()">选择用户为超管</a>
+	                    </td>
 	                </tr>                
 	                </tbody>
 	            </table>
@@ -36,21 +76,157 @@
         	<div id="admin-cache">
 	            <div class="input-title">后台缓存设置</div>
 	            <table cellpadding="0" cellspacing="0" class="table_form" width="100%">
-	                <tbody>                
+	                <tbody> 
 	                <tr>
-	                    <td>后台菜单ID缓存时间:</td>
-	                    <td><input type="text" class="input length_5" name="RULE_ID_TIME" value="{$Think.config.RULE_ID_TIME}" id="RULE_ID_TIME"></td>
+	                    <td width="240">后台数据分页数量:</td>
+	                    <td>
+	                    <select name="ADMIN_PAGE_NUM" class="length_3">              	
+	                    	<option value="5" <if condition='$Think.config.ADMIN_PAGE_NUM eq 5'>selected</if>>5条</option>
+	                    	<option value="10" <if condition='$Think.config.ADMIN_PAGE_NUM eq 10'>selected</if>>10条</option>
+	                    	<option value="15" <if condition='$Think.config.ADMIN_PAGE_NUM eq 15'>selected</if>>15条</option>
+	                    	<option value="20" <if condition='$Think.config.ADMIN_PAGE_NUM eq 20'>selected</if>>20条</option>
+	                    	<option value="30" <if condition='$Think.config.ADMIN_PAGE_NUM eq 30'>selected</if>>30条</option>
+	                    	<option value="50" <if condition='$Think.config.ADMIN_PAGE_NUM eq 50'>selected</if>>50条</option>
+	                    	<option value="100" <if condition='$Think.config.ADMIN_PAGE_NUM eq 100'>selected</if>>100条</option>
+	                    	<option value="1000" <if condition='$Think.config.ADMIN_PAGE_NUM eq 1000'>selected</if>>1000条</option>
+	                    </select>
+	                    </td>	                    
+	                </tr>               
+	                <tr>
+	                    <td width="240">后台菜单ID缓存时间:</td>
+	                    <td>
+	                    <select name="RULE_ID_TIME" class="length_3">                	
+	                    	<option value="300" <if condition='$Think.config.RULE_ID_TIME eq 300'>selected</if>>5分钟</option>
+	                    	<option value="1800" <if condition='$Think.config.RULE_ID_TIME eq 1800'>selected</if>>半小时</option>
+	                    	<option value="3600" <if condition='$Think.config.RULE_ID_TIME eq 3600'>selected</if>>1小时</option>
+	                    	<option value="10800" <if condition='$Think.config.RULE_ID_TIME eq 10800'>selected</if>>3小时</option>
+	                    	<option value="21600" <if condition='$Think.config.RULE_ID_TIME eq 21600'>selected</if>>6小时</option>
+	                    	<option value="43200" <if condition='$Think.config.RULE_ID_TIME eq 43200'>selected</if>>12小时</option>
+	                    	<option value="43200" <if condition='$Think.config.RULE_ID_TIME eq 43200'>selected</if>>1天</option>
+	                    	<option value="0" <if condition='$Think.config.RULE_ID_TIME eq 0'>selected</if>>不过期</option>
+	                    </select>
+	                    </td>
 	                </tr> 
 	                <tr>
-	                    <td>后台菜单缓存时间:</td>
-	                    <td><input type="text" class="input length_5" name="RULE_MENU_TIME" value="{$Think.config.RULE_MENU_TIME}" id="RULE_MENU_TIME"></td>
+	                    <td width="240">后台菜单缓存时间:</td>
+	                    <td>
+	                    <select name="RULE_MENU_TIME" class="length_3">                	
+	                    	<option value="300" <if condition='$Think.config.RULE_MENU_TIME eq 300'>selected</if>>5分钟</option>
+	                    	<option value="1800" <if condition='$Think.config.RULE_MENU_TIME eq 1800'>selected</if>>半小时</option>
+	                    	<option value="3600" <if condition='$Think.config.RULE_MENU_TIME eq 3600'>selected</if>>1小时</option>
+	                    	<option value="10800" <if condition='$Think.config.RULE_MENU_TIME eq 10800'>selected</if>>3小时</option>
+	                    	<option value="21600" <if condition='$Think.config.RULE_MENU_TIME eq 21600'>selected</if>>6小时</option>
+	                    	<option value="43200" <if condition='$Think.config.RULE_MENU_TIME eq 43200'>selected</if>>12小时</option>
+	                    	<option value="43200" <if condition='$Think.config.RULE_MENU_TIME eq 43200'>selected</if>>1天</option>
+	                    	<option value="0" <if condition='$Think.config.RULE_MENU_TIME eq 0'>selected</if>>不过期</option>
+	                    </select>
+	                    </td>	                    
 	                </tr>
 	                <tr>
-	                    <td>开启操作日志:</td>
+	                    <td width="240">后台用户管理缓存时间:</td>
 	                    <td>
-	                    <input type="radio" name="OPERATE_LOG" value="true" data-labelauty="开启" <if condition="$Think.config.OPERATE_LOG eq 'true'">checked</if> />
-	                    <input type="radio" name="OPERATE_LOG" value="false" data-labelauty="关闭" <if condition="$Think.config.OPERATE_LOG eq 'false'">checked</if> /></td>	                    
-	                </tr>                
+	                    <select name="ADMIN_USER_MANAGE_TIME" class="length_3">                	
+	                    	<option value="300" <if condition='$Think.config.ADMIN_USER_MANAGE_TIME eq 300'>selected</if>>5分钟</option>
+	                    	<option value="1800" <if condition='$Think.config.ADMIN_USER_MANAGE_TIME eq 1800'>selected</if>>半小时</option>
+	                    	<option value="3600" <if condition='$Think.config.ADMIN_USER_MANAGE_TIME eq 3600'>selected</if>>1小时</option>
+	                    	<option value="10800" <if condition='$Think.config.ADMIN_USER_MANAGE_TIME eq 10800'>selected</if>>3小时</option>
+	                    	<option value="21600" <if condition='$Think.config.ADMIN_USER_MANAGE_TIME eq 21600'>selected</if>>6小时</option>
+	                    	<option value="43200" <if condition='$Think.config.ADMIN_USER_MANAGE_TIME eq 43200'>selected</if>>12小时</option>
+	                    	<option value="43200" <if condition='$Think.config.ADMIN_USER_MANAGE_TIME eq 43200'>selected</if>>1天</option>
+	                    	<option value="0" <if condition='$Think.config.ADMIN_USER_MANAGE_TIME eq 0'>selected</if>>不过期</option>
+	                    </select>
+	                    </td>	                    
+	                </tr>
+	                <tr>
+	                    <td width="240">后台角色管理列表缓存时间:</td>
+	                    <td>
+	                    <select name="ADMIN_ROLE_MANAGE_TIME" class="length_3">                	
+	                    	<option value="300" <if condition='$Think.config.ADMIN_ROLE_MANAGE_TIME eq 300'>selected</if>>5分钟</option>
+	                    	<option value="1800" <if condition='$Think.config.ADMIN_ROLE_MANAGE_TIME eq 1800'>selected</if>>半小时</option>
+	                    	<option value="3600" <if condition='$Think.config.ADMIN_ROLE_MANAGE_TIME eq 3600'>selected</if>>1小时</option>
+	                    	<option value="10800" <if condition='$Think.config.ADMIN_ROLE_MANAGE_TIME eq 10800'>selected</if>>3小时</option>
+	                    	<option value="21600" <if condition='$Think.config.ADMIN_ROLE_MANAGE_TIME eq 21600'>selected</if>>6小时</option>
+	                    	<option value="43200" <if condition='$Think.config.ADMIN_ROLE_MANAGE_TIME eq 43200'>selected</if>>12小时</option>
+	                    	<option value="43200" <if condition='$Think.config.ADMIN_ROLE_MANAGE_TIME eq 43200'>selected</if>>1天</option>
+	                    	<option value="0" <if condition='$Think.config.ADMIN_ROLE_MANAGE_TIME eq 0'>selected</if>>不过期</option>
+	                    </select>
+	                    </td>	                    
+	                </tr>  
+	                <tr>
+	                    <td width="240">后台角色授权列表缓存时间:</td>
+	                    <td>
+	                    <select name="ADMIN_ROLE_AUTH_TIME" class="length_3">                	
+	                    	<option value="300" <if condition='$Think.config.ADMIN_ROLE_AUTH_TIME eq 300'>selected</if>>5分钟</option>
+	                    	<option value="1800" <if condition='$Think.config.ADMIN_ROLE_AUTH_TIME eq 1800'>selected</if>>半小时</option>
+	                    	<option value="3600" <if condition='$Think.config.ADMIN_ROLE_AUTH_TIME eq 3600'>selected</if>>1小时</option>
+	                    	<option value="10800" <if condition='$Think.config.ADMIN_ROLE_AUTH_TIME eq 10800'>selected</if>>3小时</option>
+	                    	<option value="21600" <if condition='$Think.config.ADMIN_ROLE_AUTH_TIME eq 21600'>selected</if>>6小时</option>
+	                    	<option value="43200" <if condition='$Think.config.ADMIN_ROLE_AUTH_TIME eq 43200'>selected</if>>12小时</option>
+	                    	<option value="43200" <if condition='$Think.config.ADMIN_ROLE_AUTH_TIME eq 43200'>selected</if>>1天</option>
+	                    	<option value="0" <if condition='$Think.config.ADMIN_ROLE_AUTH_TIME eq 0'>selected</if>>不过期</option>
+	                    </select>
+	                    </td>	                    
+	                </tr>  
+	                <tr>
+	                    <td width="240">开发日志管理缓存时间:</td>
+	                    <td>
+	                    <select name="ADMIN_VERSION_MANAGE_TIME" class="length_3">                	
+	                    	<option value="300" <if condition='$Think.config.ADMIN_VERSION_MANAGE_TIME eq 300'>selected</if>>5分钟</option>
+	                    	<option value="1800" <if condition='$Think.config.ADMIN_VERSION_MANAGE_TIME eq 1800'>selected</if>>半小时</option>
+	                    	<option value="3600" <if condition='$Think.config.ADMIN_VERSION_MANAGE_TIME eq 3600'>selected</if>>1小时</option>
+	                    	<option value="10800" <if condition='$Think.config.ADMIN_VERSION_MANAGE_TIME eq 10800'>selected</if>>3小时</option>
+	                    	<option value="21600" <if condition='$Think.config.ADMIN_VERSION_MANAGE_TIME eq 21600'>selected</if>>6小时</option>
+	                    	<option value="43200" <if condition='$Think.config.ADMIN_VERSION_MANAGE_TIME eq 43200'>selected</if>>12小时</option>
+	                    	<option value="43200" <if condition='$Think.config.ADMIN_VERSION_MANAGE_TIME eq 43200'>selected</if>>1天</option>
+	                    	<option value="0" <if condition='$Think.config.ADMIN_VERSION_MANAGE_TIME eq 0'>selected</if>>不过期</option>
+	                    </select>
+	                    </td>	                    
+	                </tr> 
+	                <tr>
+	                    <td width="240">登录日志管理缓存时间:</td>
+	                    <td>
+	                    <select name="ADMIN_LOGIN_MANAGE_TIME" class="length_3">                	
+	                    	<option value="300" <if condition='$Think.config.ADMIN_LOGIN_MANAGE_TIME eq 300'>selected</if>>5分钟</option>
+	                    	<option value="1800" <if condition='$Think.config.ADMIN_LOGIN_MANAGE_TIME eq 1800'>selected</if>>半小时</option>
+	                    	<option value="3600" <if condition='$Think.config.ADMIN_LOGIN_MANAGE_TIME eq 3600'>selected</if>>1小时</option>
+	                    	<option value="10800" <if condition='$Think.config.ADMIN_LOGIN_MANAGE_TIME eq 10800'>selected</if>>3小时</option>
+	                    	<option value="21600" <if condition='$Think.config.ADMIN_LOGIN_MANAGE_TIME eq 21600'>selected</if>>6小时</option>
+	                    	<option value="43200" <if condition='$Think.config.ADMIN_LOGIN_MANAGE_TIME eq 43200'>selected</if>>12小时</option>
+	                    	<option value="43200" <if condition='$Think.config.ADMIN_LOGIN_MANAGE_TIME eq 43200'>selected</if>>1天</option>
+	                    	<option value="0" <if condition='$Think.config.ADMIN_LOGIN_MANAGE_TIME eq 0'>selected</if>>不过期</option>
+	                    </select>
+	                    </td>	                    
+	                </tr>  
+	                <tr>
+	                    <td width="240">操作日志管理缓存时间:</td>
+	                    <td>
+	                    <select name="ADMIN_OPERATE_MANAGE_TIME" class="length_3">                	
+	                    	<option value="300" <if condition='$Think.config.ADMIN_OPERATE_MANAGE_TIME eq 300'>selected</if>>5分钟</option>
+	                    	<option value="1800" <if condition='$Think.config.ADMIN_OPERATE_MANAGE_TIME eq 1800'>selected</if>>半小时</option>
+	                    	<option value="3600" <if condition='$Think.config.ADMIN_OPERATE_MANAGE_TIME eq 3600'>selected</if>>1小时</option>
+	                    	<option value="10800" <if condition='$Think.config.ADMIN_OPERATE_MANAGE_TIME eq 10800'>selected</if>>3小时</option>
+	                    	<option value="21600" <if condition='$Think.config.ADMIN_OPERATE_MANAGE_TIME eq 21600'>selected</if>>6小时</option>
+	                    	<option value="43200" <if condition='$Think.config.ADMIN_OPERATE_MANAGE_TIME eq 43200'>selected</if>>12小时</option>
+	                    	<option value="43200" <if condition='$Think.config.ADMIN_OPERATE_MANAGE_TIME eq 43200'>selected</if>>1天</option>
+	                    	<option value="0" <if condition='$Think.config.ADMIN_OPERATE_MANAGE_TIME eq 0'>selected</if>>不过期</option>
+	                    </select>
+	                    </td>	                    
+	                </tr> 
+	                <tr>
+	                    <td width="240">后台规则菜单缓存时间:</td>
+	                    <td>
+	                    <select name="AUTH_MENU_TIME" class="length_3">                	
+	                    	<option value="300" <if condition='$Think.config.AUTH_MENU_TIME eq 300'>selected</if>>5分钟</option>
+	                    	<option value="1800" <if condition='$Think.config.AUTH_MENU_TIME eq 1800'>selected</if>>半小时</option>
+	                    	<option value="3600" <if condition='$Think.config.AUTH_MENU_TIME eq 3600'>selected</if>>1小时</option>
+	                    	<option value="10800" <if condition='$Think.config.AUTH_MENU_TIME eq 10800'>selected</if>>3小时</option>
+	                    	<option value="21600" <if condition='$Think.config.AUTH_MENU_TIME eq 21600'>selected</if>>6小时</option>
+	                    	<option value="43200" <if condition='$Think.config.AUTH_MENU_TIME eq 43200'>selected</if>>12小时</option>
+	                    	<option value="43200" <if condition='$Think.config.AUTH_MENU_TIME eq 43200'>selected</if>>1天</option>
+	                    	<option value="0" <if condition='$Think.config.AUTH_MENU_TIME eq 0'>selected</if>>不过期</option>
+	                    </select>
+	                    </td>	                    
+	                </tr>            
 	                </tbody>
 	            </table>
             </div>
@@ -59,19 +235,71 @@
 	            <table cellpadding="0" cellspacing="0" class="table_form" width="100%">
 	                <tbody>                
 	                <tr>
-	                    <td>菜单名称:</td>
-	                    <!-- <td><input type="text" class="input length_5" name="title" value="" id="title"></td> -->
-	                </tr>                
+	                    <td width="240">使用那家的邮箱:</td>
+	                    <td>
+	                    <select name="YOUR_EMAIL_SMTP" class="length_3">               	
+	                    	<option value="qq.com" <if condition='$Think.config.YOUR_EMAIL_SMTP eq "qq.com"'>selected</if>>qq邮箱</option>
+	                    	<option value="163.com" <if condition='$Think.config.YOUR_EMAIL_SMTP eq "163.com"'>selected</if>>163邮箱</option>
+	                    	<option value="126.com" <if condition='$Think.config.YOUR_EMAIL_SMTP eq "126.com"'>selected</if>>126邮箱</option>
+	                    	<option value="msn.com" <if condition='$Think.config.YOUR_EMAIL_SMTP eq "msn.com"'>selected</if>>msn邮箱</option>
+	                    	<option value="hotmail.com" <if condition='$Think.config.YOUR_EMAIL_SMTP eq "hotmail.com"'>selected</if>>hotmail邮箱</option>
+	                    </select>
+	                    </td>
+	                </tr>
+	                <tr>
+	                    <td width="240">邮箱端口:</td>
+	                    <td>
+	                    <select name="YOUR_EMAIL_PORT" class="length_3">               	
+	                    	<option value="25" <if condition='$Think.config.YOUR_EMAIL_PORT eq 25'>selected</if>>25</option>
+	                    </select>
+	                    </td>
+	                </tr>
+	                <tr>
+	                    <td width="240">邮箱地址:</td>
+	                    <td><input type="text" class="input length_4" name="YOUR_EMAIL" value="{$Think.config.YOUR_EMAIL}" id="YOUR_EMAIL">&nbsp;&nbsp;&nbsp;只需要填写邮箱帐号,@163.com这部分不需要填写</td>
+	                </tr>   
+	                <tr>
+	                    <td width="240">邮箱密码:</td>
+	                    <td><input type="password" class="input length_4" name="YOUR_EMAIL_PWD" value="{$Think.config.YOUR_EMAIL_PWD}" id="YOUR_EMAIL_PWD"></td>
+	                </tr>                 
 	                </tbody>
 	            </table>
             </div>
             <div id="backup">
 	            <div class="input-title">数据备份设置</div>
 	            <table cellpadding="0" cellspacing="0" class="table_form" width="100%">
-	                <tbody>                
+	                <tbody>
 	                <tr>
-	                    <td>菜单名称:</td>
-	                    <!-- <td><input type="text" class="input length_5" name="title" value="" id="title"></td> -->
+	                    <td width="240">是否启用数据压缩:</td>
+	                    <td>
+	                    <input type="radio" name="DATA_BACKUP_COMPRESS" value="1" data-labelauty="启用压缩" <if condition="$Think.config.DATA_BACKUP_COMPRESS eq 1">checked</if> />
+	                    <input type="radio" name="DATA_BACKUP_COMPRESS" value="0" data-labelauty="不压缩" <if condition="$Think.config.DATA_BACKUP_COMPRESS eq 0">checked</if> />&nbsp;&nbsp;&nbsp;0:不压缩1:启用压缩</td>    
+	                </tr>                
+	                <tr>
+	                    <td>数据库备份卷大小:</td>
+	                    <td>
+	                    <select name="DATA_BACKUP_PART_SIZE" class="length_3">                	
+	                    	<option value="20971520" <if condition='$Think.config.DATA_BACKUP_PART_SIZE eq 20971520'>selected</if>>20MB</option>
+	                    	<option value="52428800" <if condition='$Think.config.DATA_BACKUP_PART_SIZE eq 52428800'>selected</if>>50MB</option>
+	                    	<option value="104857600" <if condition='$Think.config.DATA_BACKUP_PART_SIZE eq 104857600'>selected</if>>100MB</option>                    	
+	                    </select>&nbsp;&nbsp;&nbsp;该值用于限制压缩后的分卷最大长度。单位：B；建议设置20M
+	                    </td>	
+	                </tr> 
+	                <tr>
+	                    <td width="240">备份文件压缩级别:</td>
+	                    <td>
+	                    <select name="DATA_BACKUP_COMPRESS_LEVEL" class="length_3">                	
+	                    	<option value="9" <if condition='$Think.config.DATA_BACKUP_COMPRESS_LEVEL eq 9'>selected</if>>9级</option>
+	                    	<option value="8" <if condition='$Think.config.DATA_BACKUP_COMPRESS_LEVEL eq 8'>selected</if>>8级</option>
+	                    	<option value="7" <if condition='$Think.config.DATA_BACKUP_COMPRESS_LEVEL eq 7'>selected</if>>7级</option>
+	                    	<option value="6" <if condition='$Think.config.DATA_BACKUP_COMPRESS_LEVEL eq 6'>selected</if>>6级</option>
+	                    	<option value="5" <if condition='$Think.config.DATA_BACKUP_COMPRESS_LEVEL eq 5'>selected</if>>5级</option>
+	                    	<option value="4" <if condition='$Think.config.DATA_BACKUP_COMPRESS_LEVEL eq 4'>selected</if>>4级</option>
+	                    	<option value="3" <if condition='$Think.config.DATA_BACKUP_COMPRESS_LEVEL eq 3'>selected</if>>3级</option>
+	                    	<option value="2" <if condition='$Think.config.DATA_BACKUP_COMPRESS_LEVEL eq 2'>selected</if>>2级</option>
+	                    	<option value="1" <if condition='$Think.config.DATA_BACKUP_COMPRESS_LEVEL eq 1'>selected</if>>1级</option>
+	                    </select>
+	                    </td>	                    
 	                </tr>                
 	                </tbody>
 	            </table>
@@ -94,8 +322,24 @@
 <link href="/public/common/js/radio/source/jquery-labelauty.css" rel="stylesheet"></link>
 <script type="text/javascript">
 var configmanage = '/Intendant/Site/config';
+//添加超管ID组
+	function Admin_User_Ids(){
+		// e.preventDefault();
+		//添加相关文章
+		layer.open({
+		  title:'选择用户为超管',
+		  type: 2,
+		  offset: 'rb',
+		  area: ['700px', '100%'],
+		  fix: false, //不固定
+		  maxmin: true,
+		  btn: '关闭',
+		  content: '/Intendant/SiteCom/userIds',
+		});
+	}
 $(function(){
 	$(":radio").labelauty();
+	
     jQuery.validator.addMethod("chinaese", function(value, element) {
         var chinaese = /^[\u4e00-\u9fa5]+$/;
         return this.optional(element) || (chinaese.test(value));

@@ -16,6 +16,41 @@ class SiteComController extends Controller {
             exit(json_encode($tmp_iconsCls));
         }
     }
+    //系统配置，分配超管ID组，读取用户列表
+    public function userIds(){
+    	$p = !empty(I('p')) ? I('p') : 1;
+		$username = I('username');       
+        $uid = I('uid');
+        if (!empty($username)) {
+            $where['username'] = array('like', '%' . $username . '%');
+        }        
+        if (!empty($uid)) {
+            $where['uid'] = $uid;
+        }
+        $search = md5(serialize($where));        
+		$data = S('userids');		
+	    $list = $data['user-ids.cache'.$p.$search];
+	    $show = $data['user-ids-page.cache'.$p.$search];
+	    unset($data);
+	    if($list == null){
+			$count = M('user')->where($where)->count();
+			$Page  = new \Think\Page($count,C('ADMIN_PAGE_NUM'));// 实例化分页类 传入总记录数和每页显示的记录数(25)
+			$Page->setConfig('theme','%HEADER% %FIRST% %UP_PAGE% %LINK_PAGE% %DOWN_PAGE% %END%');
+			$Page->setConfig('prev','上一页');
+	        $Page->setConfig('next','下一页');
+	        $Page->setConfig('first','第一页');
+	        $Page->setConfig('last','最后一页');
+	        $pk = M('user')->getPk();
+	        $list = M('user')->where($where)->order($pk.' desc')->limit($Page->firstRow.','.$Page->listRows)->select();
+	        $show = $Page->show();// 分页显示输出
+	        $data['user-ids.cache'.$p.$search] =$login;
+	        $data['user-ids-page.cache'.$p.$search] =$show;  	
+	        S('userids',$data,C('ADMIN_LOGIN_MANAGE_TIME'));     
+	    }
+        $this->assign("list", $list);
+        $this->assign("page", $show);
+		$this->display();
+    }
     //验证添加菜单时是否已存在菜单名
 	public function checkAddMTit(){
 		if(IS_POST && I('title')){

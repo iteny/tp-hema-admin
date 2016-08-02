@@ -26,6 +26,8 @@
 // 	'ADMIN_VERSION_MANAGE_TIME' => 1000,
 // 	//登录日志管理缓存时间
 // 	'ADMIN_LOGIN_MANAGE_TIME' => 1000,
+	//操作日志管理缓存时间
+//	'ADMIN_OPERATE_MANAGE_TIME' => 1000,
 // 	//后台缓存配置
 // 	'AUTH_MENU_TIME' => 1, //后台规则菜单缓存时间
 // 	'DATA_CACHE_TYPE' => 'Redis',
@@ -43,8 +45,8 @@
 //   	'FILE_BACKUP_PATH' => './FileZip/', //文件备份路径
 //   	'YOUR_EMAIL_SMTP' => '163.com', //使用那家的邮箱
 //   	'YOUR_EMAIL_PORT' => 25, //邮箱端口号
-//   	'YOUR_EMAIL' => 'iteny@163.com',//你的邮箱
-//   	'YOUR_EMAIL_PWD' => 'a58025329',//你的邮箱密码
+//   	'YOUR_EMAIL' => 'asdfasdf',//你的邮箱
+//   	'YOUR_EMAIL_PWD' => '123123',//你的邮箱密码
 //   	// 'SETCONFIG' => 'setconfig',
 
 // );

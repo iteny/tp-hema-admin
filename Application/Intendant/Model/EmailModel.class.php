@@ -73,14 +73,14 @@ class EmailModel{
 	    $time = date('Y-m-d',time());
 		$transport = \Swift_SmtpTransport::newInstance('smtp.'.C('YOUR_EMAIL_SMTP'),C('YOUR_EMAIL_PORT'));
 		// 设置登录名和密码
-		$transport->setUsername(C('YOUR_EMAIL'));
+		$transport->setUsername(C('YOUR_EMAIL').'@'.C('YOUR_EMAIL_SMTP'));
 		$transport->setPassword(C('YOUR_EMAIL_PWD'));
 		//得到发送邮件对象Swift_Mailer对象
 		$mailer = \Swift_Mailer::newInstance($transport);
 		//得到邮件信息对象
 		$message = \Swift_Message::newInstance();
 		//设置管理员的信息
-		$message->setFrom([C('YOUR_EMAIL')=>$fromname . '--发送时间：' .$time]);
+		$message->setFrom([C('YOUR_EMAIL').'@'.C('YOUR_EMAIL_SMTP')=>$fromname . '--发送时间：' .$time]);
 		//邮件发给谁
 		$message->setTo([$toaddr=>$toname]);
 		//设置邮件主题

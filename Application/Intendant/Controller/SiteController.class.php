@@ -680,7 +680,7 @@ class SiteController extends AuthController {
 	        $show = $Page->show();// 分页显示输出
 	        $data['operate-list.cache'.$p.$search] =$login;
 	        $data['operate-list-page.cache'.$p.$search] =$show;  	
-	        S('operatelog',$data,C('ADMIN_LOGIN_MANAGE_TIME'));     
+	        S('operatelog',$data,C('ADMIN_OPERATE_MANAGE_TIME'));     
 	    }
         $this->assign("operatelist", $operate);
         $this->assign("page", $show);
@@ -1039,11 +1039,14 @@ class SiteController extends AuthController {
     {
         if($file){
         	$subject = '你好，下面是文件备份';
-        	$path  = realpath(C('FILE_BACKUP_PATH')) . DIRECTORY_SEPARATOR . $file . '.zip';
+        	$path  = realpath(C('FILE_BACKUP_PATH')) . DIRECTORY_SEPARATOR . $file;
             \Intendant\Model\EmailModel::sendEmail('河马叔叔','8192332@qq.com','',$path,$subject);
+            // $msg = returnMsg("发送成功".$file,"发送失败",true);
+            // exit(json_encode($msg));
         } else {
-            $this->error('参数错误！');
+            $msg = returnMsg("发送成功","发送失败",false);
         }
+        
     }
     //删除已备份的文件ZIP
     public function delFileBackup() {

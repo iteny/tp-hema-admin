@@ -38,6 +38,15 @@ $(function(){
         reloadPage: function(){
             window.location.reload();
         },
+        //判断数组中是否存在某个值
+        inArray: function(arr,id) {
+            for (var i = 0; i < arr.length; i++) {
+                if (arr[i] == id) {
+                    return true;
+                }
+            }
+            return false;
+        },
         countdown: function(intDiff){
             window.setInterval(function(){
                 var day=0,
