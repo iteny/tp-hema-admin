@@ -15,4 +15,7 @@ return array(
 	// 	'__INTENDANT__' => __ROOT__ . '/Public/intendant', // 后台目录
 	// 	'__HOME__' => __ROOT__ . '/Public/home', // 前台目录
 	// ),/*设置快捷目录*/
+	'DATA_CACHE_TYPE' => 'Redis',
+	'MEMCACHE_HOST' => '127.0.0.1',
+	'MEMBACHE_PORT' => 6379,
 );
