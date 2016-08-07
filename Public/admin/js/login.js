@@ -11,6 +11,7 @@ function refreshs(){
     document.getElementById('code_img').src=verifycode+'?time='+Math.random();void(0);
 }
 $(function(){
+    $("input").removeAttr("disabled");
     $(':input').focus(function(){
         $(this).parents('.inputs').addClass('focus');
     }).blur(function(){

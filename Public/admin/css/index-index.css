@@ -6,7 +6,7 @@ body{
     padding: 0;
     border: 0;
     background-color: #EEEEEE;
-    font-family: Microsoft Yahei, \5FAE\8F6F\96C5\9ED1, \5B8B\4F53, Arial, Verdana, sans-serif;
+   font-family: "Microsoft Yahei";
     color: #666;
     list-style: none;
 }
@@ -203,3 +203,15 @@ list-style-type: none;
     top: 8px;
     left: 0px;
 }
+/*用户退出*/
+#nav_right{position: relative;padding: 0 15px;float:right;height:40px;line-height:40px;cursor: pointer;}
+#nav_right img{border-radius: 25px;display: block;}
+#nav_right a{height: 40px;line-height: 40px;text-align: center;}
+#nav_right .image{float:left;padding:4px 10px 0 0;}
+#nav_right .uu{float:left;height:40px;line-height:40px;padding-right:5px;color: white;font-size: 18px;font-weight:bold;}
+#nav_right .cc{position: absolute;top: 40px;right: 0;z-index: 99999;background: white;padding:4px 8px;width: 150px; padding: 0;margin: 0;display: none;}
+#nav_right.item .cc li a{display: block;font-size: 14px;font-weight: bold;color: #666;}
+#nav_right.item .cc li{height: 40px;text-align: center;}
+#nav_right.item .cc li a:hover{background: #37424f;color: white;}
+#nav_right.hover{background: #0087b4;}
+#nav_right.hover .cc{display: block;}

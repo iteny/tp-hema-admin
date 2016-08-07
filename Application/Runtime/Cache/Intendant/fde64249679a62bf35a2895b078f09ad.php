@@ -1,4 +1,4 @@
-<!doctype html>
+<?php if (!defined('THINK_PATH')) exit();?><!doctype html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -17,16 +17,14 @@
         </div>
         <div class="nav">
             <ul id="access" class="children-tooltip">
-                <volist name="topNav" id="topnav">
-                <li class=""><a class="top-nav" data-id="{$topnav.id}" href="javascript:void(0);" title="{$topnav.title}">{$topnav.title}</a></li>
-                </volist>
+                <?php if(is_array($topNav)): $i = 0; $__LIST__ = $topNav;if( count($__LIST__)==0 ) : echo "" ;else: foreach($__LIST__ as $key=>$topnav): $mod = ($i % 2 );++$i;?><li class=""><a class="top-nav" data-id="<?php echo ($topnav["id"]); ?>" href="javascript:void(0);" title="<?php echo ($topnav["title"]); ?>"><?php echo ($topnav["title"]); ?></a></li><?php endforeach; endif; else: echo "" ;endif; ?>
             </ul>            
         </div>
         <div id="nav_right" onmouseover="this.className='item hover'" onmouseout="this.className='item'">
             <div class="image">
             <img width="32" height="32" src="/public/admin/img/user_img.jpg" />
             </div>
-            <div class="uu">{$Think.session.admin_user}</div>
+            <div class="uu"><?php echo (session('admin_user')); ?></div>
             <div class="cc">
                 <ul>                    
                     <li><a href="" target="rightFrame">个人资料</a></li>

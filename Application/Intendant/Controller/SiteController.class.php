@@ -7,13 +7,13 @@ use Hema\Database;
 class SiteController extends AuthController {
 	//后台菜单显示
 	public function menu(){
-		$allRulekey = 'all-rule.cache';
+		$allMenukey = 'all-menu.cache';
 		$menu = S($allMenukey);
 		if($menu == null){
 			$menu = M('AuthRule')->order('sort asc')->select();
 			$menu = recursive($menu);
 			S($allMenukey,$menu,C('AUTH_MENU_TIME'));
-		}
+		}		
 		$this->menu = $menu;
 		$this->display();
 	}
@@ -32,18 +32,20 @@ class SiteController extends AuthController {
 					$status = $tableRule->save();
 					$msg = returnMsg("菜单修改成功","菜单修改失败",$status);
 					if($status){
-						S('all-rule.cache',null);
+						S('all-menu.cache',null);
 						S('all-rule-id.cache',null);
 						S('all-rule-select.cache',null);
+						S('top-nav.cache',null);
 					}					
 					exit(json_encode($msg));
 				}else{//添加菜单
 					$status = $tableRule->add();
 					$msg = returnMsg("菜单添加成功","菜单添加失败",$status);
 					if($status){
-						S('all-rule.cache',null);
+						S('all-menu.cache',null);
 						S('all-rule-id.cache',null);
 						S('all-rule-select.cache',null);
+						S('top-nav.cache',null);
 					}	
 					exit(json_encode($msg));
 				}				
@@ -233,7 +235,8 @@ class SiteController extends AuthController {
 					}
 					$tableUser->usergroup = I('group_id');
 					$status = $tableUser->relation(true)->save();
-					$msg = returnMsg("用户修改成功","用户修改失败",$status);					
+					$msg = returnMsg("用户修改成功","用户修改失败",$status);
+
 				}else{//添加
 					$tableUser->password = jiami(I('password'));
 					$tableUser->usergroup = I('group_id');
@@ -244,6 +247,9 @@ class SiteController extends AuthController {
 				}
 				//如果成功清楚用户管理缓存
 				if($status){
+					session("admin_group".session('admin_uid'));
+                    session("admin_group_id".session('admin_uid'));
+                    session("admin_group_rules".session('admin_uid'));
 					$userListPageCount = 'user-list-page-count.cache';
 					if(!empty(S($userListPageCount))){
 						for($i=1;$i<=S($userListPageCount);$i++){

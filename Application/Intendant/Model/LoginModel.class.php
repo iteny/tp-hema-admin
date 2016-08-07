@@ -6,6 +6,7 @@
  * @blog: http://itenyblog.com
  */
 namespace Intendant\Model;
+use Think\Auth;
 class LoginModel{
 	protected static $username = null;
 	protected static $password = null;
@@ -55,6 +56,11 @@ class LoginModel{
                         self::logout(); //清理session以防万一
                         session("admin_user", $row['username']);
                         session("admin_uid", $row['uid']);
+                        $Auth = new Auth();
+                        $myGroups = $Auth->getGroups($adminuid);//获取用户用户组
+                        session("admin_group".$row['uid'],$myGroups[0]['title']);
+                        session("admin_group_id".$row['uid'],$myGroups[0]['group_id']);
+                        session("admin_group_rules".$row['uid'],$myGroups[0]['rules']);
                         // $groupId = M('authGroupAccess')->where(['uid'=>$row['uid']])->find();
                         // $group = M('authGroup')->where(['id'=>$groupId['group_id']])->find();
                         // session("admin_group",$group['title']);

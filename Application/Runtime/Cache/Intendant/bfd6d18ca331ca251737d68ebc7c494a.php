@@ -1,4 +1,4 @@
-<!doctype html>
+<?php if (!defined('THINK_PATH')) exit();?><!doctype html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -39,22 +39,20 @@
                 </tr>
                 </thead>
                 <tbody>
-                <volist name="versionlist" id="vo">
-                <tr>
-                    <td align="center"><input type="checkbox" class="ids chk-none" name="ids[]" value="{$vo.id}"></td>
-                    <td align="center">{$vo.id}</td> 
-                    <td align="center">{$vo.version}</td> 
-                    <td align="center">{$vo.time|date="Y-m-d",###}</td>             
-                    <td align="center"><a class="bsn blue" title="{$vo.remark}" style="cursor:pointer">鼠标悬停</a></td>                    
+                <?php if(is_array($versionlist)): $i = 0; $__LIST__ = $versionlist;if( count($__LIST__)==0 ) : echo "" ;else: foreach($__LIST__ as $key=>$vo): $mod = ($i % 2 );++$i;?><tr>
+                    <td align="center"><input type="checkbox" class="ids chk-none" name="ids[]" value="<?php echo ($vo["id"]); ?>"></td>
+                    <td align="center"><?php echo ($vo["id"]); ?></td> 
+                    <td align="center"><?php echo ($vo["version"]); ?></td> 
+                    <td align="center"><?php echo (date("Y-m-d",$vo["time"])); ?></td>             
+                    <td align="center"><a class="bsn blue" title="<?php echo ($vo["remark"]); ?>" style="cursor:pointer">鼠标悬停</a></td>                    
                     <td align="center">                        
-                        <a class="ajax-edit blue" href="/Intendant/Site/addEditVersion/?id={$vo.id}"><i class="iconfont" style="color:white;font-size: 16px;">&#xe615;</i>&nbsp;&nbsp;修改</a>&nbsp;&nbsp;&nbsp;<a class="ajax-del red" data-title="{$vo.time|date="Y-m-d",###}" data-type="开发日志" href="/Intendant/Site/batchDelVersion" data-id="{$vo.id}"><i class="iconfont" style="color:white;font-size: 16px;">&#xe614;</i>&nbsp;&nbsp;删除</a>
+                        <a class="ajax-edit blue" href="/Intendant/Site/addEditVersion/?id=<?php echo ($vo["id"]); ?>"><i class="iconfont" style="color:white;font-size: 16px;">&#xe615;</i>&nbsp;&nbsp;修改</a>&nbsp;&nbsp;&nbsp;<a class="ajax-del red" data-title="<?php echo (date("Y-m-d",$vo["time"])); ?>" data-type="开发日志" href="/Intendant/Site/batchDelVersion" data-id="<?php echo ($vo["id"]); ?>"><i class="iconfont" style="color:white;font-size: 16px;">&#xe614;</i>&nbsp;&nbsp;删除</a>
                     </td>
-                </tr>
-                </volist>
+                </tr><?php endforeach; endif; else: echo "" ;endif; ?>
                 </tbody>
             </table>
             <div id="page10">
-                <div class="pages">{$page}</div>
+                <div class="pages"><?php echo ($page); ?></div>
             </div>
         </div>
         <div class="frame-table-btn">

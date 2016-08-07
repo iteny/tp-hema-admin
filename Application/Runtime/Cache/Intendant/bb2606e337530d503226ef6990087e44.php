@@ -1,4 +1,4 @@
-<!doctype html>
+<?php if (!defined('THINK_PATH')) exit();?><!doctype html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -20,7 +20,7 @@
             <li id="userli"><i class="iconfont" style="color:white;font-size: 18px;margin-right: 10px;">&#xe600;</i><input type="text" name="username" id="username" value="" class="input-unstyled" placeholder="用户名" autocomplete="off" disabled></li>
             <li id="passli"><i class="iconfont" style="color:white;font-size: 18px;margin-right: 10px;">&#xe601;</i><input type="password" name="password" id="password" value="" class="input-unstyled" placeholder="密码" autocomplete="off" disabled></li>
             <li id="verifyli"><i class="iconfont" style="color:white;font-size: 18px;margin-right: 10px;">&#xe602;</i><input style="width:120px" type="text" name="verify" id="verify" value="" class="input-unstyled" placeholder="验证码" autocomplete="off">
-                <div class="yanzhengma_box" id="verifyshow"><img class="yanzheng_img" id="code_img" src="__ROOT__{:U('Login/verify')}"  width="130" height="58" onclick="refreshs()"></div>
+                <div class="yanzhengma_box" id="verifyshow"><img class="yanzheng_img" id="code_img" src="<?php echo U('Login/verify');?>"  width="130" height="58" onclick="refreshs()"></div>
             </li>
         </ul>
 
@@ -29,9 +29,9 @@
 </div>
 </body>
 <script>
- var verifycode = "{:U('Login/verify')}";
- var link = "{:U('Login/index')}";
- var redirect= "{:U('Index/index')}";
+ var verifycode = "<?php echo U('Login/verify');?>";
+ var link = "<?php echo U('Login/index');?>";
+ var redirect= "<?php echo U('Index/index');?>";
 </script>
 <script src="/public/common/js/jquery/jquery-1.12.3.min.js"></script>
 <script src="/public/common/js/layer/layer.js"></script>

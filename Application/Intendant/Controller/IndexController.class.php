@@ -24,9 +24,20 @@ class IndexController extends Controller {
     //获取左侧菜单
     public function getLeftMenu(){
     	$adminuid = session('admin_uid');
-    	$Auth = new Auth();
-        $myGroups = $Auth->getGroups($adminuid);//获取用户用户组
-        session("admin_group",$myGroups[0]['title']);
+        $admin_group = session('admin_group'.$adminuid);
+        $admin_group_id = session('admin_group_id'.$adminuid);
+        $admin_group_rules = session('admin_group_rules'.$adminuid);
+        if(!isset($admin_group) && !isset($admin_group_id) && !isset($admin_group_rules))
+        {
+            $Auth = new Auth();
+            $myGroups = $Auth->getGroups($adminuid);//获取用户用户组
+            session("admin_group".$row['uid'],$myGroups[0]['title']);
+            session("admin_group_id".$row['uid'],$myGroups[0]['group_id']);
+            session("admin_group_rules".$row['uid'],$myGroups[0]['rules']);
+        }
+    	// $Auth = new Auth();
+     //    $myGroups = $Auth->getGroups($adminuid);//获取用户用户组
+     //    session("admin_group",$myGroups[0]['title']);
         if(in_array($adminuid,explode(',',C('AUTH_SUPERADMIN')))){//区分是否管理员用户
         	$allRuleKey = 'all-rule-id.cache';
 	        $ids = S($allRuleKey);
@@ -37,7 +48,7 @@ class IndexController extends Controller {
 	            S($allRuleKey,$ids,C('RULE_ID_TIME'));
         	}
         } else {            
-            if($myGroups[0]['group_id'] == '1'){//区分是否该角色拥有超级管理员角色
+            if($admin_group_id == '1'){//区分是否该角色拥有超级管理员角色
                 $allRuleKey = 'all-rule-id.cache';
 		        $ids = S($allRuleKey);
 		        if($ids == null){
@@ -47,7 +58,7 @@ class IndexController extends Controller {
 		            S($allRuleKey,$ids,C('RULE_ID_TIME'));
 	        	}                
             } else {
-                $ids = $myGroups[0]['rules'];
+                $ids = $admin_group_rules;
             }            
         }        
         $where = [
@@ -66,6 +77,44 @@ class IndexController extends Controller {
             $twoRule[$k]['children'] = $threeRule;
         }
         exit(json_encode($twoRule));
+    }
+    //修改密码
+    public function userPass(){
+        if(IS_POST && I("userPass"))
+        {
+            $rules = array(
+                array('password','require',-1), 
+                // 验证确认密码是否和密码一致
+                array('passworded','password',-7,0,'confirm'),
+            );
+            $user = M('user');
+            if($user->validate($rules)->create()){
+                $user->uid = $_SESSION['admin_uid'];
+                if(I('password') == '' || I('passworded') == ''){//当没有修改密码时
+                    unset($table_User->password);
+                }
+                else
+                {
+                    $user->password = jiami(I('password'));
+                }
+                $status = $user->save();
+                $msg = returnMsg("密码修改成功,请重新登录","密码修改失败",$status);
+                if ($status) {
+                    session("admin_user", null);
+                    session("admin_uid", null);
+                }                
+                exit(json_encode($msg));
+            }
+            else
+            {
+                exit(json_encode($user->getError()));
+            }
+        }
+        $this->display();
+    }
+    public function loginOut(){
+        \Intendant\Model\LoginModel::logout();
+        $this->redirect('Login/index');
     }
     //后台首页
     public function home(){
