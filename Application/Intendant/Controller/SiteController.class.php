@@ -992,7 +992,7 @@ class SiteController extends AuthController {
             $forpath = glob($path);
             foreach($forpath as $k => $v)
             {
-            	\Intendant\Model\EmailModel::sendEmail('河马叔叔','8192332@qq.com','',$v,$subject);
+            	\Intendant\Model\EmailModel::sendEmail('河马叔叔',C('BACKUP_TO_EMAIL'),'',$v,$subject);
             }
         } else {
             $this->error('参数错误！');
@@ -1046,7 +1046,7 @@ class SiteController extends AuthController {
         if($file){
         	$subject = '你好，下面是文件备份';
         	$path  = realpath(C('FILE_BACKUP_PATH')) . DIRECTORY_SEPARATOR . $file;
-            \Intendant\Model\EmailModel::sendEmail('河马叔叔','8192332@qq.com','',$path,$subject);
+            \Intendant\Model\EmailModel::sendEmail('河马叔叔',C('BACKUP_TO_EMAIL'),'',$path,$subject);
             // $msg = returnMsg("发送成功".$file,"发送失败",true);
             // exit(json_encode($msg));
         } else {

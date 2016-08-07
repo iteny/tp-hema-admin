@@ -27,6 +27,7 @@ return array (
   'YOUR_EMAIL_PORT' => '25',
   'YOUR_EMAIL' => 'hmtest520',
   'YOUR_EMAIL_PWD' => 'a123456',
+  'BACKUP_TO_EMAIL' => '8192332@qq.com',
   'SETCONFIG' => 'setconfig',
   'STATUS' => 'false',
 );

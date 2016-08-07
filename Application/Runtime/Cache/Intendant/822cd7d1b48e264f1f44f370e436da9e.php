@@ -261,7 +261,11 @@
 	                <tr>
 	                    <td width="240">邮箱密码:</td>
 	                    <td><input type="password" class="input length_4" name="YOUR_EMAIL_PWD" value="<?php echo (C("YOUR_EMAIL_PWD")); ?>" id="YOUR_EMAIL_PWD"></td>
-	                </tr>                 
+	                </tr> 
+	                <tr>
+	                    <td width="240">备份文件发送的目标地址:</td>
+	                    <td><input type="text" class="input length_4" name="BACKUP_TO_EMAIL" value="<?php echo (C("BACKUP_TO_EMAIL")); ?>" id="BACKUP_TO_EMAIL">&nbsp;&nbsp;&nbsp;备份文件发送的目标地址,注意这里需要加上@163.com</td>
+	                </tr>                
 	                </tbody>
 	            </table>
             </div>
