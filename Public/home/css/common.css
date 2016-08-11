@@ -39,12 +39,18 @@ body{
 .nav .item .title i{display: none;}
 .nav .hover .title i{display: block;}
 .nav .item a{color: #666;}
-.nav .hover a{color:red;}
+.nav .hover a{color:#09c;}
 .nav .item .cc{display: none;width: 1000px;background: #09C;z-index: 9999;}
-.nav .item .cc ul li{float: left;width: 240px;text-align: center;line-height: 42px;margin: 10px 10px 10px 0;}
+.nav .item .cc ul li{float: left;width: 240px;text-align: center;line-height: 42px;margin: 10px 10px 20px 0;}
 .nav .item .cc ul li h2{ border-bottom: 1px solid rgb(194, 220, 203);padding: 10px 0;}
 .nav .item .cc ul li a{color: white;}
 .nav .item .cc ul li ol{margin-top: 10px;}
 .nav .item .cc ul li ol li{width: 110px;background: green;height: 32px;line-height: 32px;margin:0 5px 6px;overflow:hidden;padding: 0;}   
 .nav .item .cc ul li ol li a{font-size: 14px;}
 .nav .hover .cc{display: block;position: absolute;top: 60px;left: 0;}
+/*tabs*/
+.intabs li{float: left;margin-left: 120px;}
+.intabs li a{margin-bottom: 20px;display: block;}
+.intabs li a i {color:#666;font-size: 90px;}
+.intabs li a.selected i{color: #09c;}
+.intabs li h2{color:#666;}
