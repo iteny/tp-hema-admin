@@ -13,6 +13,30 @@ function get_all_child($array,$id)
 	}
 	return $arr;
 }
+/**
+ * 获取上传文件路径
+ * @param  int $id 文件ID
+ * @return string
+ */
+function get_cover($id, $type) {
+    if ((int)$id) {
+        $upload_info = D('Admin/Upload')->find($id);
+        $url = $upload_info['real_path'];
+    }
+    if (!$url) {
+        switch ($type) {
+            case 'default' : //默认图片
+                $url = C('TMPL_PARSE_STRING.__HOME_IMG__').'/default/default.gif';
+                break;
+            case 'avatar' : //用户头像
+                $url = C('TMPL_PARSE_STRING.__HOME_IMG__').'/default/avatar.gif';
+                break;
+            default: //文档列表默认图片
+                break;
+        }
+    }
+    return $url;
+}
 //获取浏览器版本号
 function getBrowser(){
 	$agent=$_SERVER["HTTP_USER_AGENT"];

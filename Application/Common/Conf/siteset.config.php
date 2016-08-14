@@ -27,5 +27,6 @@ return array (
   'BACKUP_TO_EMAIL' => '8192332@qq.com',
   'SETCONFIG' => 'setconfig',
   'STATUS' => 'false',
+  'ADMIN_PUBLIC_LAYOUT' => APP_PATH.'Common/Builder/Layout/layout.html',
 );
 ?>

@@ -14,6 +14,7 @@ class AuthController extends Controller{
 	    {
 	        $this->redirect('Login/index');
 	    }
+	    $this->assign('admin_public_layout', C('ADMIN_PUBLIC_LAYOUT'));  // 页面公共继承模版
 	    // 检查普通用户权限
 		$AuthModel = new Auth();
 		$AuthGroups = $AuthModel->getGroups($adminuid);
