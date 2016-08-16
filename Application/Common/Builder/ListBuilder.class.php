@@ -87,10 +87,9 @@ class ListBuilder extends CommonController{
             $where[$statusField] = $status;
         }
         $search = md5(serialize($where));
-        $conAction = CONTROLLER_NAME.'-'.ACTION_NAME;
-    	$data = S($conAction);		
-	    $list = $data[$conAction.'.cache'.$p.$search];
-	    $show = $data[$conAction.'-page.cache'.$p.$search];
+    	$data = S($table);		
+	    $list = $data[$table.'.cache'.$p.$search];
+	    $show = $data[$table.'-page.cache'.$p.$search];
 	    unset($data);
 	    if($list == null){
 	    	if($mord){
@@ -106,9 +105,9 @@ class ListBuilder extends CommonController{
 	        	$list = D($table)->relation(true)->where($where)->order($primaryKey.' desc')->limit($Page->firstRow.','.$Page->listRows)->select();
 	        }	        
 	        $show = $Page->show();// 分页显示输出
-	        $data[$conAction.'.cache'.$p.$search] =$list;
-	        $data[$conAction.'-page.cache'.$p.$search] =$show;  	
-	        S($conAction,$data,C('ADMIN_DATA_LIST_TIME'));     
+	        $data[$table.'.cache'.$p.$search] =$list;
+	        $data[$table.'-page.cache'.$p.$search] =$show;  	
+	        S($table,$data,C('ADMIN_DATA_LIST_TIME'));     
 	    }
 	    return [
 	    	'list' => $list,

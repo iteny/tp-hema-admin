@@ -596,7 +596,7 @@ class SiteController extends AuthController {
         $builder = new \Common\Builder\ListBuilder();
         $data = $builder->getDataList('LoginLog','true','id','status','username','loginip','logintime');
         $builder->addTopButton('refresh')
-        		->addTopButton('add','addTest')
+        		// ->addTopButton('add','addTest')
         		->addBottomButton('del','delLoginLog','删除一个月前的登录日志','登录日志','一个月前')
         		->setSearch(1,1,1,1)
         		->addTableColumn('id','编号')
@@ -627,7 +627,7 @@ class SiteController extends AuthController {
         $builder = new \Common\Builder\ListBuilder();
         $data = $builder->getDataList('OperateLog','true','id','status','username','ip','time');
         $builder->addTopButton('refresh')
-        		->addTopButton('add','addTest')
+        		// ->addTopButton('add','addTest')
         		->addBottomButton('del','delOperateLog','删除一个月前的操作日志','操作日志','一个月前')
         		->setSearch(1,1,1,1)
         		->addTableColumn('id','编号',null,null,40)
