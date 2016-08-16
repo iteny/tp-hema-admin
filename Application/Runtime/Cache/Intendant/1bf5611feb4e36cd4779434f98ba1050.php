@@ -35,9 +35,7 @@
 </div><?php endif; ?>
 <?php if(!empty($top_toolbar)): ?><div id="frame-toolbar">
     <ul>
-        <li><a class="active" href="/Intendant/Site/user"><i class="iconfont" style="color:white;font-size: 16px;">&#xe611;</i>&nbsp;&nbsp;用户管理</a></li>
         <?php if(is_array($top_toolbar)): $i = 0; $__LIST__ = $top_toolbar;if( count($__LIST__)==0 ) : echo "" ;else: foreach($__LIST__ as $key=>$top_button): $mod = ($i % 2 );++$i;?><li><a href="<?php echo ($top_button["href"]); ?>"><i class="iconfont" style="color:white;font-size: 16px;">&#xe610;</i>&nbsp;&nbsp;<?php echo ($top_button["title"]); ?></a></li><?php endforeach; endif; else: echo "" ;endif; ?>
-        
     </ul>
 </div><?php endif; ?>
 <div id="frame-content">
@@ -49,8 +47,8 @@
             	<?php if($search['status'] == 1): ?>搜索类型：
 		            <select class="select_2" name="status" style="width:100px;">
 		                <option value='' <?php if($_GET['status'] == ''): ?>selected<?php endif; ?>>不限</option>
-		                <option style="color:green" value="1" <?php if($_GET['status'] == '1'): ?>selected<?php endif; ?>>登陆成功</option>
-		                <option style="color:red" value="0" <?php if($_GET['status'] == '0'): ?>selected<?php endif; ?>>登陆失败</option>
+		                <option style="color:green" value="1" <?php if($_GET['status'] == '1'): ?>selected<?php endif; ?>>成功</option>
+		                <option style="color:red" value="0" <?php if($_GET['status'] == '0'): ?>selected<?php endif; ?>>失败</option>
 		            </select><?php endif; ?>
 	            <?php if($search['username'] == 1): ?>用户名：<input type="text" class="input length_2" name="username" size='10' value="<?php echo ($_GET["username"]); ?>" placeholder="用户名"><?php endif; ?>
                 <?php if($search['ip'] == 1): ?>IP：<input type="text" class="input length_2" name="ip" size='20' value="<?php echo ($_GET["ip"]); ?>" placeholder="IP"><?php endif; ?>
@@ -68,7 +66,7 @@
     	<table width="100%">
             <thead>
             <tr>
-                <?php if(is_array($table_column_list)): $i = 0; $__LIST__ = $table_column_list;if( count($__LIST__)==0 ) : echo "" ;else: foreach($__LIST__ as $key=>$column): $mod = ($i % 2 );++$i;?><td align="center"><?php echo (htmlspecialchars($column["title"])); ?></td><?php endforeach; endif; else: echo "" ;endif; ?>
+                <?php if(is_array($table_column_list)): $i = 0; $__LIST__ = $table_column_list;if( count($__LIST__)==0 ) : echo "" ;else: foreach($__LIST__ as $key=>$column): $mod = ($i % 2 );++$i;?><td align="center" width="<?php echo ($column["width"]); ?>"><?php echo (htmlspecialchars($column["title"])); ?></td><?php endforeach; endif; else: echo "" ;endif; ?>
             </tr>
             </thead>
             <tbody>
@@ -83,7 +81,7 @@
         </div>
     </div>
     <?php if(!empty($bottom_toolbar)): ?><div class="frame-table-btn">
-    	<?php if(is_array($bottom_toolbar)): $i = 0; $__LIST__ = $bottom_toolbar;if( count($__LIST__)==0 ) : echo "" ;else: foreach($__LIST__ as $key=>$bottom_button): $mod = ($i % 2 );++$i;?><button class="<?php echo ($bottom_button["class"]); ?>" href="<?php echo ($bottom_button["href"]); ?>" data-type="用户" type="submit"><?php echo ($bottom_button["title"]); ?></button><?php endforeach; endif; else: echo "" ;endif; ?>
+    	<?php if(is_array($bottom_toolbar)): $i = 0; $__LIST__ = $bottom_toolbar;if( count($__LIST__)==0 ) : echo "" ;else: foreach($__LIST__ as $key=>$bottom_button): $mod = ($i % 2 );++$i;?><button class="<?php echo ($bottom_button["class"]); ?>" href="<?php echo ($bottom_button["href"]); ?>" data-type="<?php echo ($bottom_button["datatype"]); ?>" data-title="<?php echo ($bottom_button["datatitle"]); ?>" type="submit"><?php echo ($bottom_button["title"]); ?></button><?php endforeach; endif; else: echo "" ;endif; ?>
     </div><?php endif; ?>
 </form>
 

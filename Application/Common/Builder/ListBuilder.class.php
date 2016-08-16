@@ -171,7 +171,7 @@ class ListBuilder extends CommonController{
      * @param string $title 修改按钮的标题
      * @param string $controller 如果你需要切换到别的控制器下处理，比如填写这个参数
      */
-    public function addBottomButton($type,$action,$title = null, $controller = null) {
+    public function addBottomButton($type,$action,$title = null,$dataType=null,$dateTitle=null, $controller = null) {
     	switch ($type) {
             case 'sort':  // 排序按钮
                 //预定义按钮属性以简化使用
@@ -186,6 +186,8 @@ class ListBuilder extends CommonController{
                 //预定义按钮属性以简化使用
                 $button['title'] = $title ? : '删除';
                 $button['class'] = 'btn ajax-del';
+                $button['datatype'] = $dataType ? : '这个';
+                $button['datatitle'] = $dateTitle ? : '东西';
                 $controller = $controller ? : CONTROLLER_NAME;;  // 是否切换控制器
                 $button['href']  = U(MODULE_NAME.'/'.$controller.'/'.$action);
                 // 这个按钮定义好了把它丢进按钮池里
@@ -222,14 +224,19 @@ class ListBuilder extends CommonController{
     }
     /**
      * 加一个表格标题字段
-     * @author jry <598821125@qq.com>
+     * @param $name 数据字段名
+     * @param $title 表格标题
+     * @param $type 格式化数据的类型
+     * @param $param 参数
+     * @param $width td宽度 
      */
-    public function addTableColumn($name, $title, $type = null, $param = null) {
+    public function addTableColumn($name, $title, $type = null, $param = null,$width='auto') {
         $column = array(
             'name'  => $name,
             'title' => $title,
             'type'  => $type,
             'param' => $param,
+            'width' => $width
         );
         $this->table_column_list[] = $column;
         return $this;
@@ -237,7 +244,6 @@ class ListBuilder extends CommonController{
 
     /**
      * 表格数据列表
-     * @author jry <598821125@qq.com>
      */
     public function setTableDataList($table_data_list) {
         $this->table_data_list = $table_data_list;
@@ -245,7 +251,6 @@ class ListBuilder extends CommonController{
     }
     /**
      * 表格数据列表的主键名称
-     * @author jry <598821125@qq.com>
      */
     public function setTableDataListKey($table_data_list_key) {
         $this->table_data_list_key = $table_data_list_key;
@@ -322,7 +327,6 @@ class ListBuilder extends CommonController{
     }
     /**
      * 显示页面
-     * @author jry <598821125@qq.com>
      */
     public function display() {
         // 编译data_list中的值

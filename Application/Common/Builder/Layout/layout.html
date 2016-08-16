@@ -35,11 +35,9 @@
 <notempty name="top_toolbar">
 <div id="frame-toolbar">
     <ul>
-        <li><a class="active" href="/Intendant/Site/user"><i class="iconfont" style="color:white;font-size: 16px;">&#xe611;</i>&nbsp;&nbsp;用户管理</a></li>
         <volist name="top_toolbar" id="top_button">
         	<li><a href="{$top_button.href}"><i class="iconfont" style="color:white;font-size: 16px;">&#xe610;</i>&nbsp;&nbsp;{$top_button.title}</a></li>
         </volist>
-        
     </ul>
 </div>
 </notempty>
@@ -54,8 +52,8 @@
 	                搜索类型：
 		            <select class="select_2" name="status" style="width:100px;">
 		                <option value='' <if condition="$_GET['status'] eq ''">selected</if>>不限</option>
-		                <option style="color:green" value="1" <if condition="$_GET['status'] eq '1'">selected</if>>登陆成功</option>
-		                <option style="color:red" value="0" <if condition="$_GET['status'] eq '0'">selected</if>>登陆失败</option>
+		                <option style="color:green" value="1" <if condition="$_GET['status'] eq '1'">selected</if>>成功</option>
+		                <option style="color:red" value="0" <if condition="$_GET['status'] eq '0'">selected</if>>失败</option>
 		            </select>
 	            </if>
 	            <if condition="$search['username'] eq 1">

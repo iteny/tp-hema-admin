@@ -4,7 +4,7 @@
             <thead>
             <tr>
                 <volist name="table_column_list" id="column">
-			        <td align="center">{$column.title|htmlspecialchars}</td>
+			        <td align="center" width="{$column.width}">{$column.title|htmlspecialchars}</td>
 			    </volist>
             </tr>
             </thead>
@@ -26,7 +26,7 @@
     <notempty name="bottom_toolbar">
     <div class="frame-table-btn">
     	<volist name="bottom_toolbar" id="bottom_button">
-        <button class="{$bottom_button.class}" href="{$bottom_button.href}" data-type="用户" type="submit">{$bottom_button.title}</button>
+        <button class="{$bottom_button.class}" href="{$bottom_button.href}" data-type="{$bottom_button.datatype}" data-title="{$bottom_button.datatitle}" type="submit">{$bottom_button.title}</button>
         </volist>
     </div>
     </notempty>
