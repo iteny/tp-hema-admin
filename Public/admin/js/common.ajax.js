@@ -47,6 +47,7 @@ $(function(){
             type = btn.attr('data-type'),
             href = btn.attr('href'),
             id = btn.attr('data-id');
+        
         layer.confirm('是否删除'+type+'<span style="color:red;">['+title+']</span>', {icon: 3,offset:'200px', title:'删除'+type+'提示'}, function(index){
             layer.close(index);
             $.ajax({

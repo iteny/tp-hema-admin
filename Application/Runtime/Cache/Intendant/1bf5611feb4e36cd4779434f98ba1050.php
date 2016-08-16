@@ -21,7 +21,7 @@
     .tip-darkgray{z-index: 99999;}
     </style>
     
-    <link rel="stylesheet" type="text/css" href="__CUI__/css/cui.extend.min.css">
+    <!-- <link rel="stylesheet" type="text/css" href="__CUI__/css/cui.extend.min.css"> -->
     
 
     <!--[if lt IE 9]>
