@@ -14,6 +14,20 @@ class AuthController extends Controller{
 	    {
 	        $this->redirect('Login/index');
 	    }
+	    //获取父菜单
+	    $pid = getThisRulePid();
+	    if($pid){
+	    	$allMenukey = 'all-menu.cache';
+			$menu = S($allMenukey);
+			if($menu == null){
+				$menu = M('AuthRule')->order('sort asc')->select();
+				$menu = recursive($menu);
+				S($allMenukey,$menu,C('AUTH_MENU_TIME'));
+			}		
+			$parentMenu = reverse($menu,$pid);
+			$parentMenu = array_reverse($parentMenu);
+			$this->assign('parent_menu',$parentMenu);
+	    }		
 	    $this->assign('admin_public_layout', C('ADMIN_PUBLIC_LAYOUT'));  // 页面公共继承模版
 	    // 检查普通用户权限
 		$AuthModel = new Auth();

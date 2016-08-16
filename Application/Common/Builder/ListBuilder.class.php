@@ -24,6 +24,98 @@ class ListBuilder extends CommonController{
         $this->template = APP_PATH.'Common/Builder/Layout/list.html';
     }
     /**
+     * 设置list列表的搜索条件(由于数据字段可能存在不同，所以这里如果不同就传入参数)
+     * @param $statusField 修改需要查询status的字段名，默认是status
+     * @param $userField 修改需要查询username的字段名，默认是username
+     * @param $ipField 修改需要查询ip的字段名，默认是ip
+     * @param $timeField 修改需要查询time的字段名，默认是time
+     * @return $this
+     */
+    public function setSearchCondition($statusField='status',$userField='username',$ipField='ip',$timeField='time'){
+    	$username = I('username');
+        $start_time = I('start_time');
+        $end_time = I('end_time');
+        $ip = I('ip');
+        $status = I('status');
+        if (!empty($username)) {
+            $where[$userField] = array('like', '%' . $username . '%');
+        }
+        if (!empty($start_time) && !empty($end_time)) {
+            $start_time = strtotime($start_time);
+            $end_time = strtotime($end_time) + 86399;
+            $where[$timeField] = array(array('GT', $start_time), array('LT', $end_time), 'AND');
+        }
+        if (!empty($ip)) {
+            $where[$ipField] = array('like', "%{$ip}%");
+        }
+        if ($status != '') {
+            $where[$statusField] = $status;
+        }
+        $search = md5(serialize($where));
+        return $search;
+    }
+    /**
+     * 得到数据列表
+     * @param $table 设置表名(或者设置关联模型名)
+     * @param $mord 如果第一个参数是关联模型名，那么第2个参数只要不等于true就开启关联模式查询
+     * @param $primaryKey 有的时候主键ID可能不是id，排序的时候需要用到，可以更改
+     * @param $statusField 修改需要查询status的字段名，默认是status
+     * @param $userField 修改需要查询username的字段名，默认是username
+     * @param $ipField 修改需要查询ip的字段名，默认是ip
+     * @param $timeField 修改需要查询time的字段名，默认是time
+     * @return $this
+     */
+    public function getDataList($table,$mord = 'true',$primaryKey='id',$statusField='status',$userField='username',$ipField='ip',$timeField='time'){
+    	$p = !empty(I('p')) ? I('p') : 1;
+    	$username = I('username');
+        $start_time = I('start_time');
+        $end_time = I('end_time');
+        $ip = I('ip');
+        $status = I('status');
+        if (!empty($username)) {
+            $where[$userField] = array('like', '%' . $username . '%');
+        }
+        if (!empty($start_time) && !empty($end_time)) {
+            $start_time = strtotime($start_time);
+            $end_time = strtotime($end_time) + 86399;
+            $where[$timeField] = array(array('GT', $start_time), array('LT', $end_time), 'AND');
+        }
+        if (!empty($ip)) {
+            $where[$ipField] = array('like', "%{$ip}%");
+        }
+        if ($status != '') {
+            $where[$statusField] = $status;
+        }
+        $search = md5(serialize($where));
+        $conAction = CONTROLLER_NAME.'-'.ACTION_NAME;
+    	$data = S($conAction);		
+	    $list = $data[$conAction.'.cache'.$p.$search];
+	    $show = $data[$conAction.'-page.cache'.$p.$search];
+	    unset($data);
+	    if($list == null){
+	    	if($mord){
+	    		$count = M($table)->where($where)->count();
+	    	}else{
+	    		$count = D($table)->where($where)->count();
+	    	}			
+			$Page  = new \Think\Page($count,C('ADMIN_PAGE_NUM'));// 实例化分页类 传入总记录数和每页显示的记录数(25)
+			$total = ceil($count / C('ADMIN_PAGE_NUM'));
+	        if($mord){
+	        	$list = M($table)->where($where)->order($primaryKey.' desc')->limit($Page->firstRow.','.$Page->listRows)->select();
+	        }else{
+	        	$list = D($table)->relation(true)->where($where)->order($primaryKey.' desc')->limit($Page->firstRow.','.$Page->listRows)->select();
+	        }	        
+	        $show = $Page->show();// 分页显示输出
+	        $data[$conAction.'.cache'.$p.$search] =$list;
+	        $data[$conAction.'-page.cache'.$p.$search] =$show;  	
+	        S($conAction,$data,C('ADMIN_DATA_LIST_TIME'));     
+	    }
+	    return [
+	    	'list' => $list,
+	    	'show' => $show
+	    ];
+    }
+    /**
      * 设置页面标题
      * @param $title 标题文本
      * @return $this
@@ -83,7 +175,7 @@ class ListBuilder extends CommonController{
     	switch ($type) {
             case 'sort':  // 排序按钮
                 //预定义按钮属性以简化使用
-                $button['title'] = '排序';
+                $button['title'] = $title ? : '排序';
                 $button['class'] = 'btn ajax-sort';
                 $controller = $controller ? : CONTROLLER_NAME;;  // 是否切换控制器
                 $button['href']  = U(MODULE_NAME.'/'.$controller.'/'.$action);
@@ -92,7 +184,16 @@ class ListBuilder extends CommonController{
                 break;
             case 'del':  // 批量删除
                 //预定义按钮属性以简化使用
-                $button['title'] = '批量删除';
+                $button['title'] = $title ? : '删除';
+                $button['class'] = 'btn ajax-del';
+                $controller = $controller ? : CONTROLLER_NAME;;  // 是否切换控制器
+                $button['href']  = U(MODULE_NAME.'/'.$controller.'/'.$action);
+                // 这个按钮定义好了把它丢进按钮池里
+                $this->bottom_toolbar[] = $button;
+                break; 
+            case 'delBatch':  // 批量删除
+                //预定义按钮属性以简化使用
+                $button['title'] = $title ? : '批量删除';
                 $button['class'] = 'btn ajax-batch-del';
                 $controller = $controller ? : CONTROLLER_NAME;;  // 是否切换控制器
                 $button['href']  = U(MODULE_NAME.'/'.$controller.'/'.$action);
@@ -100,6 +201,7 @@ class ListBuilder extends CommonController{
                 $this->bottom_toolbar[] = $button;
                 break;             
         }
+        return $this;
     }
     /**
      * 设置搜索参数
@@ -111,10 +213,11 @@ class ListBuilder extends CommonController{
      * @param string $controller 如果你需要切换到别的控制器下处理，比如填写这个参数
      * 此方法通常不需要设置controller,action参数,如有特别需求才修改注意
      */
-    public function setSearch($status,$username,$ip,$time,$action = null, $controller = null) {
+    public function setSearch($status,$username,$ip,$time,$href = null, $controller = null) {
     	$controller = $controller ? : CONTROLLER_NAME;  // 是否切换控制器
         $action = $action ? : ACTION_NAME;// 是否切换方法
-        $this->search = ['status' => $status,'username' => $username,'ip' => $ip,'time' => $time, 'action' => $url];
+        $url = U(MODULE_NAME.'/'.$controller.'/'.$action);
+        $this->search = ['status' => $status,'username' => $username,'ip' => $ip,'time' => $time, 'href' => $url];
         return $this;
     }
     /**
@@ -326,7 +429,8 @@ class ListBuilder extends CommonController{
 
         $this->assign('meta_title',          $this->meta_title);          // 页面标题
         $this->assign('top_toolbar',     	 $this->top_toolbar);     // 顶部工具栏按钮
-        $this->assign('search',              $this->_search);              // 搜索配置
+        $this->assign('bottom_toolbar',      $this->bottom_toolbar);     // 底部工具栏按钮
+        $this->assign('search',              $this->search);              // 搜索配置
         // $this->assign('tab_nav',             $this->_tab_nav);             // 页面Tab导航
         $this->assign('table_column_list',   $this->table_column_list);   // 表格的列
         $this->assign('table_data_list',     $this->table_data_list);     // 表格数据
