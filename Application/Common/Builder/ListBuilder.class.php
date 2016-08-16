@@ -90,7 +90,6 @@ class ListBuilder extends CommonController{
     	$data = S($table);		
 	    $list = $data[$table.'.cache'.$p.$search];
 	    $show = $data[$table.'-page.cache'.$p.$search];
-	    unset($data);
 	    if($list == null){
 	    	if($mord){
 	    		$count = M($table)->where($where)->count();

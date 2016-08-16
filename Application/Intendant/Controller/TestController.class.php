@@ -3,8 +3,8 @@ namespace Intendant\Controller;
 use Think\Controller;
 class TestController extends AuthController {
 	public function index(){		
-		$ss =S('LoginLog');
-		p($ss);
+		// $ss =S('LoginLog');
+		// p($ss['LoginLog'.'.cache3']);
 		//使用Builder建立数据列表页面
         $builder = new \Common\Builder\ListBuilder();
         $data = $builder->getDataList('OperateLog','true','id','status','username','ip','time');
