@@ -7,7 +7,7 @@ class TestController extends AuthController {
 		
 		// 使用Builder快速建立列表页面。
         $builder = new \Common\Builder\ListBuilder();
-        $data = $builder->getDataList('LoginLog');
+        $data = $builder->getDataList('LoginLog','true','id','status','username','loginip','logintime');
         // p($data['list']);
         $builder->addTopButton('refresh')
         		->addTopButton('add','addTest')
