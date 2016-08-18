@@ -24,37 +24,6 @@ class ListBuilder extends CommonController{
         $this->template = APP_PATH.'Common/Builder/Layout/list.html';
     }
     /**
-     * 设置list列表的搜索条件(由于数据字段可能存在不同，所以这里如果不同就传入参数)
-     * @param $statusField 修改需要查询status的字段名，默认是status
-     * @param $userField 修改需要查询username的字段名，默认是username
-     * @param $ipField 修改需要查询ip的字段名，默认是ip
-     * @param $timeField 修改需要查询time的字段名，默认是time
-     * @return $this
-     */
-    public function setSearchCondition($statusField='status',$userField='username',$ipField='ip',$timeField='time'){
-    	$username = I('username');
-        $start_time = I('start_time');
-        $end_time = I('end_time');
-        $ip = I('ip');
-        $status = I('status');
-        if (!empty($username)) {
-            $where[$userField] = array('like', '%' . $username . '%');
-        }
-        if (!empty($start_time) && !empty($end_time)) {
-            $start_time = strtotime($start_time);
-            $end_time = strtotime($end_time) + 86399;
-            $where[$timeField] = array(array('GT', $start_time), array('LT', $end_time), 'AND');
-        }
-        if (!empty($ip)) {
-            $where[$ipField] = array('like', "%{$ip}%");
-        }
-        if ($status != '') {
-            $where[$statusField] = $status;
-        }
-        $search = md5(serialize($where));
-        return $search;
-    }
-    /**
      * 得到数据列表
      * @param $table 设置表名(或者设置关联模型名)
      * @param $mord 如果第一个参数是关联模型名，那么第2个参数只要不等于true就开启关联模式查询
@@ -91,14 +60,14 @@ class ListBuilder extends CommonController{
 	    $list = $data[$table.'.cache'.$p.$search];
 	    $show = $data[$table.'-page.cache'.$p.$search];
 	    if($list == null){
-	    	if($mord){
+	    	if($mord == 'true'){
 	    		$count = M($table)->where($where)->count();
 	    	}else{
 	    		$count = D($table)->where($where)->count();
 	    	}			
 			$Page  = new \Think\Page($count,C('ADMIN_PAGE_NUM'));// 实例化分页类 传入总记录数和每页显示的记录数(25)
 			$total = ceil($count / C('ADMIN_PAGE_NUM'));
-	        if($mord){
+	        if($mord == 'true'){
 	        	$list = M($table)->where($where)->order($primaryKey.' desc')->limit($Page->firstRow.','.$Page->listRows)->select();
 	        }else{
 	        	$list = D($table)->relation(true)->where($where)->order($primaryKey.' desc')->limit($Page->firstRow.','.$Page->listRows)->select();
@@ -228,12 +197,13 @@ class ListBuilder extends CommonController{
      * @param $param 参数
      * @param $width td宽度 
      */
-    public function addTableColumn($name, $title, $type = null, $param = null,$width='auto') {
+    public function addTableColumn($name, $title, $type = null, $param = null,$align='center',$width='auto') {
         $column = array(
             'name'  => $name,
             'title' => $title,
             'type'  => $type,
             'param' => $param,
+            'align' => $align,
             'width' => $width
         );
         $this->table_column_list[] = $column;
@@ -259,14 +229,18 @@ class ListBuilder extends CommonController{
      * @param string $type 按钮类型
      * @param string $action 提交到方法
      * @param string $title 修改按钮的标题
+     * @param string $dataType 这里设定弹出框的提示信息
+     * @param string $dateTitle 这里设定设置弹出框具体操作那一个数据提示信息
      * @param string $controller 如果你需要切换到别的控制器下处理，比如填写这个参数
      */
-    public function addRightButton($type,$action,$bicon,$title = null, $controller = null) {
+    public function addRightButton($type,$action,$bicon = null,$title = null,$dataType=null,$dateTitle=null, $controller = null) {
         switch ($type) {
             case 'edit':  // 编辑按钮
                 // 预定义按钮属性以简化使用
                 $button['title'] = $title ? : '编辑';
                 $button['class'] = 'ajax-add blue';
+                $button['datatype'] = $dataType ? : '这个';
+                $button['datatitle'] = $dateTitle ? : '东西';
                 $button['bicon'] = $bicon ? : '&#xe610;';
                 $controller = $controller ? : CONTROLLER_NAME;  // 是否切换控制器
                 $button['href']  = U(MODULE_NAME.'/'.$controller.'/'.$action);
@@ -277,6 +251,8 @@ class ListBuilder extends CommonController{
                 // 预定义按钮属性以简化使用
                 $button['title'] = '删除';
                 $button['class'] = 'ajax-del red';
+                $button['datatype'] = $dataType ? : '这个';
+                $button['datatitle'] = $dateTitle ? : '东西';
                 $button['bicon'] = $bicon ? : '&#xe610;';
                 $controller = $controller ? : CONTROLLER_NAME;  // 是否切换控制器
                 $button['href'] = U(MODULE_NAME.'/'.CONTROLLER_NAME.'/'.$action);
@@ -343,12 +319,14 @@ class ListBuilder extends CommonController{
                     //     $data[$this->_table_data_list_key],
                     //     $right_button['href']
                     // );
-
+                    if(!empty($this->window_title)){
+                        $data[$right_button['datatitle']] = $this->window_title;
+                    }
                     // 编译按钮属性
                     // $right_button['attribute'] = $this->compileHtmlAttr($right_button);
                     // $data['right_button'] .= '<a '.$right_button['attribute']
                     //                       .'>'.$right_button['title'].'</a> ';
-                    $data['right_button'] .= '<a class="'.$right_button['class'].'" href="'.$right_button['href'].'/?'.$this->table_data_list_key.'='.$data[$this->table_data_list_key].'&title='.$data['title'].'" data-id="'.$data[$this->table_data_list_key].'" data-title="'.$data['title'].'" data-type="'.$this->window_title.'"><i class="iconfont" style="color:white;font-size: 16px;">'.$right_button['bicon'].'</i>&nbsp;&nbsp;'.$right_button['title'].'</a>&nbsp;&nbsp;&nbsp;';
+                    $data['right_button'] .= '<a class="'.$right_button['class'].'" href="'.$right_button['href'].'/?'.$this->table_data_list_key.'='.$data[$this->table_data_list_key].'&title='.$data[$right_button['datatitle']].'" data-id="'.$data[$this->table_data_list_key].'" data-title="'.$data[$right_button['datatitle']].'" data-type="'.$right_button['datatype'].'"><i class="iconfont" style="color:white;font-size: 16px;">'.$right_button['bicon'].'</i>&nbsp;&nbsp;'.$right_button['title'].'</a>&nbsp;&nbsp;&nbsp;';
 
                 }
             }
@@ -367,7 +345,11 @@ class ListBuilder extends CommonController{
                                 break;
                         }
                         break;
-                    //讲字节转换kb,mb
+                    //将字符串，用悬浮消息框输出
+                    case 'remark':
+                        $data[$column['name']] = '<a class="bsn blue" title="'.$data[$column['name']].'" style="cursor:pointer">鼠标悬停</a>';
+                        break;
+                    //将字节转换kb,mb
                     case 'byte':
                         $data[$column['name']] = format_size($data[$column['name']]);
                         break;
@@ -394,10 +376,10 @@ class ListBuilder extends CommonController{
                     case 'img_id':
                         $data[$column['name']] = '<img class="picture" src="'.get_cover($data[$column['name']]).'">';
                         break;
-                    // case 'type':
-                    //     $form_item_type = C('FORM_ITEM_TYPE');
-                    //     $data[$column['name']] = $form_item_type[$data[$column['name']]][0];
-                    //     break;
+                    //输出关联模型下一层的数据
+                    case 'relation':
+                        $data[$column['name']] = $data[$column['name']][0][$column['param']];
+                        break;
                     // case 'callback': // 调用函数
                     //     if (is_array($column['param'])) {
                     //         $data[$column['name']] = call_user_func_array($column['param'], array($data[$column['name']]));

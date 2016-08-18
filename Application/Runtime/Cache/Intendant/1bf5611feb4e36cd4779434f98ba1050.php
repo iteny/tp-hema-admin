@@ -66,13 +66,14 @@
     	<table width="100%">
             <thead>
             <tr>
-                <?php if(is_array($table_column_list)): $i = 0; $__LIST__ = $table_column_list;if( count($__LIST__)==0 ) : echo "" ;else: foreach($__LIST__ as $key=>$column): $mod = ($i % 2 );++$i;?><td align="center" width="<?php echo ($column["width"]); ?>"><?php echo (htmlspecialchars($column["title"])); ?></td><?php endforeach; endif; else: echo "" ;endif; ?>
+                <td align="center" width="40"><input type="checkbox" class="check-all"></td>
+                <?php if(is_array($table_column_list)): $i = 0; $__LIST__ = $table_column_list;if( count($__LIST__)==0 ) : echo "" ;else: foreach($__LIST__ as $key=>$column): $mod = ($i % 2 );++$i;?><td align="<?php echo ($column["align"]); ?>" width="<?php echo ($column["width"]); ?>"><?php echo (htmlspecialchars($column["title"])); ?></td><?php endforeach; endif; else: echo "" ;endif; ?>
             </tr>
             </thead>
             <tbody>
                 <?php if(is_array($table_data_list)): $i = 0; $__LIST__ = $table_data_list;if( count($__LIST__)==0 ) : echo "" ;else: foreach($__LIST__ as $key=>$data): $mod = ($i % 2 );++$i;?><tr>
-                        <!-- <td><input class="ids" type="checkbox" value="<?php echo ($data[$table_data_list_key]); ?>" name="ids[]"></td> -->
-                        <?php if(is_array($table_column_list)): $i = 0; $__LIST__ = $table_column_list;if( count($__LIST__)==0 ) : echo "" ;else: foreach($__LIST__ as $key=>$column): $mod = ($i % 2 );++$i;?><td align="center"><?php echo ($data[$column['name']]); ?></td><?php endforeach; endif; else: echo "" ;endif; ?>
+                        <td align="center" width="40"><input class="ids" type="checkbox" value="<?php echo ($data[$table_data_list_key]); ?>" name="ids[]"></td>
+                        <?php if(is_array($table_column_list)): $i = 0; $__LIST__ = $table_column_list;if( count($__LIST__)==0 ) : echo "" ;else: foreach($__LIST__ as $key=>$column): $mod = ($i % 2 );++$i;?><td align="<?php echo ($column["align"]); ?>" width="<?php echo ($column["width"]); ?>"><?php echo ($data[$column['name']]); ?></td><?php endforeach; endif; else: echo "" ;endif; ?>
                     </tr><?php endforeach; endif; else: echo "" ;endif; ?>
             </tbody>
         </table>

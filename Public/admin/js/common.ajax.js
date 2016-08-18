@@ -6,7 +6,7 @@ $(function(){
     $('button.ajax-sort').on('click', function (e) {
         e.preventDefault();
         var btn = $(this),
-            form = btn.parents('form[name=commonSort]');
+            form = btn.parents('form[name=ids]');
         if(btn.attr("disabledSubmit")){
             btn.text('请勿重复提交...').prop('disabled', true).addClass('disabled');
             return false;
@@ -14,7 +14,7 @@ $(function(){
         btn.attr("disabledSubmit",true);
         var param = form.serialize();
         $.ajax({
-            url: form.attr('action'),
+            url: btn.attr('href'),
             dataType:'json',
             type:'POST',
             data:param,

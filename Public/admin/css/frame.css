@@ -192,7 +192,7 @@ td, th, div {
     line-height: 18px;
     border: 1px solid #ccc;
     background-color: #fff;
-    box-shadow: 2px 2px 2px #f0f0f0 inset;
+    /*box-shadow: 2px 2px 2px #f0f0f0 inset;*/
     /* border-radius: 1px; */
     vertical-align: middle;
     margin: 0;

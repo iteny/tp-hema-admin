@@ -2,25 +2,26 @@
 namespace Intendant\Controller;
 use Think\Controller;
 class TestController extends AuthController {
-	public function index(){		
-		// $ss =S('LoginLog');
-		// p($ss['LoginLog'.'.cache3']);
+	public function index(){
 		//使用Builder建立数据列表页面
         $builder = new \Common\Builder\ListBuilder();
-        $data = $builder->getDataList('OperateLog','true','id','status','username','ip','time');
+        $data = $builder->getDataList('UserRelation','no','uid','status','username','create_ip','create_time');
         $builder->addTopButton('refresh')
-        		->addTopButton('add','addTest')
-        		->addBottomButton('del','delrizhi','删除一个月前的操作日志','操作日志','一个月前')
+        		->addTopButton('add','addUser')
+        		->addBottomButton('delBatch','delrizhi','批量删除')
+        		->addRightButton('edit','editUser',null,null,'用户','username')
+        		->addRightButton('del','delUser',null,null,'用户','username')
         		->setSearch(1,1,1,1)
-        		->addTableColumn('id','编号',null,null,40)
-        		->addTableColumn('username','用户名',null,null,100)
-        		->addTableColumn('info','操作说明',null,null,400)
-        		->addTableColumn('get','请求路径',null,null,400)
-        		->addTableColumn('status','状态','status',null,40)
-        		// ->addTableColumn('useragent','用户浏览器信息')
-        		->addTableColumn('time','时间','timestamp',null,300)
-        		->addTableColumn('ip','IP',null,null,100)
-        		->addTableColumn('country','用户登录地区',null,null,100)
+        		->setTableDataListKey('uid')
+        		->addTableColumn('uid','编号',null,null,'center',40)
+        		->addTableColumn('username','用户名',null,null,'center',150)
+        		->addTableColumn('usergroup','所属用户组','relation','title','center',200)
+        		->addTableColumn('create_time','创建时间','timestamp',null,'center',300)
+        		->addTableColumn('create_ip','创建IP',null,null,'center',200)
+        		->addTableColumn('email','邮箱',null,null,'center',200)
+        		->addTableColumn('remark','备注','remark',null,'center',100)
+        		->addTableColumn('status','是否启用','status',null,'center',100)
+        		->addTableColumn('right_button', '操作管理', 'btn',null,'center',200)
         		->setTableDataList($data['list'])    // 数据列表
                 ->setTableDataPage($data['show']) // 数据列表分页
         		->display();
