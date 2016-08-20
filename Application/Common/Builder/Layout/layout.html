@@ -36,7 +36,7 @@
 <div id="frame-toolbar">
     <ul>
         <volist name="top_toolbar" id="top_button">
-        	<li><a href="{$top_button.href}"><i class="iconfont" style="color:white;font-size: 16px;">&#xe610;</i>&nbsp;&nbsp;{$top_button.title}</a></li>
+        	<li><a href="{$top_button.href}"><i class="iconfont iconfont_btn">{$top_button.bicon}</i>&nbsp;&nbsp;{$top_button.title}</a></li>
         </volist>
     </ul>
 </div>
@@ -68,7 +68,7 @@
 	                -
 	                <input type="text" class="input length_2 my-date" name="end_time" value="{$_GET.end_time}" style="width:140px;">
                 </if>
-                <button class="btn" style="height: 30px;line-height: 30px;padding-bottom: 31px;">搜索</button>
+                <button class="btn" style="height: 30px;line-height: 30px;padding-bottom: 31px;"><i class="iconfont iconfont_btn">&#xe612;</i>&nbsp;搜索</button>
             </div>
         </form>
     </div>

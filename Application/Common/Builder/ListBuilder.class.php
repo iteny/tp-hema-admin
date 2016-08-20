@@ -8,6 +8,8 @@ class ListBuilder extends CommonController{
     private $top_toolbar = array();   	  // 顶部工具栏按钮组
     private $bottom_toolbar = array();	  // 底部工具栏按钮组
     private $search  = array();           // 搜索参数配置
+    private $sort = null;                 // 是否启用表格数据排序的html
+    private $checkbox = null;             // 是否启动表格数据勾选的html
     private $table_column_list = array(); // 表格标题字段
     private $table_data_list   = array(); // 表格数据列表
     private $table_data_list_key = 'id';  // 表格数据列表主键字段名
@@ -23,18 +25,28 @@ class ListBuilder extends CommonController{
     protected function _initialize() {
         $this->template = APP_PATH.'Common/Builder/Layout/list.html';
     }
+
     /**
      * 得到数据列表
      * @param $table 设置表名(或者设置关联模型名)
-     * @param $mord 如果第一个参数是关联模型名，那么第2个参数只要不等于true就开启关联模式查询
-     * @param $primaryKey 有的时候主键ID可能不是id，排序的时候需要用到，可以更改
+     * @param $mord 默认null为M()方法,如果输出非null字符串,将为D()方法
+     * @param $sortField 排序字段名,允许为主键,排序的时候需要用到，可以更改
+     * @param $sort 设置排序的方式,asc升序,desc倒序
      * @param $statusField 修改需要查询status的字段名，默认是status
      * @param $userField 修改需要查询username的字段名，默认是username
      * @param $ipField 修改需要查询ip的字段名，默认是ip
      * @param $timeField 修改需要查询time的字段名，默认是time
      * @return $this
      */
-    public function getDataList($table,$mord = 'true',$primaryKey='id',$statusField='status',$userField='username',$ipField='ip',$timeField='time'){
+    public function getDataList($table,$mord=null,$sortField=null,$sort=null,$statusField=null,$userField=null,$ipField=null,$timeField=null){
+        $mord = $mord ? : 'true';
+        $sortField = $sortField ? : 'id';
+        $sort = $sort ? : 'desc';
+        $statusField = $statusField ? : 'status';
+        $userField = $userField ? : 'username';
+        $ipField = $ipField ? : 'ip';
+        $timeField = $timeField ? : 'time';
+
     	$p = !empty(I('p')) ? I('p') : 1;
     	$username = I('username');
         $start_time = I('start_time');
@@ -55,10 +67,11 @@ class ListBuilder extends CommonController{
         if ($status != '') {
             $where[$statusField] = $status;
         }
+        $conAction = CONTROLLER_NAME.'-'.ACTION_NAME;
         $search = md5(serialize($where));
-    	$data = S($table);		
-	    $list = $data[$table.'.cache'.$p.$search];
-	    $show = $data[$table.'-page.cache'.$p.$search];
+    	$data = S($conAction);		
+	    $list = $data[$conAction.'.cache'.$p.$search];
+	    $show = $data[$conAction.'-page.cache'.$p.$search];
 	    if($list == null){
 	    	if($mord == 'true'){
 	    		$count = M($table)->where($where)->count();
@@ -68,14 +81,14 @@ class ListBuilder extends CommonController{
 			$Page  = new \Think\Page($count,C('ADMIN_PAGE_NUM'));// 实例化分页类 传入总记录数和每页显示的记录数(25)
 			$total = ceil($count / C('ADMIN_PAGE_NUM'));
 	        if($mord == 'true'){
-	        	$list = M($table)->where($where)->order($primaryKey.' desc')->limit($Page->firstRow.','.$Page->listRows)->select();
+	        	$list = M($table)->where($where)->order($sortField.' '.$sort)->limit($Page->firstRow.','.$Page->listRows)->select();
 	        }else{
-	        	$list = D($table)->relation(true)->where($where)->order($primaryKey.' desc')->limit($Page->firstRow.','.$Page->listRows)->select();
+	        	$list = D($table)->relation(true)->where($where)->order($sortField.' '.$sort)->limit($Page->firstRow.','.$Page->listRows)->select();
 	        }	        
 	        $show = $Page->show();// 分页显示输出
-	        $data[$table.'.cache'.$p.$search] =$list;
-	        $data[$table.'-page.cache'.$p.$search] =$show;  	
-	        S($table,$data,C('ADMIN_DATA_LIST_TIME'));     
+	        $data[$conAction.'.cache'.$p.$search] =$list;
+	        $data[$conAction.'-page.cache'.$p.$search] =$show;  	
+	        S($conAction,$data,C('ADMIN_DATA_LIST_TIME'));     
 	    }
 	    return [
 	    	'list' => $list,
@@ -101,18 +114,29 @@ class ListBuilder extends CommonController{
         return $this;
     }
     /**
+     * 设置表格数据排序和勾选的html
+     * @param $checkbox 只要不为null,就表示启用(勾选框必须是主键,所以填写1或任何字符串即可)
+     * @param $sort     只要不为null,就表示启用(如果启用,那么得填写排序数据字段,不可以是主键)
+     */
+    public function setCheckboxSort($checkbox=null,$sort=null){
+        $this->checkbox = $checkbox;
+        $this->sort = $sort;
+        return $this;
+    }
+    /**
      * 顶部工具栏按钮
      * @param string $type 按钮类型
      * @param string $action 提交到方法
      * @param string $title 修改按钮的标题
      * @param string $controller 如果你需要切换到别的控制器下处理，比如填写这个参数
      */
-    public function addTopButton($type,$action,$title = null, $controller = null) {
+    public function addTopButton($type,$action,$bicon = null,$title = null, $controller = null) {
         switch ($type) {
             case 'add':  // 添加新增按钮
                 // 预定义按钮属性以简化使用
                 $button['title'] = '添加';
                 $button['class'] = 'btn btn-primary';
+                $button['bicon'] = $bicon ? : '&#xe610;';
                 $controller = $controller ? : CONTROLLER_NAME;  // 是否切换控制器
                 $button['href']  = U(MODULE_NAME.'/'.$controller.'/'.$action);
                 // 这个按钮定义好了把它丢进按钮池里
@@ -122,6 +146,7 @@ class ListBuilder extends CommonController{
                 //预定义按钮属性以简化使用
                 $button['title'] = '刷新';
                 $button['class'] = 'btn btn-primary';
+                $button['bicon'] = $bicon ? : '&#xe608;';
                 $controller = $controller ? : CONTROLLER_NAME;  // 是否切换控制器
                 $action = $action ? : ACTION_NAME;
                 $button['href']  = U(MODULE_NAME.'/'.$controller.'/'.$action);
@@ -138,12 +163,13 @@ class ListBuilder extends CommonController{
      * @param string $title 修改按钮的标题
      * @param string $controller 如果你需要切换到别的控制器下处理，比如填写这个参数
      */
-    public function addBottomButton($type,$action,$title = null,$dataType=null,$dateTitle=null, $controller = null) {
+    public function addBottomButton($type,$action,$bicon = null,$title = null,$dataType=null,$dateTitle=null, $controller = null) {
     	switch ($type) {
             case 'sort':  // 排序按钮
                 //预定义按钮属性以简化使用
                 $button['title'] = $title ? : '排序';
                 $button['class'] = 'btn ajax-sort';
+                $button['bicon'] = $bicon ? : '&#xe61a;';
                 $controller = $controller ? : CONTROLLER_NAME;;  // 是否切换控制器
                 $button['href']  = U(MODULE_NAME.'/'.$controller.'/'.$action);
                 // 这个按钮定义好了把它丢进按钮池里
@@ -153,6 +179,7 @@ class ListBuilder extends CommonController{
                 //预定义按钮属性以简化使用
                 $button['title'] = $title ? : '删除';
                 $button['class'] = 'btn ajax-del';
+                $button['bicon'] = $bicon ? : '&#xe614;';
                 $button['datatype'] = $dataType ? : '这个';
                 $button['datatitle'] = $dateTitle ? : '东西';
                 $controller = $controller ? : CONTROLLER_NAME;;  // 是否切换控制器
@@ -164,6 +191,9 @@ class ListBuilder extends CommonController{
                 //预定义按钮属性以简化使用
                 $button['title'] = $title ? : '批量删除';
                 $button['class'] = 'btn ajax-batch-del';
+                $button['bicon'] = $bicon ? : '&#xe614;';
+                $button['datatype'] = $dataType ? : '这个';
+                $button['datatitle'] = $dateTitle ? : '东西';
                 $controller = $controller ? : CONTROLLER_NAME;;  // 是否切换控制器
                 $button['href']  = U(MODULE_NAME.'/'.$controller.'/'.$action);
                 // 这个按钮定义好了把它丢进按钮池里
@@ -191,13 +221,15 @@ class ListBuilder extends CommonController{
     }
     /**
      * 加一个表格标题字段
-     * @param $name 数据字段名
-     * @param $title 表格标题
-     * @param $type 格式化数据的类型
+     * @param $name 数据字段名(必填)
+     * @param $title 表格标题(此项必须填写,否则表格将无法显示标题)
+     * @param $type 格式化数据的类型(下面的display方法,可以自定义自己的格式化数据)
      * @param $param 参数
      * @param $width td宽度 
      */
-    public function addTableColumn($name, $title, $type = null, $param = null,$align='center',$width='auto') {
+    public function addTableColumn($name,$title,$type=null,$param=null,$align=null,$width=null){
+        $align = $align ? : 'center';
+        $width = $width ? : 'auto';
         $column = array(
             'name'  => $name,
             'title' => $title,
@@ -237,11 +269,11 @@ class ListBuilder extends CommonController{
         switch ($type) {
             case 'edit':  // 编辑按钮
                 // 预定义按钮属性以简化使用
-                $button['title'] = $title ? : '编辑';
+                $button['title'] = $title ? : '修改';
                 $button['class'] = 'ajax-add blue';
                 $button['datatype'] = $dataType ? : '这个';
                 $button['datatitle'] = $dateTitle ? : '东西';
-                $button['bicon'] = $bicon ? : '&#xe610;';
+                $button['bicon'] = $bicon ? : '&#xe615;';
                 $controller = $controller ? : CONTROLLER_NAME;  // 是否切换控制器
                 $button['href']  = U(MODULE_NAME.'/'.$controller.'/'.$action);
                 // 这个按钮定义好了把它丢进按钮池里
@@ -253,7 +285,7 @@ class ListBuilder extends CommonController{
                 $button['class'] = 'ajax-del red';
                 $button['datatype'] = $dataType ? : '这个';
                 $button['datatitle'] = $dateTitle ? : '东西';
-                $button['bicon'] = $bicon ? : '&#xe610;';
+                $button['bicon'] = $bicon ? : '&#xe614;';
                 $controller = $controller ? : CONTROLLER_NAME;  // 是否切换控制器
                 $button['href'] = U(MODULE_NAME.'/'.CONTROLLER_NAME.'/'.$action);
                 // 这个按钮定义好了把它丢进按钮池里
@@ -347,7 +379,7 @@ class ListBuilder extends CommonController{
                         break;
                     //将字符串，用悬浮消息框输出
                     case 'remark':
-                        $data[$column['name']] = '<a class="bsn blue" title="'.$data[$column['name']].'" style="cursor:pointer">鼠标悬停</a>';
+                        $data[$column['name']] = '<a class="bsn blue" title="'.$data[$column['name']].'" style="cursor:pointer"><i class="iconfont iconfont_btn">&#xe613;</i>&nbsp;悬停</a>';
                         break;
                     //将字节转换kb,mb
                     case 'byte':
@@ -412,17 +444,19 @@ class ListBuilder extends CommonController{
         // }
 
         $this->assign('meta_title',          $this->meta_title);          // 页面标题
-        $this->assign('top_toolbar',     	 $this->top_toolbar);     // 顶部工具栏按钮
-        $this->assign('bottom_toolbar',      $this->bottom_toolbar);     // 底部工具栏按钮
+        $this->assign('top_toolbar',     	 $this->top_toolbar);         // 顶部工具栏按钮
+        $this->assign('bottom_toolbar',      $this->bottom_toolbar);      // 底部工具栏按钮
         $this->assign('search',              $this->search);              // 搜索配置
-        // $this->assign('tab_nav',             $this->_tab_nav);             // 页面Tab导航
+        $this->assign('sort',                $this->sort);                // 排序html
+        $this->assign('checkbox',            $this->checkbox);            // 勾选html
+        // $this->assign('tab_nav',             $this->_tab_nav);         // 页面Tab导航
         $this->assign('table_column_list',   $this->table_column_list);   // 表格的列
         $this->assign('table_data_list',     $this->table_data_list);     // 表格数据
-        $this->assign('table_data_list_key', $this->table_data_list_key); // 表格数据主键字段名称
-        $this->assign('table_data_page',     $this->table_data_page);     // 表示个数据分页
-        $this->assign('table_right_toolbar',   $this->table_right_toolbar);   // 表格右侧操作按钮
-        $this->assign('alter_data_list',     $this->alter_data_list);     // 表格数据列表重新修改的项目
-        $this->assign('extra_html',          $this->extra_html);          // 额外HTML代码
+        $this->assign('table_data_list_key', $this->table_data_list_key); //表格数据主键字段名称
+        $this->assign('table_data_page',     $this->table_data_page);      // 表示个数据分页
+        $this->assign('table_right_toolbar',   $this->table_right_toolbar);// 表格右侧操作按钮
+        $this->assign('alter_data_list',     $this->alter_data_list);      // 表格数据列表重新修改的项目
+        $this->assign('extra_html',          $this->extra_html);           // 额外HTML代码
         parent::display($this->template);
     }
 

@@ -35,7 +35,7 @@
 </div><?php endif; ?>
 <?php if(!empty($top_toolbar)): ?><div id="frame-toolbar">
     <ul>
-        <?php if(is_array($top_toolbar)): $i = 0; $__LIST__ = $top_toolbar;if( count($__LIST__)==0 ) : echo "" ;else: foreach($__LIST__ as $key=>$top_button): $mod = ($i % 2 );++$i;?><li><a href="<?php echo ($top_button["href"]); ?>"><i class="iconfont" style="color:white;font-size: 16px;">&#xe610;</i>&nbsp;&nbsp;<?php echo ($top_button["title"]); ?></a></li><?php endforeach; endif; else: echo "" ;endif; ?>
+        <?php if(is_array($top_toolbar)): $i = 0; $__LIST__ = $top_toolbar;if( count($__LIST__)==0 ) : echo "" ;else: foreach($__LIST__ as $key=>$top_button): $mod = ($i % 2 );++$i;?><li><a href="<?php echo ($top_button["href"]); ?>"><i class="iconfont iconfont_btn"><?php echo ($top_button["bicon"]); ?></i>&nbsp;&nbsp;<?php echo ($top_button["title"]); ?></a></li><?php endforeach; endif; else: echo "" ;endif; ?>
     </ul>
 </div><?php endif; ?>
 <div id="frame-content">
@@ -56,7 +56,7 @@
 	                <input type="text" name="start_time" class="input length_2 my-date" value="<?php echo ($_GET["start_time"]); ?>" style="width:140px;">
 	                -
 	                <input type="text" class="input length_2 my-date" name="end_time" value="<?php echo ($_GET["end_time"]); ?>" style="width:140px;"><?php endif; ?>
-                <button class="btn" style="height: 30px;line-height: 30px;padding-bottom: 31px;">搜索</button>
+                <button class="btn" style="height: 30px;line-height: 30px;padding-bottom: 31px;"><i class="iconfont iconfont_btn">&#xe612;</i>&nbsp;搜索</button>
             </div>
         </form>
     </div><?php endif; ?>
@@ -66,13 +66,15 @@
     	<table width="100%">
             <thead>
             <tr>
-                <td align="center" width="40"><input type="checkbox" class="check-all"></td>
+                <?php if(!empty($checkbox)): ?><td align="center" width="10"><input type="checkbox" class="check-all"></td><?php endif; ?>
+                <?php if(!empty($sort)): ?><td align="center" width="40">排序</td><?php endif; ?> 
                 <?php if(is_array($table_column_list)): $i = 0; $__LIST__ = $table_column_list;if( count($__LIST__)==0 ) : echo "" ;else: foreach($__LIST__ as $key=>$column): $mod = ($i % 2 );++$i;?><td align="<?php echo ($column["align"]); ?>" width="<?php echo ($column["width"]); ?>"><?php echo (htmlspecialchars($column["title"])); ?></td><?php endforeach; endif; else: echo "" ;endif; ?>
             </tr>
             </thead>
             <tbody>
-                <?php if(is_array($table_data_list)): $i = 0; $__LIST__ = $table_data_list;if( count($__LIST__)==0 ) : echo "" ;else: foreach($__LIST__ as $key=>$data): $mod = ($i % 2 );++$i;?><tr>
-                        <td align="center" width="40"><input class="ids" type="checkbox" value="<?php echo ($data[$table_data_list_key]); ?>" name="ids[]"></td>
+                <?php if(is_array($table_data_list)): $i = 0; $__LIST__ = $table_data_list;if( count($__LIST__)==0 ) : echo "" ;else: foreach($__LIST__ as $key=>$data): $mod = ($i % 2 );++$i;?><tr>                        
+                        <?php if(!empty($checkbox)): ?><td align="center" width="10"><input class="ids" type="checkbox" value="<?php echo ($data[$table_data_list_key]); ?>" name="ids[]"></td><?php endif; ?>
+                        <?php if(!empty($sort)): ?><td align="center" width="40"><input style="text-align: center" name="sort[<?php echo ($table_data_list_key); ?>]" type="text" size="3" value="<?php echo ($data[$sort]); ?>" class="input"></td><?php endif; ?>
                         <?php if(is_array($table_column_list)): $i = 0; $__LIST__ = $table_column_list;if( count($__LIST__)==0 ) : echo "" ;else: foreach($__LIST__ as $key=>$column): $mod = ($i % 2 );++$i;?><td align="<?php echo ($column["align"]); ?>" width="<?php echo ($column["width"]); ?>"><?php echo ($data[$column['name']]); ?></td><?php endforeach; endif; else: echo "" ;endif; ?>
                     </tr><?php endforeach; endif; else: echo "" ;endif; ?>
             </tbody>
@@ -82,7 +84,7 @@
         </div>
     </div>
     <?php if(!empty($bottom_toolbar)): ?><div class="frame-table-btn">
-    	<?php if(is_array($bottom_toolbar)): $i = 0; $__LIST__ = $bottom_toolbar;if( count($__LIST__)==0 ) : echo "" ;else: foreach($__LIST__ as $key=>$bottom_button): $mod = ($i % 2 );++$i;?><button class="<?php echo ($bottom_button["class"]); ?>" href="<?php echo ($bottom_button["href"]); ?>" data-type="<?php echo ($bottom_button["datatype"]); ?>" data-title="<?php echo ($bottom_button["datatitle"]); ?>" type="submit"><?php echo ($bottom_button["title"]); ?></button><?php endforeach; endif; else: echo "" ;endif; ?>
+    	<?php if(is_array($bottom_toolbar)): $i = 0; $__LIST__ = $bottom_toolbar;if( count($__LIST__)==0 ) : echo "" ;else: foreach($__LIST__ as $key=>$bottom_button): $mod = ($i % 2 );++$i;?><button class="<?php echo ($bottom_button["class"]); ?>" href="<?php echo ($bottom_button["href"]); ?>" data-type="<?php echo ($bottom_button["datatype"]); ?>" data-title="<?php echo ($bottom_button["datatitle"]); ?>" type="submit"><i class="iconfont iconfont_btn"><?php echo ($bottom_button["bicon"]); ?></i>&nbsp;<?php echo ($bottom_button["title"]); ?></button><?php endforeach; endif; else: echo "" ;endif; ?>
     </div><?php endif; ?>
 </form>
 

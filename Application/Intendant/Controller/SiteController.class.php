@@ -166,30 +166,33 @@ class SiteController extends AuthController {
 	}
 	//用户管理
 	public function user(){
-		$p = !empty(I('p')) ? I('p') : 1;
-		$userListKey = 'user-list.cache'.$p;
-		$userListPageKey = 'user-list-page.cache'.$p;
-		$userListPageCount = 'user-list-page-count.cache';
-	    $user = S($userListKey);
-	    $show = S($userListPageKey);
-	    if($user == null){
-			$count = D('UserRelation')->count();
-			$Page  = new \Think\Page($count,C('ADMIN_PAGE_NUM'));// 实例化分页类 传入总记录数和每页显示的记录数(25)
-			$total = ceil($count / C('ADMIN_PAGE_NUM'));
-			$Page->setConfig('theme','%HEADER% %FIRST% %UP_PAGE% %LINK_PAGE% %DOWN_PAGE% %END%');
-			$Page->setConfig('prev','上一页');
-	        $Page->setConfig('next','下一页');
-	        $Page->setConfig('first','第一页');
-	        $Page->setConfig('last','最后一页');
-	        $user = D('UserRelation')->relation(true)->order('uid asc')->limit($Page->firstRow.','.$Page->listRows)->select();
-	        $show = $Page->show();// 分页显示输出	        
-	        S($userListKey,$user,C('ADMIN_USER_MANAGE_TIME'));
-	        S($userListPageKey,$show,C('ADMIN_USER_MANAGE_TIME'));
-	        S($userListPageCount,$total,C('ADMIN_USER_MANAGE_TIME'));
-	    }
-        $this->assign("userlist", $user);
-        $this->assign("page", $show);
-		$this->display();
+		//使用Builder建立数据列表页面
+        $builder = new \Common\Builder\ListBuilder();
+        $data = $builder->getDataList('UserRelation','no','uid',null,null,null,'create_ip','create_time');
+        $builder->addTopButton('refresh')
+        		->addTopButton('add','addUser')
+        		->addBottomButton('delBatch','delrizhi',null,'批量删除','用户')
+        		->addRightButton('edit','editUser',null,null,'用户','username')
+        		->addRightButton('del','delUser',null,null,'用户','username')
+        		->alterTableData(//修改当用户UID为1是不可以对他进行任何操作
+        			['key' => 'uid', 'value' => '1'],
+        			['key' => 'right_button', 'value' => '<a class="black"><i class="iconfont iconfont_btn">&#xe615;</i>&nbsp;&nbsp;修改</a>&nbsp;&nbsp;&nbsp;<a class="black"><i class="iconfont iconfont_btn">&#xe614;</i>&nbsp;&nbsp;删除</a>&nbsp;&nbsp;&nbsp;']
+        		)
+        		->setSearch(1,1,1,1)
+        		->setCheckboxSort(1)
+        		->setTableDataListKey('uid')
+        		->addTableColumn('uid','编号',null,null,null,40)
+        		->addTableColumn('username','用户名',null,null,null,150)
+        		->addTableColumn('usergroup','所属用户组','relation','title',null,200)
+        		->addTableColumn('create_time','创建时间','timestamp',null,null,300)
+        		->addTableColumn('create_ip','创建IP',null,null,null,200)
+        		->addTableColumn('email','邮箱',null,null,'center',200)
+        		->addTableColumn('remark','备注','remark',null,null,100)
+        		->addTableColumn('status','是否启用','status',null,null,100)
+        		->addTableColumn('right_button', '操作管理', 'btn',null,null,200)
+        		->setTableDataList($data['list'])    // 数据列表
+                ->setTableDataPage($data['show']) // 数据列表分页
+        		->display();
 	}
 	//添加或修改用户
 	public function addEditUser(){
@@ -337,30 +340,30 @@ class SiteController extends AuthController {
 	}
 	//角色管理
 	public function role(){
-		$p = !empty(I('p')) ? I('p') : 1;
-		$roleListKey = 'role-list.cache'.$p;
-		$roleListPageKey = 'role-list-page.cache'.$p;
-		$roleListPageCount = 'role-list-page-count.cache';
-	    $role = S($roleListKey);
-	    $show = S($roleListPageKey);
-	    if($role == null){
-			$count = M('AuthGroup')->count();
-			$Page  = new \Think\Page($count,C('ADMIN_PAGE_NUM'));// 实例化分页类 传入总记录数和每页显示的记录数(25)
-			$total = ceil($count / C('ADMIN_PAGE_NUM'));
-			$Page->setConfig('theme','%HEADER% %FIRST% %UP_PAGE% %LINK_PAGE% %DOWN_PAGE% %END%');
-			$Page->setConfig('prev','上一页');
-	        $Page->setConfig('next','下一页');
-	        $Page->setConfig('first','第一页');
-	        $Page->setConfig('last','最后一页');
-	        $role = M('AuthGroup')->order('sort asc')->limit($Page->firstRow.','.$Page->listRows)->select();
-	        $show = $Page->show();// 分页显示输出	        
-	        S($roleListKey,$role,C('ADMIN_ROLE_MANAGE_TIME'));
-	        S($roleListPageKey,$show,C('ADMIN_ROLE_MANAGE_TIME'));
-	        S($roleListPageCount,$total,C('ADMIN_ROLE_MANAGE_TIME'));
-	    }
-        $this->assign("rolelist", $role);
-        $this->assign("page", $show);
-		$this->display();
+		//使用Builder建立数据列表页面
+        $builder = new \Common\Builder\ListBuilder();
+        $data = $builder->getDataList('AuthGroup',null,'sort','asc',null);
+        $builder->addTopButton('refresh')
+        		->addTopButton('add','addRole')
+        		->addBottomButton('sort','sortRole',null,null,'角色')
+        		->addBottomButton('delBatch','delRole',null,'批量删除','角色')
+        		->addRightButton('edit','setRole','&#xe617;','权限设置','角色','title')
+        		->addRightButton('edit','editRole',null,null,'角色','title')
+        		->addRightButton('del','delRole',null,null,'角色','title')
+        		->alterTableData(//修改当角色ID为1是不可以对他进行任何操作
+        			['key' => 'id', 'value' => '1'],
+        			['key' => 'right_button', 'value' => '<a class="black"><i class="iconfont iconfont_btn">&#xe617;</i>&nbsp;&nbsp;权限设置</a>&nbsp;&nbsp;&nbsp;<a class="black"><i class="iconfont iconfont_btn">&#xe615;</i>&nbsp;&nbsp;修改</a>&nbsp;&nbsp;&nbsp;<a class="black"><i class="iconfont iconfont_btn">&#xe614;</i>&nbsp;&nbsp;删除</a>&nbsp;&nbsp;&nbsp;']
+        		)
+        		->setSearch(1)
+        		->setCheckboxSort(1,'sort')
+        		->addTableColumn('id','编号',null,null,'center',40)
+        		->addTableColumn('title','角色名称',null,null,'left',150)
+        		->addTableColumn('status','是否启用','status',null,'center',100)
+        		->addTableColumn('remark','备注','remark',null,'center',100)        		
+        		->addTableColumn('right_button', '操作管理', 'btn',null,'center',200)
+        		->setTableDataList($data['list'])    // 数据列表
+                ->setTableDataPage($data['show']) // 数据列表分页
+        		->display();
 	}
 	//添加或修改角色
 	public function addEditRole(){
@@ -594,7 +597,7 @@ class SiteController extends AuthController {
 	public function loginLog(){
 		//使用Builder建立数据列表页面
         $builder = new \Common\Builder\ListBuilder();
-        $data = $builder->getDataList('LoginLog','true','id','status','username','loginip','logintime');
+        $data = $builder->getDataList('LoginLog',null,null,null,null,'loginip','logintime');
         $builder->addTopButton('refresh')
         		// ->addTopButton('add','addTest')
         		->addBottomButton('del','delLoginLog','删除一个月前的登录日志','登录日志','一个月前')
@@ -625,7 +628,7 @@ class SiteController extends AuthController {
 	public function operateLog(){
 		//使用Builder建立数据列表页面
         $builder = new \Common\Builder\ListBuilder();
-        $data = $builder->getDataList('OperateLog','true','id','status','username','ip','time');
+        $data = $builder->getDataList('OperateLog',null,null,null,'username','ip','time');
         $builder->addTopButton('refresh')
         		// ->addTopButton('add','addTest')
         		->addBottomButton('del','delOperateLog','删除一个月前的操作日志','操作日志','一个月前')
