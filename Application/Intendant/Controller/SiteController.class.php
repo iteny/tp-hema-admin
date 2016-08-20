@@ -356,11 +356,11 @@ class SiteController extends AuthController {
         		)
         		->setSearch(1)
         		->setCheckboxSort(1,'sort')
-        		->addTableColumn('id','编号',null,null,'center',40)
-        		->addTableColumn('title','角色名称',null,null,'left',150)
-        		->addTableColumn('status','是否启用','status',null,'center',100)
-        		->addTableColumn('remark','备注','remark',null,'center',100)        		
-        		->addTableColumn('right_button', '操作管理', 'btn',null,'center',200)
+        		->addTableColumn('id','编号',null,null,null,40)
+        		->addTableColumn('title','角色名称',null,null,null,150)
+        		->addTableColumn('status','是否启用','status',null,null,100)
+        		->addTableColumn('remark','备注','remark',null,null,100)        		
+        		->addTableColumn('right_button', '操作管理', 'btn',null,null,200)
         		->setTableDataList($data['list'])    // 数据列表
                 ->setTableDataPage($data['show']) // 数据列表分页
         		->display();
@@ -505,30 +505,23 @@ class SiteController extends AuthController {
 	}
 	//开发日志管理
 	public function version(){
-		$p = !empty(I('p')) ? I('p') : 1;
-		$versionListKey = 'version-list.cache'.$p;
-		$versionListPageKey = 'version-list-page.cache'.$p;
-		$versionListPageCount = 'version-list-page-count.cache';
-	    $version = S($versionListKey);
-	    $show = S($versionListPageKey);
-	    if($version == null){
-			$count = M('version')->count();
-			$Page  = new \Think\Page($count,C('ADMIN_PAGE_NUM'));// 实例化分页类 传入总记录数和每页显示的记录数(25)
-			$total = ceil($count / C('ADMIN_PAGE_NUM'));
-			$Page->setConfig('theme','%HEADER% %FIRST% %UP_PAGE% %LINK_PAGE% %DOWN_PAGE% %END%');
-			$Page->setConfig('prev','上一页');
-	        $Page->setConfig('next','下一页');
-	        $Page->setConfig('first','第一页');
-	        $Page->setConfig('last','最后一页');
-	        $version = M('version')->order('time desc')->limit($Page->firstRow.','.$Page->listRows)->select();
-	        $show = $Page->show();// 分页显示输出	        
-	        S($versionListKey,$version,C('ADMIN_VERSION_MANAGE_TIME'));
-	        S($versionListPageKey,$show,C('ADMIN_VERSION_MANAGE_TIME'));
-	        S($versionListPageCount,$total,C('ADMIN_VERSION_MANAGE_TIME'));
-	    }
-        $this->assign("versionlist", $version);
-        $this->assign("page", $show);
-		$this->display();
+		//使用Builder建立数据列表页面
+        $builder = new \Common\Builder\ListBuilder();
+        $data = $builder->getDataList('Version',null,'time','desc',null);
+        $builder->addTopButton('refresh')
+        		->addTopButton('add','addVersion')
+        		->addBottomButton('delBatch','delVersion',null,'批量删除','开发日志')
+        		->addRightButton('edit','editVersion',null,null,'开发日志','id')
+        		->addRightButton('del','delVersion',null,null,'开发日志','id')        		
+        		->setCheckboxSort(1,null)
+        		->addTableColumn('id','编号',null,null,null,40)
+        		->addTableColumn('version','版本号',null,null,null,150)
+        		->addTableColumn('time','日志时间','timestamp',null,null,100)
+        		->addTableColumn('remark','更新内容','remark',null,null,100)        		
+        		->addTableColumn('right_button', '操作管理', 'btn',null,null,300)
+        		->setTableDataList($data['list'])    // 数据列表
+                ->setTableDataPage($data['show']) // 数据列表分页
+        		->display();
 	}
 	//添加或修改开发日志
 	public function addEditVersion(){
