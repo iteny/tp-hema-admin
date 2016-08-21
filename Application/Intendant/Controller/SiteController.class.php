@@ -168,8 +168,9 @@ class SiteController extends AuthController {
 	public function user(){
 		//使用Builder建立数据列表页面
         $builder = new \Common\Builder\ListBuilder();
-        $data = $builder->getDataList('UserRelation','no','uid',null,null,null,'create_ip','create_time');
-        $builder->addTopButton('refresh')
+        $data = $builder->getDataList('UserRelation','no','uid','asc',null,null,'create_ip','create_time');
+        $builder->setMetaTitle('用户管理')
+                ->addTopButton('refresh')
         		->addTopButton('add','addUser')
         		->addBottomButton('delBatch','delrizhi',null,'批量删除','用户')
         		->addRightButton('edit','editUser',null,null,'用户','username')
@@ -343,7 +344,8 @@ class SiteController extends AuthController {
 		//使用Builder建立数据列表页面
         $builder = new \Common\Builder\ListBuilder();
         $data = $builder->getDataList('AuthGroup',null,'sort','asc',null);
-        $builder->addTopButton('refresh')
+        $builder->setMetaTitle('角色管理')
+                ->addTopButton('refresh')
         		->addTopButton('add','addRole')
         		->addBottomButton('sort','sortRole',null,null,'角色')
         		->addBottomButton('delBatch','delRole',null,'批量删除','角色')
@@ -508,7 +510,8 @@ class SiteController extends AuthController {
 		//使用Builder建立数据列表页面
         $builder = new \Common\Builder\ListBuilder();
         $data = $builder->getDataList('Version',null,'time','desc',null);
-        $builder->addTopButton('refresh')
+        $builder->setMetaTitle('开发日志管理')
+                ->addTopButton('refresh')
         		->addTopButton('add','addVersion')
         		->addBottomButton('delBatch','delVersion',null,'批量删除','开发日志')
         		->addRightButton('edit','editVersion',null,null,'开发日志','id')
@@ -587,12 +590,13 @@ class SiteController extends AuthController {
 			exit(json_encode($msg));
 		}
 	}
+	//登录日志管理
 	public function loginLog(){
 		//使用Builder建立数据列表页面
         $builder = new \Common\Builder\ListBuilder();
         $data = $builder->getDataList('LoginLog',null,null,null,null,'loginip','logintime');
-        $builder->addTopButton('refresh')
-        		// ->addTopButton('add','addTest')
+        $builder->setMetaTitle('登录日志管理')
+                ->addTopButton('refresh')
         		->addBottomButton('del','delLoginLog',null,'删除一个月前的登录日志','登录日志','一个月前')
         		->setSearch(1,1,1,1)
         		->addTableColumn('id','编号')
@@ -622,8 +626,8 @@ class SiteController extends AuthController {
 		//使用Builder建立数据列表页面
         $builder = new \Common\Builder\ListBuilder();
         $data = $builder->getDataList('OperateLog',null,null,null,'username','ip','time');
-        $builder->addTopButton('refresh')
-        		// ->addTopButton('add','addTest')
+        $builder->setMetaTitle('操作日志管理')
+                ->addTopButton('refresh')
         		->addBottomButton('del','delOperateLog',null,'删除一个月前的操作日志','操作日志','一个月前')
         		->setSearch(1,1,1,1)
         		->addTableColumn('id','编号',null,null,'center',40)

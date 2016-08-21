@@ -29,16 +29,17 @@
             <colgroup>
                 <col width="40">
                 <col width="40">
+                <col width="40">
                 <col width="240">
                 <col width="160">
-                <col width="80">
-                
+                <col width="20">
                 <col width="160">
             </colgroup>
             <thead>
-            <tr>
+            <tr pid=0>
                 <td align="center">排序</td>
                 <td align="center">ID</td>
+                <td align="center">展开</td>
                 <td align="left">菜单名称</td>
                 <td align="center">控制器/方法</td>               
                 <td align="center">是否显示</td>
@@ -46,9 +47,10 @@
             </tr>
             </thead>
             <tbody>
-                <?php if(is_array($menu)): $i = 0; $__LIST__ = $menu;if( count($__LIST__)==0 ) : echo "" ;else: foreach($__LIST__ as $key=>$menu): $mod = ($i % 2 );++$i;?><tr>
+                <?php if(is_array($menu)): $i = 0; $__LIST__ = $menu;if( count($__LIST__)==0 ) : echo "" ;else: foreach($__LIST__ as $key=>$menu): $mod = ($i % 2 );++$i;?><tr id="<?php echo ($menu["id"]); ?>" pid="<?php echo ($menu["pid"]); ?>">
                     <td align="center"><input style="text-align: center" name="sort[<?php echo ($menu['id']); ?>]" type="text" size="3" value="<?php echo ($menu['sort']); ?>" class="input"></td>
                     <td align="center"><?php echo ($menu['id']); ?></td>
+                    <td align="center"><a href="javascript:void(0)" class="show"><i class="iconfont out">&#xe61f;</i></a></td>
                     <td><span class="tree-icon tree-file icons-calendar-calculator_edit"></span><!-- <i class="org-2">1</i> --><?php echo str_repeat('&nbsp;&nbsp;&nbsp;',$menu['level']); echo ($menu['html']); ?><i class="iconfont icon" style=""><?php echo ($menu['icon']); ?></i><?php echo ($menu['title']); ?></td>
                     <td align="center"><?php echo ($menu['name']); ?></td>
                     <td align="center"><?php if($menu["isshow"] == 1): ?><i class="iconfont" style="color:green;font-size: 16px;">&#xe60c;</i><?php else: ?><i class="iconfont" style="color:red;font-size: 16px;">&#xe60a;</i><?php endif; ?></td>
@@ -98,7 +100,37 @@ $('#site-menu-upload').Huploadify({
 });
 </script>
 <script>
-$(function(){    
+$(function(){
+    $('tr[pid!=0]').hide();
+    $('.show').click(function(event){
+        if($(this).hasClass("active")){
+            $(this).removeClass("active");
+            var id = $(this).parents('tr').attr('id');
+            $('tr[pid='+id+']').hide().find('a.show').removeClass("active").find('i.out').html('&#xe61f;').animate({opacity:0},'slow');
+            $('tr[pid='+id+']').each(function () {
+                var zid = $(this).attr("id");
+                $('tr[pid='+zid+']').hide().find('a.show').removeClass("active").find('i.out').html('&#xe61f;').animate({opacity:0},'slow');
+                $('tr[pid='+zid+']').each(function () {
+                    var qid = $(this).attr("id");
+                    $('tr[pid='+qid+']').hide().find('a.show').removeClass("active").find('i.out').html('&#xe61f;').animate({opacity:0},'slow');
+                });
+            });
+            $(this).find('i').html('&#xe61f;');
+        }else{
+            $(this).addClass("active");
+            var id = $(this).parents('tr').attr('id');
+            $('tr[pid='+id+']').show().find('a.show').addClass("active").find('i.out').html('&#xe61c;').animate({opacity:1},'slow');
+            $('tr[pid='+id+']').each(function () {
+                var zid = $(this).attr("id");
+                $('tr[pid='+zid+']').show().find('a.show').addClass("active").find('i.out').html('&#xe61c;').animate({opacity:1},'slow');
+                $('tr[pid='+zid+']').each(function () {
+                    var qid = $(this).attr("id");
+                    $('tr[pid='+qid+']').show().find('a.show').addClass("active").find('i.out').html('&#xe61c;').animate({opacity:1},'slow');
+                });
+            });
+            $(this).find('i').html('&#xe61c;');
+        }
+    });
     $('.ajax-add').on('click', function (e) {
         var data = $(this).attr('data-level');
         if(data >= 3){e.preventDefault();admin.alert('提示信息','对不起，菜单最多4级！',2,'3000');}
