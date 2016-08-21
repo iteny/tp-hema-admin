@@ -225,7 +225,8 @@ class ListBuilder extends CommonController{
      * @param $title 表格标题(此项必须填写,否则表格将无法显示标题)
      * @param $type 格式化数据的类型(下面的display方法,可以自定义自己的格式化数据)
      * @param $param 参数
-     * @param $width td宽度 
+     * @param $align td位置(left,center,right),默认是居中center
+     * @param $width td宽度,默认是auto
      */
     public function addTableColumn($name,$title,$type=null,$param=null,$align=null,$width=null){
         $align = $align ? : 'center';

@@ -13,7 +13,8 @@ class SiteController extends AuthController {
 			$menu = M('AuthRule')->order('sort asc')->select();
 			$menu = recursive($menu);
 			S($allMenukey,$menu,C('AUTH_MENU_TIME'));
-		}		
+		}	
+		// p($menu);	
 		$this->menu = $menu;
 		$this->display();
 	}
