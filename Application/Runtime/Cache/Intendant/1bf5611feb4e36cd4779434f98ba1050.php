@@ -35,7 +35,7 @@
 </div><?php endif; ?>
 <?php if(!empty($top_toolbar)): ?><div id="frame-toolbar">
     <ul>
-        <?php if(is_array($top_toolbar)): $i = 0; $__LIST__ = $top_toolbar;if( count($__LIST__)==0 ) : echo "" ;else: foreach($__LIST__ as $key=>$top_button): $mod = ($i % 2 );++$i;?><li><a href="<?php echo ($top_button["href"]); ?>"><i class="iconfont iconfont_btn"><?php echo ($top_button["bicon"]); ?></i>&nbsp;&nbsp;<?php echo ($top_button["title"]); ?></a></li><?php endforeach; endif; else: echo "" ;endif; ?>
+        <?php if(is_array($top_toolbar)): $i = 0; $__LIST__ = $top_toolbar;if( count($__LIST__)==0 ) : echo "" ;else: foreach($__LIST__ as $key=>$top_button): $mod = ($i % 2 );++$i;?><li><a class="<?php echo ($top_button["class"]); ?>" href="<?php echo ($top_button["href"]); ?>"><i class="iconfont iconfont_btn"><?php echo ($top_button["bicon"]); ?></i>&nbsp;&nbsp;<?php echo ($top_button["title"]); ?></a></li><?php endforeach; endif; else: echo "" ;endif; ?>
     </ul>
 </div><?php endif; ?>
 <div id="frame-content">

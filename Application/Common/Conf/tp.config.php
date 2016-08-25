@@ -1,6 +1,6 @@
 <?php
 return array(
-	// 'SHOW_PAGE_TRACE' => false,/*调试模式*/
+	// 'SHOW_PAGE_TRACE' => true,/*调试模式*/
 
 	/*URL配置信息*/
 	'URL_CASE_INSENSITIVE' => true,/*表示URL区分大小写 true则表示不区分大小写*/

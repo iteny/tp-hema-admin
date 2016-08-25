@@ -83,7 +83,29 @@ class TreeBuilder extends CommonController{
                 $button['href']  = U(MODULE_NAME.'/'.$controller.'/'.$action);
                 // 这个按钮定义好了把它丢进按钮池里
                 $this->top_toolbar[] = $button;
-                break;            
+                break;
+            case 'export':  // 添加启用按钮(禁用的反操作)
+                //预定义按钮属性以简化使用
+                $button['title'] = '导出';
+                $button['class'] = 'btn export';
+                $button['bicon'] = $bicon ? : '&#xe611;';
+                $controller = $controller ? : CONTROLLER_NAME;  // 是否切换控制器
+                $action = $action ? : ACTION_NAME;
+                $button['href']  = U(MODULE_NAME.'/'.$controller.'/'.$action);
+                // 这个按钮定义好了把它丢进按钮池里
+                $this->top_toolbar[] = $button;
+                break; 
+            case 'import':  // 添加启用按钮(禁用的反操作)
+                //预定义按钮属性以简化使用
+                $button['title'] = '导入';
+                $button['class'] = 'btn import';
+                $button['bicon'] = $bicon ? : '&#xe611;';
+                $controller = $controller ? : CONTROLLER_NAME;  // 是否切换控制器
+                $action = $action ? : ACTION_NAME;
+                $button['href']  = U(MODULE_NAME.'/'.$controller.'/'.$action);
+                // 这个按钮定义好了把它丢进按钮池里
+                $this->top_toolbar[] = $button;
+                break;           
         }
         return $this;
     }
