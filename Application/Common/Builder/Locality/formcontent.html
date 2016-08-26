@@ -1,0 +1,25 @@
+<form name="setconfig" method="post" class="ajax-form" action="/Intendant/Site/setConfig">
+    <input type="hidden" name="setconfig" value="setconfig">
+    <div class="frame-table-list">
+    	<volist name="list" id="vo">
+        	<div id="tab{$vo.id}">
+	            <div class="input-title">{$vo.title}</div>
+	            <table cellpadding="0" cellspacing="0" class="table_form" width="100%">
+	                <tbody>
+	                <volist name="vo['me']" id="me">
+	                <tr>
+	                    <td width="240">后台登录帐号锁定:</td>
+	                    <!-- <td> -->
+	                    <!-- <input type="radio" name="USER_STATE_LOCK" value="1" data-labelauty="开启" <if condition="$Think.config.USER_STATE_LOCK eq 1">checked</if> />
+	                    <input type="radio" name="USER_STATE_LOCK" value="0" data-labelauty="关闭" <if condition="$Think.config.USER_STATE_LOCK eq 0">checked</if> /></td>     -->
+	                </tr>
+	                </volist>
+	                </tbody>
+	            </table>
+            </div>
+        </volist>
+    </div>
+    <div class="frame-table-btn">
+        <button class="btn ajax-add" type="submit">修改配置</button>
+    </div>
+</form>

@@ -32,6 +32,7 @@
     当前位置&nbsp;<i class="iconfont" style="color:#666;font-size: 12px;">&#xe60e;</i>&nbsp;&nbsp;<volist name="parent_menu" id="menu" empty="父菜单获取失败">{$menu.title}<if condition="$i neq count($parent_menu)">&nbsp;&nbsp;<i class="iconfont" style="color:#666;font-size: 12px;">&#xe60f;</i>&nbsp;&nbsp;</if></volist>
 </div>
 </notempty>
+<block name="tollbar">
 <notempty name="top_toolbar">
 <div id="frame-toolbar">
     <ul>
@@ -41,6 +42,7 @@
     </ul>
 </div>
 </notempty>
+</block>
 <div id="frame-content">
 	<notempty name="search">
 	<div class="frame-table-list">

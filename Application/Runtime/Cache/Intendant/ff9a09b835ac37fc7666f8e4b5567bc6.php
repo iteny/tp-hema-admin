@@ -33,11 +33,13 @@
 <?php if(!empty($parent_menu)): ?><div id="frame-top">
     当前位置&nbsp;<i class="iconfont" style="color:#666;font-size: 12px;">&#xe60e;</i>&nbsp;&nbsp;<?php if(is_array($parent_menu)): $i = 0; $__LIST__ = $parent_menu;if( count($__LIST__)==0 ) : echo "父菜单获取失败" ;else: foreach($__LIST__ as $key=>$menu): $mod = ($i % 2 );++$i; echo ($menu["title"]); if($i != count($parent_menu)): ?>&nbsp;&nbsp;<i class="iconfont" style="color:#666;font-size: 12px;">&#xe60f;</i>&nbsp;&nbsp;<?php endif; endforeach; endif; else: echo "父菜单获取失败" ;endif; ?>
 </div><?php endif; ?>
+
 <?php if(!empty($top_toolbar)): ?><div id="frame-toolbar">
     <ul>
         <?php if(is_array($top_toolbar)): $i = 0; $__LIST__ = $top_toolbar;if( count($__LIST__)==0 ) : echo "" ;else: foreach($__LIST__ as $key=>$top_button): $mod = ($i % 2 );++$i;?><li><a class="<?php echo ($top_button["class"]); ?>" href="<?php echo ($top_button["href"]); ?>"><i class="iconfont iconfont_btn"><?php echo ($top_button["bicon"]); ?></i>&nbsp;&nbsp;<?php echo ($top_button["title"]); ?></a></li><?php endforeach; endif; else: echo "" ;endif; ?>
     </ul>
 </div><?php endif; ?>
+
 <div id="frame-content">
 	<?php if(!empty($search)): ?><div class="frame-table-list">
         <div class="input-title">搜索</div>

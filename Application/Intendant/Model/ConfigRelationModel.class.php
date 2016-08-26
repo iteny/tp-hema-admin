@@ -9,7 +9,7 @@ class ConfigRelationModel extends RelationModel{
 			'mapping_type'  => self::HAS_MANY,    
 			'class_name'    => 'Config',    
 			'foreign_key'   => 'pid',    
-			'mapping_name'  => 'this',    
+			'mapping_name'  => 'me',    
 			'mapping_order' => 'sort asc',
 		),
 	);
