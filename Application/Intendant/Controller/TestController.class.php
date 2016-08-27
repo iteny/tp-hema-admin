@@ -5,7 +5,10 @@ class TestController extends AuthController {
         public function index(){
                 $table = D('ConfigRelation');
                 $m = $table->relation(true)->where(['pid' => 0])->select();
+             
+                // p($m);die;
                 $this->assign('list',$m);
+                $this->assign('tab_nav','asdfas');
                 $this->display(APP_PATH.'Common/Builder/Layout/form.html');
                 // echo D('ConfigRelation')->getLastSql();
                 // echo M('config')->getLastSql();

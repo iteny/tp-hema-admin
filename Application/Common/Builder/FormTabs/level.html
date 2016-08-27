@@ -1,0 +1,18 @@
+<case value="level">
+	<tr>
+	    <td width="240">{$me.title}:</td>
+	    <td>
+	    <select name="{$me.key}" class="length_3">              	
+	    	<option value="9" <if condition='$me.value eq 9'>selected</if>>9级</option>
+        	<option value="8" <if condition='$me.value eq 8'>selected</if>>8级</option>
+        	<option value="7" <if condition='$me.value eq 7'>selected</if>>7级</option>
+        	<option value="6" <if condition='$me.value eq 6'>selected</if>>6级</option>
+        	<option value="5" <if condition='$me.value eq 5'>selected</if>>5级</option>
+        	<option value="4" <if condition='$me.value eq 4'>selected</if>>4级</option>
+        	<option value="3" <if condition='$me.value eq 3'>selected</if>>3级</option>
+        	<option value="2" <if condition='$me.value eq 2'>selected</if>>2级</option>
+        	<option value="1" <if condition='$me.value eq 1'>selected</if>>1级</option>
+	    </select>&nbsp;&nbsp;&nbsp;{$me.tip}
+	    </td>	                    
+	</tr> 
+</case>

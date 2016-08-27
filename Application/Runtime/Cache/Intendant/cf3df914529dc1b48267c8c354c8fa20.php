@@ -34,7 +34,7 @@
     当前位置&nbsp;<i class="iconfont" style="color:#666;font-size: 12px;">&#xe60e;</i>&nbsp;&nbsp;<?php if(is_array($parent_menu)): $i = 0; $__LIST__ = $parent_menu;if( count($__LIST__)==0 ) : echo "父菜单获取失败" ;else: foreach($__LIST__ as $key=>$menu): $mod = ($i % 2 );++$i; echo ($menu["title"]); if($i != count($parent_menu)): ?>&nbsp;&nbsp;<i class="iconfont" style="color:#666;font-size: 12px;">&#xe60f;</i>&nbsp;&nbsp;<?php endif; endforeach; endif; else: echo "父菜单获取失败" ;endif; ?>
 </div><?php endif; ?>
 
-<div id="frame-toolbar">
+<?php if(!empty($tab_nav)): ?><div id="frame-toolbar">
     <ul class="idTabs">
     	<?php if(is_array($list)): $i = 0; $__LIST__ = $list;if( count($__LIST__)==0 ) : echo "" ;else: foreach($__LIST__ as $key=>$title): $mod = ($i % 2 );++$i;?><li><a href="#tab<?php echo ($title["id"]); ?>"><i class="iconfont" style="color:white;font-size: 16px;">&#xe611;</i>&nbsp;&nbsp;<?php echo ($title["title"]); ?></a></li><?php endforeach; endif; else: echo "" ;endif; ?>
 
@@ -42,7 +42,7 @@
         <li><a href="#backup"><i class="iconfont" style="color:white;font-size: 16px;">&#xe611;</i>&nbsp;&nbsp;数据备份设置</a></li>
         <li><a href="#email"><i class="iconfont" style="color:white;font-size: 16px;">&#xe610;</i>&nbsp;&nbsp;邮箱设置</a></li> -->
     </ul>
-</div>
+</div><?php endif; ?>
 
 <div id="frame-content">
 	<?php if(!empty($search)): ?><div class="frame-table-list">
@@ -70,19 +70,62 @@
     <form name="setconfig" method="post" class="ajax-form" action="/Intendant/Site/setConfig">
     <input type="hidden" name="setconfig" value="setconfig">
     <div class="frame-table-list">
-    	<?php if(is_array($list)): $i = 0; $__LIST__ = $list;if( count($__LIST__)==0 ) : echo "" ;else: foreach($__LIST__ as $key=>$vo): $mod = ($i % 2 );++$i;?><div id="tab<?php echo ($vo["id"]); ?>">
+    	<?php if(!empty($tab_nav)): if(is_array($list)): $i = 0; $__LIST__ = $list;if( count($__LIST__)==0 ) : echo "" ;else: foreach($__LIST__ as $key=>$vo): $mod = ($i % 2 );++$i;?><div id="tab<?php echo ($vo["id"]); ?>">
 	            <div class="input-title"><?php echo ($vo["title"]); ?></div>
 	            <table cellpadding="0" cellspacing="0" class="table_form" width="100%">
 	                <tbody>
-	                <?php if(is_array($vo['me'])): $i = 0; $__LIST__ = $vo['me'];if( count($__LIST__)==0 ) : echo "" ;else: foreach($__LIST__ as $key=>$me): $mod = ($i % 2 );++$i;?><tr>
-	                    <td width="240">后台登录帐号锁定:</td>
-	                    <!-- <td> -->
-	                    <!-- <input type="radio" name="USER_STATE_LOCK" value="1" data-labelauty="开启" <?php if(C("USER_STATE_LOCK")== 1): ?>checked<?php endif; ?> />
-	                    <input type="radio" name="USER_STATE_LOCK" value="0" data-labelauty="关闭" <?php if(C("USER_STATE_LOCK")== 0): ?>checked<?php endif; ?> /></td>     -->
-	                </tr><?php endforeach; endif; else: echo "" ;endif; ?>
+	                <?php if(is_array($vo['me'])): $i = 0; $__LIST__ = $vo['me'];if( count($__LIST__)==0 ) : echo "" ;else: foreach($__LIST__ as $key=>$me): $mod = ($i % 2 );++$i; switch($me["type"]): case "radio": ?><tr>
+        <td width="240"><?php echo ($me["title"]); ?>:</td>
+        <td>
+        <input type="radio" name="<?php echo ($me["key"]); ?>" value="1" data-labelauty="开启" <?php if($me["value"] == 1): ?>checked<?php endif; ?> />
+        <input type="radio" name="<?php echo ($me["key"]); ?>" value="0" data-labelauty="关闭" <?php if($me["value"] == 0): ?>checked<?php endif; ?> />&nbsp;&nbsp;&nbsp;<?php echo ($me["tip"]); ?></td>    
+    </tr><?php break;?>
+                            
+                            <?php case "select_cnt": ?><tr>
+	    <td width="240"><?php echo ($me["title"]); ?>:</td>
+	    <td>
+	    <select name="<?php echo ($me["key"]); ?>" class="length_3">              	
+	    	<option value="3" <?php if($me["value"] == 3): ?>selected<?php endif; ?>>3次</option>
+        	<option value="6" <?php if($me["value"] == 6): ?>selected<?php endif; ?>>6次</option>
+        	<option value="10" <?php if($me["value"] == 10): ?>selected<?php endif; ?>>10次</option>
+        	<option value="20" <?php if($me["value"] == 20): ?>selected<?php endif; ?>>20次</option>
+	    </select>&nbsp;&nbsp;&nbsp;<?php echo ($me["tip"]); ?>
+	    </td>	                    
+	</tr><?php break;?>
+                            
+                            <?php case "select_time": ?><tr>
+	    <td width="240"><?php echo ($me["title"]); ?>:</td>
+	    <td>
+	    <select name="<?php echo ($me["key"]); ?>" class="length_3">              	
+	    	<option value="300" <?php if($me["value"] == 300): ?>selected<?php endif; ?>>5分钟</option>
+        	<option value="1800" <?php if($me["value"] == 1800): ?>selected<?php endif; ?>>半小时</option>
+        	<option value="3600" <?php if($me["value"] == 3600): ?>selected<?php endif; ?>>1小时</option>
+        	<option value="10800" <?php if($me["value"] == 10800): ?>selected<?php endif; ?>>3小时</option>
+        	<option value="21600" <?php if($me["value"] == 21600): ?>selected<?php endif; ?>>6小时</option>
+        	<option value="43200" <?php if($me["value"] == 43200): ?>selected<?php endif; ?>>12小时</option>
+        	<option value="86400" <?php if($me["value"] == 86400): ?>selected<?php endif; ?>>1天</option>
+        	<option value="0" <?php if($me["value"] == 0): ?>selected<?php endif; ?>>不过期</option>
+	    </select>&nbsp;&nbsp;&nbsp;<?php echo ($me["tip"]); ?>
+	    </td>	                    
+	</tr><?php break;?>
+                            
+                            
+                            
+                            <?php case "data_size": ?><tr>
+	    <td width="240"><?php echo ($me["title"]); ?>:</td>
+	    <td>
+	    <select name="<?php echo ($me["key"]); ?>" class="length_3">              	
+	    	<option value="20971520" <?php if($me["value"] == 20971520): ?>selected<?php endif; ?>>20MB</option>
+        	<option value="52428800" <?php if($me["value"] == 52428800): ?>selected<?php endif; ?>>50MB</option>
+        	<option value="104857600" <?php if($me["value"] == 104857600): ?>selected<?php endif; ?>>100MB</option> 
+	    </select>&nbsp;&nbsp;&nbsp;<?php echo ($me["tip"]); ?>
+	    </td>	                    
+	</tr><?php break;?>
+                            
+                            <?php default: endswitch; endforeach; endif; else: echo "" ;endif; ?>
 	                </tbody>
 	            </table>
-            </div><?php endforeach; endif; else: echo "" ;endif; ?>
+            </div><?php endforeach; endif; else: echo "" ;endif; endif; ?>
     </div>
     <div class="frame-table-btn">
         <button class="btn ajax-add" type="submit">修改配置</button>

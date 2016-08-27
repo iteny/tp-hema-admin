@@ -1,0 +1,17 @@
+<case value="select_time">
+	<tr>
+	    <td width="240">{$me.title}:</td>
+	    <td>
+	    <select name="{$me.key}" class="length_3">              	
+	    	<option value="300" <if condition='$me.value eq 300'>selected</if>>5分钟</option>
+        	<option value="1800" <if condition='$me.value eq 1800'>selected</if>>半小时</option>
+        	<option value="3600" <if condition='$me.value eq 3600'>selected</if>>1小时</option>
+        	<option value="10800" <if condition='$me.value eq 10800'>selected</if>>3小时</option>
+        	<option value="21600" <if condition='$me.value eq 21600'>selected</if>>6小时</option>
+        	<option value="43200" <if condition='$me.value eq 43200'>selected</if>>12小时</option>
+        	<option value="86400" <if condition='$me.value eq 86400'>selected</if>>1天</option>
+        	<option value="0" <if condition='$me.value eq 0'>selected</if>>不过期</option>
+	    </select>&nbsp;&nbsp;&nbsp;{$me.tip}
+	    </td>	                    
+	</tr> 
+</case>
