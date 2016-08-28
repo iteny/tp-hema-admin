@@ -109,9 +109,23 @@
 	    </td>	                    
 	</tr><?php break;?>
                             
+                            <?php case "select_page": ?><tr>
+	    <td width="240"><?php echo ($me["title"]); ?>:</td>
+	    <td>
+	    <select name="<?php echo ($me["key"]); ?>" class="length_3">              	
+	    	<option value="5" <?php if($me["value"] == 5): ?>selected<?php endif; ?>>5条</option>
+        	<option value="10" <?php if($me["value"] == 10): ?>selected<?php endif; ?>>10条</option>
+        	<option value="15" <?php if($me["value"] == 15): ?>selected<?php endif; ?>>15条</option>
+        	<option value="20" <?php if($me["value"] == 20): ?>selected<?php endif; ?>>20条</option>
+        	<option value="30" <?php if($me["value"] == 30): ?>selected<?php endif; ?>>30条</option>
+        	<option value="50" <?php if($me["value"] == 50): ?>selected<?php endif; ?>>50条</option>
+        	<option value="100" <?php if($me["value"] == 100): ?>selected<?php endif; ?>>100条</option>
+        	<option value="1000" <?php if($me["value"] == 1000): ?>selected<?php endif; ?>>1000条</option>
+	    </select>&nbsp;&nbsp;&nbsp;<?php echo ($me["tip"]); ?>
+	    </td>	                    
+	</tr><?php break;?>
                             
-                            
-                            <?php case "data_size": ?><tr>
+                            <?php case "select_size": ?><tr>
 	    <td width="240"><?php echo ($me["title"]); ?>:</td>
 	    <td>
 	    <select name="<?php echo ($me["key"]); ?>" class="length_3">              	
@@ -120,6 +134,64 @@
         	<option value="104857600" <?php if($me["value"] == 104857600): ?>selected<?php endif; ?>>100MB</option> 
 	    </select>&nbsp;&nbsp;&nbsp;<?php echo ($me["tip"]); ?>
 	    </td>	                    
+	</tr><?php break;?>
+                            
+                            <?php case "select_level": ?><tr>
+	    <td width="240"><?php echo ($me["title"]); ?>:</td>
+	    <td>
+	    <select name="<?php echo ($me["key"]); ?>" class="length_3">              	
+	    	<option value="9" <?php if($me["value"] == 9): ?>selected<?php endif; ?>>9级</option>
+        	<option value="8" <?php if($me["value"] == 8): ?>selected<?php endif; ?>>8级</option>
+        	<option value="7" <?php if($me["value"] == 7): ?>selected<?php endif; ?>>7级</option>
+        	<option value="6" <?php if($me["value"] == 6): ?>selected<?php endif; ?>>6级</option>
+        	<option value="5" <?php if($me["value"] == 5): ?>selected<?php endif; ?>>5级</option>
+        	<option value="4" <?php if($me["value"] == 4): ?>selected<?php endif; ?>>4级</option>
+        	<option value="3" <?php if($me["value"] == 3): ?>selected<?php endif; ?>>3级</option>
+        	<option value="2" <?php if($me["value"] == 2): ?>selected<?php endif; ?>>2级</option>
+        	<option value="1" <?php if($me["value"] == 1): ?>selected<?php endif; ?>>1级</option>
+	    </select>&nbsp;&nbsp;&nbsp;<?php echo ($me["tip"]); ?>
+	    </td>	                    
+	</tr><?php break;?>
+                            
+                            <?php case "email_smtp": ?><tr>
+	    <td width="240"><?php echo ($me["title"]); ?>:</td>
+	    <td>
+	    <select name="<?php echo ($me["key"]); ?>" class="length_3">              	
+	    	<option value="qq.com" <?php if($me["value"] == "qq.com"): ?>selected<?php endif; ?>>qq邮箱</option>
+        	<option value="163.com" <?php if($me["value"] == "163.com"): ?>selected<?php endif; ?>>163邮箱</option>
+        	<option value="126.com" <?php if($me["value"] == "126.com"): ?>selected<?php endif; ?>>126邮箱</option>
+        	<option value="msn.com" <?php if($me["value"] == "msn.com"): ?>selected<?php endif; ?>>msn邮箱</option>
+        	<option value="hotmail.com" <?php if($me["value"] == "hotmail.com"): ?>selected<?php endif; ?>>hotmail邮箱</option>
+	    </select>&nbsp;&nbsp;&nbsp;<?php echo ($me["tip"]); ?>
+	    </td>	                    
+	</tr><?php break;?>
+                            
+                            <?php case "email_port": ?><tr>
+	    <td width="240"><?php echo ($me["title"]); ?>:</td>
+	    <td>
+	    <select name="<?php echo ($me["key"]); ?>" class="length_3">              	
+	    	<option value="25" <?php if($me["value"] == 25): ?>selected<?php endif; ?>>25</option>
+	    </select>&nbsp;&nbsp;&nbsp;<?php echo ($me["tip"]); ?>
+	    </td>	                    
+	</tr><?php break;?>
+                            
+                            <?php case "text": ?><tr>
+	    <td width="240"><?php echo ($me["title"]); ?>:</td>
+	    <td><input type="text" class="input length_4" name="<?php echo ($me["key"]); ?>" value="<?php echo ($me["value"]); ?>" id="<?php echo ($me["key"]); ?>">&nbsp;&nbsp;&nbsp;<?php echo ($me["tip"]); ?></td>
+	    </td>	                    
+	</tr><?php break;?>
+                            
+                            <?php case "password": ?><tr>
+	    <td width="240"><?php echo ($me["title"]); ?>:</td>
+	    <td><input type="password" class="input length_4" name="<?php echo ($me["key"]); ?>" value="<?php echo ($me["value"]); ?>" id="<?php echo ($me["key"]); ?>">&nbsp;&nbsp;&nbsp;<?php echo ($me["tip"]); ?></td>
+	    </td>	                    
+	</tr><?php break;?>
+                            
+                            <?php case "text_btn": ?><tr>
+	    <td><?php echo ($me["title"]); ?>:</td>
+	    <td><input type="text" class="input length_5" name="<?php echo ($me["key"]); ?>" value="<?php echo ($me["value"]); ?>" id="<?php echo ($me["onclick"]); ?>" readonly="readonly" style="background: #999;border: 1px solid #ededed;" />
+	    <a class="btn" style="padding:5px 12px;height: 32px;" onclick="<?php echo ($me["onclick"]); ?>()">选择</a>&nbsp;&nbsp;&nbsp;<?php echo ($me["tip"]); ?>
+	    </td>
 	</tr><?php break;?>
                             
                             <?php default: endswitch; endforeach; endif; else: echo "" ;endif; ?>

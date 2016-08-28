@@ -1,0 +1,14 @@
+<case value="email_smtp">
+	<tr>
+	    <td width="240">{$me.title}:</td>
+	    <td>
+	    <select name="{$me.key}" class="length_3">              	
+	    	<option value="qq.com" <if condition='$me.value eq "qq.com"'>selected</if>>qq邮箱</option>
+        	<option value="163.com" <if condition='$me.value eq "163.com"'>selected</if>>163邮箱</option>
+        	<option value="126.com" <if condition='$me.value eq "126.com"'>selected</if>>126邮箱</option>
+        	<option value="msn.com" <if condition='$me.value eq "msn.com"'>selected</if>>msn邮箱</option>
+        	<option value="hotmail.com" <if condition='$me.value eq "hotmail.com"'>selected</if>>hotmail邮箱</option>
+	    </select>&nbsp;&nbsp;&nbsp;{$me.tip}
+	    </td>	                    
+	</tr> 
+</case>
