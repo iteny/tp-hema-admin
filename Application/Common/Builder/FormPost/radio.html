@@ -1,0 +1,13 @@
+<case value="radio">
+	<tr>
+        <td width="140">{$tag.title}:</td>
+        <td>
+        <if condition="$tag.option eq 'add'">
+	        <input type="radio" name="{$tag.name}" value="1" data-labelauty="开启" checked />
+	        <input type="radio" name="{$tag.name}" value="0" data-labelauty="关闭" />&nbsp;&nbsp;&nbsp;{$tag.tip}</td>  
+        <else />
+        	<input type="radio" name="{$tag.name}" value="1" data-labelauty="开启" <if condition="$tag.value eq 1">checked</if> />
+        	<input type="radio" name="{$tag.name}" value="0" data-labelauty="关闭" <if condition="$tag.value eq 0">checked</if> />&nbsp;&nbsp;&nbsp;{$tag.tip}</td> 
+        </if>  
+    </tr>  
+</case>

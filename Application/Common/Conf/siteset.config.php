@@ -11,11 +11,11 @@ return array (
   'ADMIN_USER_MANAGE_TIME' => '1800',
   'ADMIN_ROLE_MANAGE_TIME' => '3600',
   'ADMIN_ROLE_AUTH_TIME' => '3600',
-  'ADMIN_PAGE_NUM' => '13',
+  'ADMIN_PAGE_NUM' => '15',
   'ADMIN_VERSION_MANAGE_TIME' => '3600',
   'ADMIN_LOGIN_MANAGE_TIME' => '3600',
   'ADMIN_OPERATE_MANAGE_TIME' => '3600',
-  'AUTH_MENU_TIME' => '3600',  
+  'AUTH_MENU_TIME' => '3600',
   'DATA_BACKUP_PATH' => './Data/',
   'DATA_BACKUP_PART_SIZE' => '52428800',
   'DATA_BACKUP_COMPRESS' => '1',
@@ -28,6 +28,6 @@ return array (
   'BACKUP_TO_EMAIL' => '8192332@qq.com',
   'SETCONFIG' => 'setconfig',
   'STATUS' => 'false',
-  'ADMIN_PUBLIC_LAYOUT' => APP_PATH.'Common/Builder/Layout/layout.html',
+  'ADMIN_PUBLIC_LAYOUT' => './Application/Common/Builder/Layout/layout.html',
 );
 ?>

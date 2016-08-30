@@ -44,7 +44,7 @@
     </ul>
 </div><?php endif; ?>
 
-<div id="frame-content">
+<div id="frame-content" style="margin-top:<?php echo ($margin); ?>">
 	<?php if(!empty($search)): ?><div class="frame-table-list">
         <div class="input-title">搜索</div>
         <form method="get" action="<?php echo ($search["href"]); ?>">
@@ -67,8 +67,8 @@
         </form>
     </div><?php endif; ?>
     
-    <form name="setconfig" method="post" class="ajax-form" action="/Intendant/Site/setConfig">
-    <input type="hidden" name="setconfig" value="setconfig">
+    <form name="addEdit" method="post" class="ajax-form" action="<?php echo ($post_url); ?>">
+    <input type="hidden" name="<?php echo CONTROLLER_NAME;?>_<?php echo ACTION_NAME;?>" value="1">
     <div class="frame-table-list">
     	<?php if(!empty($tab_nav)): if(is_array($list)): $i = 0; $__LIST__ = $list;if( count($__LIST__)==0 ) : echo "" ;else: foreach($__LIST__ as $key=>$vo): $mod = ($i % 2 );++$i;?><div id="tab<?php echo ($vo["id"]); ?>">
 	            <div class="input-title"><?php echo ($vo["title"]); ?></div>
@@ -198,9 +198,41 @@
 	                </tbody>
 	            </table>
             </div><?php endforeach; endif; else: echo "" ;endif; endif; ?>
+        <?php if(empty($tab_nav)): ?><div class="input-title"><?php echo ($meta_title); ?></div>
+            <table cellpadding="0" cellspacing="0" class="table_form" width="100%">
+                <tbody>
+                    <?php if(is_array($form_tag)): $i = 0; $__LIST__ = $form_tag;if( count($__LIST__)==0 ) : echo "" ;else: foreach($__LIST__ as $key=>$tag): $mod = ($i % 2 );++$i; switch($tag["type"]): case "text": ?><tr>
+	    <td width="140"><?php echo ($tag["title"]); ?>:</td>
+	    <td><input type="text" class="input length_4" name="<?php echo ($tag["name"]); ?>" value="<?php echo ($tag["value"]); ?>" id="<?php echo ($tag["name"]); ?>">&nbsp;&nbsp;&nbsp;<?php echo ($tag["tip"]); ?></td>
+	</tr><?php break;?>
+                        
+                        <?php case "textarea": ?><tr>
+	    <td width="140"><?php echo ($tag["title"]); ?>:</td>
+	    <td><textarea name="<?php echo ($tag["name"]); ?>" rows="2" cols="20" id="<?php echo ($tag["name"]); ?>" class="inputtext" style="height:100px;width:300px;"><?php echo ($tag["value"]); ?></textarea>&nbsp;&nbsp;&nbsp;<?php echo ($tag["tip"]); ?></td>                   
+	</tr><?php break;?>
+                        
+                        <?php case "password": ?><tr>
+	    <td width="140"><?php echo ($tag["title"]); ?>:</td>
+	    <td><input type="password" class="input length_4" name="<?php echo ($tag["name"]); ?>" value="<?php echo ($tag["value"]); ?>" id="<?php echo ($tag["name"]); ?>">&nbsp;&nbsp;&nbsp;<?php echo ($tag["tip"]); ?></td>
+	</tr><?php break;?>
+                        
+                        <?php case "radio": ?><tr>
+        <td width="140"><?php echo ($tag["title"]); ?>:</td>
+        <td>
+        <?php if($tag["option"] == 'add'): ?><input type="radio" name="<?php echo ($tag["name"]); ?>" value="1" data-labelauty="开启" checked />
+	        <input type="radio" name="<?php echo ($tag["name"]); ?>" value="0" data-labelauty="关闭" />&nbsp;&nbsp;&nbsp;<?php echo ($tag["tip"]); ?></td>  
+        <?php else: ?>
+        	<input type="radio" name="<?php echo ($tag["name"]); ?>" value="1" data-labelauty="开启" <?php if($tag["value"] == 1): ?>checked<?php endif; ?> />
+        	<input type="radio" name="<?php echo ($tag["name"]); ?>" value="0" data-labelauty="关闭" <?php if($tag["value"] == 0): ?>checked<?php endif; ?> />&nbsp;&nbsp;&nbsp;<?php echo ($tag["tip"]); ?></td><?php endif; ?>  
+    </tr><?php break;?>
+                        
+                        <?php default: endswitch; endforeach; endif; else: echo "" ;endif; ?>
+                </tbody>
+            </table><?php endif; ?>
     </div>
     <div class="frame-table-btn">
-        <button class="btn ajax-add" type="submit">修改配置</button>
+        <button class="btn ajax-add" type="submit">确定</button>
+        <button class="btn" type="submit" onclick="javascript:history.back(-1);">返回</button>
     </div>
 </form>
 
@@ -223,6 +255,7 @@
 <script src="/public/common/js/radio/source/jquery-labelauty.js"></script>
 <link href="/public/common/js/radio/source/jquery-labelauty.css" rel="stylesheet"></link>
 <script type="text/javascript">
+// $('#frame-content').style('margin-top','')
 var configmanage = '/Intendant/Site/config';
 //添加超管ID组
 	function Admin_User_Ids(){

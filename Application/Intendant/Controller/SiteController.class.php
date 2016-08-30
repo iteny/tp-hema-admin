@@ -205,6 +205,19 @@ class SiteController extends AuthController {
                 ->setTableDataPage($data['show']) // 数据列表分页
         		->display();
 	}
+	public function addUser(){
+		if(IS_POST && I(CONTROLLER_NAME.'_'.ACTION_NAME)){
+			echo '11';
+		}else{
+			$builder = new \Common\Builder\FormBuilder();
+			$builder->setMetaTitle('添加用户','30px')
+					->addFormTag('username','text','用户名','输入用户名字')
+					->addFormTag('password','password','密码')
+					->addFormTag('passworded','password','确认密码')
+					->addFormTag('status','radio','是否启用')
+					->display();
+		}
+	}
 	//添加或修改用户
 	public function addEditUser(){
 		if(IS_POST && I('addEditUser')){//处理提交

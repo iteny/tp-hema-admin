@@ -1,5 +1,5 @@
-<form name="setconfig" method="post" class="ajax-form" action="/Intendant/Site/setConfig">
-    <input type="hidden" name="setconfig" value="setconfig">
+<form name="addEdit" method="post" class="ajax-form" action="{$post_url}">
+    <input type="hidden" name="{:CONTROLLER_NAME}_{:ACTION_NAME}" value="1">
     <div class="frame-table-list">
     	<notempty name="tab_nav">
     	<volist name="list" id="vo">
@@ -39,8 +39,29 @@
             </div>
         </volist>
         </notempty>
+        <empty name="tab_nav">
+            <div class="input-title">{$meta_title}</div>
+            <table cellpadding="0" cellspacing="0" class="table_form" width="100%">
+                <tbody>
+                    <volist name="form_tag" id="tag">
+                    <switch name="tag.type">                        
+                        <include file='Application/Common/Builder/FormPost/text.html' type='' />
+                        {// 文本输入框 }
+                        <include file='Application/Common/Builder/FormPost/textarea.html' type='' />
+                        {// 多行文本输入框 }
+                        <include file='Application/Common/Builder/FormPost/password.html' type='' />
+                        {// 密码输入框 }
+                        <include file='Application/Common/Builder/FormPost/radio.html' type='' />
+                        {// radio选择 }
+                        <default />
+                    </switch>
+                    </volist>
+                </tbody>
+            </table>
+        </empty>
     </div>
     <div class="frame-table-btn">
-        <button class="btn ajax-add" type="submit">修改配置</button>
+        <button class="btn ajax-add" type="submit">确定</button>
+        <button class="btn" type="submit" onclick="javascript:history.back(-1);">返回</button>
     </div>
 </form>

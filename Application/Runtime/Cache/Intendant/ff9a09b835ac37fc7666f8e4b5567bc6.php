@@ -40,7 +40,7 @@
     </ul>
 </div><?php endif; ?>
 
-<div id="frame-content">
+<div id="frame-content" style="margin-top:<?php echo ($margin); ?>">
 	<?php if(!empty($search)): ?><div class="frame-table-list">
         <div class="input-title">搜索</div>
         <form method="get" action="<?php echo ($search["href"]); ?>">
