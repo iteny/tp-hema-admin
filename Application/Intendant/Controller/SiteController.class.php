@@ -214,6 +214,10 @@ class SiteController extends AuthController {
 					->addFormTag('username','text','用户名','输入用户名字')
 					->addFormTag('password','password','密码')
 					->addFormTag('passworded','password','确认密码')
+					->addFormTag('nickname','text','昵称')
+					->addFormTag('email','text','E-Mail')
+					->addFormTag('remark','textarea','备注')
+					->addFormTag('group_id[][uid]','select','所属用户组',null,get_table_data('AuthGroup',3,'sort'))
 					->addFormTag('status','radio','是否启用')
 					->display();
 		}

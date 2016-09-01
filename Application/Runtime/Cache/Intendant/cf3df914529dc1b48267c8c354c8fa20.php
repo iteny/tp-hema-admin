@@ -226,6 +226,16 @@
         	<input type="radio" name="<?php echo ($tag["name"]); ?>" value="0" data-labelauty="关闭" <?php if($tag["value"] == 0): ?>checked<?php endif; ?> />&nbsp;&nbsp;&nbsp;<?php echo ($tag["tip"]); ?></td><?php endif; ?>  
     </tr><?php break;?>
                         
+                        <?php case "select": ?><tr>
+	    <td><?php echo ($tag["title"]); ?>:</td>
+	    <td>
+	        <select name="<?php echo ($tag["name"]); ?>">
+	        	<?php p($tag['option']); ?>
+	            <?php if(is_array($tag['option'])): $i = 0; $__LIST__ = $tag['option'];if( count($__LIST__)==0 ) : echo "" ;else: foreach($__LIST__ as $key=>$option): $mod = ($i % 2 );++$i; if($option['id'] != null): ?><option value="<?php echo ($option["id"]); ?>" <?php if($option['id'] == $tag['option']['selectid']): ?>selected<?php endif; ?>><?php echo ($option["title"]); ?></option><?php endif; endforeach; endif; else: echo "" ;endif; ?>
+	        </select>
+	    </td>
+	</tr><?php break;?>
+                        
                         <?php default: endswitch; endforeach; endif; else: echo "" ;endif; ?>
                 </tbody>
             </table><?php endif; ?>

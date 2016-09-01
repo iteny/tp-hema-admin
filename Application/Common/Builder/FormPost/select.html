@@ -1,0 +1,15 @@
+<case value="select">
+	<tr>
+	    <td>{$tag.title}:</td>
+	    <td>
+	        <select name="{$tag.name}">
+	        	<php>p($tag['option']);</php>
+	            <volist name="tag['option']" id="option">
+	            	<if condition="$option['id'] neq null">
+	                <option value="{$option.id}" <if condition="$option['id'] eq $tag['option']['selectid']">selected</if>>{$option.title}</option>
+	                </if>
+	            </volist>
+	        </select>
+	    </td>
+	</tr>
+</case>

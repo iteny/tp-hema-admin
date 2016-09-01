@@ -13,7 +13,19 @@ function get_all_child($array,$id)
 	}
 	return $arr;
 }
-
+//得到某表的所有数据
+function get_table_data($table,$selectid = null,$id = 'id'){
+	$cacheKey = $table.'.cache';
+	$data = S($cacheKey);
+	if($data == null){
+		$data = M('AuthGroup')->order($id.' asc')->select();				
+		S($cacheKey,$data,C('ADMIN_USER_MANAGE_TIME'));
+	}
+	if($selectid){
+		$data['selectid'] = $selectid;
+	}
+	return $data;
+}
 /**
  * 获取上传文件路径
  * @param  int $id 文件ID
