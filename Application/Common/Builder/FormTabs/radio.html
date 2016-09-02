@@ -1,0 +1,8 @@
+<case value="radio">
+	<tr>
+        <td width="240">{$me.title}:</td>
+        <td>
+        <input type="radio" name="{$me.key}" value="1" data-labelauty="开启" <if condition="$me.value eq 1">checked</if> />
+        <input type="radio" name="{$me.key}" value="0" data-labelauty="关闭" <if condition="$me.value eq 0">checked</if> />&nbsp;&nbsp;&nbsp;{$me.tip}</td>    
+    </tr>  
+</case>

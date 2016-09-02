@@ -1,0 +1,69 @@
+<form name="addEdit" method="post" class="ajax-form" action="{$post_url}">
+    <input type="hidden" name="{:CONTROLLER_NAME}_{:ACTION_NAME}" value="1">
+    <div class="frame-table-list">
+    	<notempty name="tab_nav">
+    	<volist name="list" id="vo">
+        	<div id="tab{$vo.id}">
+	            <div class="input-title">{$vo.title}</div>
+	            <table cellpadding="0" cellspacing="0" class="table_form" width="100%">
+	                <tbody>
+	                <volist name="vo['me']" id="me">
+	                	<switch name="me.type">
+			                <include file='Application/Common/Builder/FormTabs/radio.html' type='' />
+                            {// 开启关闭 }
+                            <include file='Application/Common/Builder/FormTabs/select_cnt.html' type='' />
+                            {// 选择次数 }
+                            <include file='Application/Common/Builder/FormTabs/select_time.html' type='' />
+                            {// 选择时间 }
+                            <include file='Application/Common/Builder/FormTabs/select_page.html' type='' />
+                            {// 分页 几条 }
+                            <include file='Application/Common/Builder/FormTabs/select_size.html' type='' />
+                            {// 数据大小MB }
+                            <include file='Application/Common/Builder/FormTabs/select_level.html' type='' />
+                            {// 级别 }
+                            <include file='Application/Common/Builder/FormTabs/email_smtp.html' type='' />
+                            {// 哪一家的邮箱 }
+                            <include file='Application/Common/Builder/FormTabs/email_port.html' type='' />
+                            {// 邮箱端口 }
+                            <include file='Application/Common/Builder/FormTabs/text.html' type='' />
+                            {// 文本输入框 }
+                            <include file='Application/Common/Builder/FormTabs/password.html' type='' />
+                            {// 密码输入框 }
+                            <include file='Application/Common/Builder/FormTabs/text_btn.html' type='' />
+                            {// 文本输入框带按钮触发 }
+                            <default />
+	                	</switch>
+	                </volist>
+	                </tbody>
+	            </table>
+            </div>
+        </volist>
+        </notempty>
+        <empty name="tab_nav">
+            <div class="input-title">{$meta_title}</div>
+            <table cellpadding="0" cellspacing="0" class="table_form" width="100%">
+                <tbody>
+                    <volist name="form_tag" id="tag">
+                    <switch name="tag.type">                        
+                        <include file='Application/Common/Builder/FormPost/text.html' type='' />
+                        {// 文本输入框 }
+                        <include file='Application/Common/Builder/FormPost/textarea.html' type='' />
+                        {// 多行文本输入框 }
+                        <include file='Application/Common/Builder/FormPost/password.html' type='' />
+                        {// 密码输入框 }
+                        <include file='Application/Common/Builder/FormPost/radio.html' type='' />
+                        {// radio选择 }
+                        <include file='Application/Common/Builder/FormPost/select.html' type='' />
+                        {// select选择 }
+                        <default />
+                    </switch>
+                    </volist>
+                </tbody>
+            </table>
+        </empty>
+    </div>
+    <div class="frame-table-btn">
+        <button class="btn ajax-add" type="submit">确定</button>
+        <button class="btn" type="submit" onclick="javascript:history.back(-1);">返回</button>
+    </div>
+</form>

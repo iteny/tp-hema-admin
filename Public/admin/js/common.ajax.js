@@ -6,7 +6,7 @@ $(function(){
     $('button.ajax-sort').on('click', function (e) {
         e.preventDefault();
         var btn = $(this),
-            form = btn.parents('form[name=commonSort]');
+            form = btn.parents('form[name=ids]');
         if(btn.attr("disabledSubmit")){
             btn.text('请勿重复提交...').prop('disabled', true).addClass('disabled');
             return false;
@@ -14,7 +14,7 @@ $(function(){
         btn.attr("disabledSubmit",true);
         var param = form.serialize();
         $.ajax({
-            url: form.attr('action'),
+            url: btn.attr('href'),
             dataType:'json',
             type:'POST',
             data:param,
@@ -47,6 +47,7 @@ $(function(){
             type = btn.attr('data-type'),
             href = btn.attr('href'),
             id = btn.attr('data-id');
+        
         layer.confirm('是否删除'+type+'<span style="color:red;">['+title+']</span>', {icon: 3,offset:'200px', title:'删除'+type+'提示'}, function(index){
             layer.close(index);
             $.ajax({

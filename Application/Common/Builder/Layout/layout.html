@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+	<meta charset="UTF-8">
+	<title>{$meta_title}-{:C('WEB_SITE_TITLE')}后台管理</title>
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no">
+	<meta name="renderer" content="webkit|ie-comp|ie-stand">
+	<meta name="author" content="{:C('WEB_SITE_TITLE')}">
+	<meta name="keywords" content="">
+	<meta name="description" content="">
+	<meta name="generator" content="HemaCms">
+	<meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-title" content="{:C('WEB_SITE_TITLE')}">
+    <meta name="format-detection" content="telephone=no,email=no">
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge">
+    <link rel="apple-touch-icon" type="image/x-icon" href="__ROOT__/favicon.ico">
+    <link rel="shortcut icon" type="image/x-icon" href="__ROOT__/logo.png">
+    <link rel="stylesheet" type="text/css" href="/public/admin/css/frame.css">
+    <link rel="stylesheet" type="text/css" href="/public/common/js/poshytip/src/tip-darkgray/tip-darkgray.css">
+    <style type="text/css">
+    .tip-darkgray{z-index: 99999;}
+    </style>
+    <block name="css"></block>
+    <!--[if lt IE 9]>
+        <script src="http://cdn.bootcss.com/html5shiv/r29/html5.min.js"></script>
+        <script src="http://cdn.bootcss.com/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+</head>
+<body>
+<notempty name="parent_menu">
+<div id="frame-top">
+    当前位置&nbsp;<i class="iconfont" style="color:#666;font-size: 12px;">&#xe60e;</i>&nbsp;&nbsp;<volist name="parent_menu" id="menu" empty="父菜单获取失败">{$menu.title}<if condition="$i neq count($parent_menu)">&nbsp;&nbsp;<i class="iconfont" style="color:#666;font-size: 12px;">&#xe60f;</i>&nbsp;&nbsp;</if></volist>
+</div>
+</notempty>
+<block name="tollbar">
+<notempty name="top_toolbar">
+<div id="frame-toolbar">
+    <ul>
+        <volist name="top_toolbar" id="top_button">
+        	<li><a class="{$top_button.class}" href="{$top_button.href}"><i class="iconfont iconfont_btn">{$top_button.bicon}</i>&nbsp;&nbsp;{$top_button.title}</a></li>
+        </volist>
+    </ul>
+</div>
+</notempty>
+</block>
+<div id="frame-content" style="margin-top:{$margin}">
+	<notempty name="search">
+	<div class="frame-table-list">
+        <div class="input-title">搜索</div>
+        <form method="get" action="{$search.href}">
+            <!--<input type="hidden" name="search" value="ok">-->
+            <div class="search-content">
+            	<if condition="$search['status'] eq 1">
+	                搜索类型：
+		            <select class="select_2" name="status" style="width:100px;">
+		                <option value='' <if condition="$_GET['status'] eq ''">selected</if>>不限</option>
+		                <option style="color:green" value="1" <if condition="$_GET['status'] eq '1'">selected</if>>成功</option>
+		                <option style="color:red" value="0" <if condition="$_GET['status'] eq '0'">selected</if>>失败</option>
+		            </select>
+	            </if>
+	            <if condition="$search['username'] eq 1">
+                	用户名：<input type="text" class="input length_2" name="username" size='10' value="{$_GET.username}" placeholder="用户名">
+                </if>
+                <if condition="$search['ip'] eq 1">
+                	IP：<input type="text" class="input length_2" name="ip" size='20' value="{$_GET.ip}" placeholder="IP">
+                </if>
+                <if condition="$search['time'] eq 1">
+	                时间：
+	                <input type="text" name="start_time" class="input length_2 my-date" value="{$_GET.start_time}" style="width:140px;">
+	                -
+	                <input type="text" class="input length_2 my-date" name="end_time" value="{$_GET.end_time}" style="width:140px;">
+                </if>
+                <button class="btn" style="height: 30px;line-height: 30px;padding-bottom: 31px;"><i class="iconfont iconfont_btn">&#xe612;</i>&nbsp;搜索</button>
+            </div>
+        </form>
+    </div>
+    </notempty>
+    <block name="main">
+    
+    </block>
+</div>
+</body>
+<script src="/public/common/js/jquery/jquery-1.12.3.min.js"></script>
+<script src="/public/common/js/layer/layer.js"></script>
+<script src="/public/admin/js/admin.common.js"></script>
+<script src="/public/admin/js/common.ajax.js"></script>
+<script src="/public/common/js/poshytip/src/jquery.poshytip.min.js"></script>
+<block name="js"></block>
+</html>

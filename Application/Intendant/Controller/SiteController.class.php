@@ -7,15 +7,25 @@ use Hema\Database;
 class SiteController extends AuthController {
 	//后台菜单显示
 	public function menu(){
-		$allMenukey = 'all-menu.cache';
-		$menu = S($allMenukey);
-		if($menu == null){
-			$menu = M('AuthRule')->order('sort asc')->select();
-			$menu = recursive($menu);
-			S($allMenukey,$menu,C('AUTH_MENU_TIME'));
-		}		
-		$this->menu = $menu;
-		$this->display();
+		//使用Builder建立数据列表页面
+        $builder = new \Common\Builder\TreeBuilder();
+        $data = $builder->getDataList('AuthRule');
+        $builder->setMetaTitle('菜单设置')
+                ->addTopButton('refresh')
+		        ->addTopButton('add','addMenu')
+                ->addTopButton('export','exportMenu')
+                ->addTopButton('import','importMenu')
+		        ->addBottomButton('sort','sortMenu',null,null,'菜单')
+                ->addRightButton('add','addMenu',null,null,'菜单','id')
+				->addRightButton('edit','editMenu',null,null,'菜单','id')
+				->addRightButton('del','delMenu',null,null,'菜单','id')        		
+				->addTableColumn('id','编号',null,null,null,40)
+				->addTableColumn('title','菜单名称','title',null,'left',240)
+				->addTableColumn('name','控制器方法',null,null,null,160)
+				->addTableColumn('isshow','是否显示','status',null,null,20)        		
+				->addTableColumn('right_button', '操作管理', 'btn',null,null,160)
+				->setTableDataList($data)    // 数据列表
+		        ->display();
 	}
 	//添加或修改菜单
 	public function addEditMenu(){
@@ -166,30 +176,51 @@ class SiteController extends AuthController {
 	}
 	//用户管理
 	public function user(){
-		$p = !empty(I('p')) ? I('p') : 1;
-		$userListKey = 'user-list.cache'.$p;
-		$userListPageKey = 'user-list-page.cache'.$p;
-		$userListPageCount = 'user-list-page-count.cache';
-	    $user = S($userListKey);
-	    $show = S($userListPageKey);
-	    if($user == null){
-			$count = D('UserRelation')->count();
-			$Page  = new \Think\Page($count,C('ADMIN_PAGE_NUM'));// 实例化分页类 传入总记录数和每页显示的记录数(25)
-			$total = ceil($count / C('ADMIN_PAGE_NUM'));
-			$Page->setConfig('theme','%HEADER% %FIRST% %UP_PAGE% %LINK_PAGE% %DOWN_PAGE% %END%');
-			$Page->setConfig('prev','上一页');
-	        $Page->setConfig('next','下一页');
-	        $Page->setConfig('first','第一页');
-	        $Page->setConfig('last','最后一页');
-	        $user = D('UserRelation')->relation(true)->order('uid asc')->limit($Page->firstRow.','.$Page->listRows)->select();
-	        $show = $Page->show();// 分页显示输出	        
-	        S($userListKey,$user,C('ADMIN_USER_MANAGE_TIME'));
-	        S($userListPageKey,$show,C('ADMIN_USER_MANAGE_TIME'));
-	        S($userListPageCount,$total,C('ADMIN_USER_MANAGE_TIME'));
-	    }
-        $this->assign("userlist", $user);
-        $this->assign("page", $show);
-		$this->display();
+		//使用Builder建立数据列表页面
+        $builder = new \Common\Builder\ListBuilder();
+        $data = $builder->getDataList('UserRelation','no','uid','asc',null,null,'create_ip','create_time');
+        $builder->setMetaTitle('用户管理')
+                ->addTopButton('refresh')
+        		->addTopButton('add','addUser')
+        		->addBottomButton('delBatch','delrizhi',null,'批量删除','用户')
+        		->addRightButton('edit','editUser',null,null,'用户','username')
+        		->addRightButton('del','delUser',null,null,'用户','username')
+        		->alterTableData(//修改当用户UID为1是不可以对他进行任何操作
+        			['key' => 'uid', 'value' => '1'],
+        			['key' => 'right_button', 'value' => '<a class="black"><i class="iconfont iconfont_btn">&#xe615;</i>&nbsp;&nbsp;修改</a>&nbsp;&nbsp;&nbsp;<a class="black"><i class="iconfont iconfont_btn">&#xe614;</i>&nbsp;&nbsp;删除</a>&nbsp;&nbsp;&nbsp;']
+        		)
+        		->setSearch(1,1,1,1)
+        		->setCheckboxSort(1)
+        		->setTableDataListKey('uid')
+        		->addTableColumn('uid','编号',null,null,null,40)
+        		->addTableColumn('username','用户名',null,null,null,150)
+        		->addTableColumn('usergroup','所属用户组','relation','title',null,200)
+        		->addTableColumn('create_time','创建时间','timestamp',null,null,300)
+        		->addTableColumn('create_ip','创建IP',null,null,null,200)
+        		->addTableColumn('email','邮箱',null,null,'center',200)
+        		->addTableColumn('remark','备注','remark',null,null,100)
+        		->addTableColumn('status','是否启用','status',null,null,100)
+        		->addTableColumn('right_button', '操作管理', 'btn',null,null,200)
+        		->setTableDataList($data['list'])    // 数据列表
+                ->setTableDataPage($data['show']) // 数据列表分页
+        		->display();
+	}
+	public function addUser(){
+		if(IS_POST && I(CONTROLLER_NAME.'_'.ACTION_NAME)){
+			echo '11';
+		}else{
+			$builder = new \Common\Builder\FormBuilder();
+			$builder->setMetaTitle('添加用户','30px')
+					->addFormTag('username','text','用户名','输入用户名字')
+					->addFormTag('password','password','密码')
+					->addFormTag('passworded','password','确认密码')
+					->addFormTag('nickname','text','昵称')
+					->addFormTag('email','text','E-Mail')
+					->addFormTag('remark','textarea','备注')
+					->addFormTag('group_id[][uid]','select','所属用户组',null,get_table_data('AuthGroup',3,'sort'))
+					->addFormTag('status','radio','是否启用')
+					->display();
+		}
 	}
 	//添加或修改用户
 	public function addEditUser(){
@@ -337,30 +368,31 @@ class SiteController extends AuthController {
 	}
 	//角色管理
 	public function role(){
-		$p = !empty(I('p')) ? I('p') : 1;
-		$roleListKey = 'role-list.cache'.$p;
-		$roleListPageKey = 'role-list-page.cache'.$p;
-		$roleListPageCount = 'role-list-page-count.cache';
-	    $role = S($roleListKey);
-	    $show = S($roleListPageKey);
-	    if($role == null){
-			$count = M('AuthGroup')->count();
-			$Page  = new \Think\Page($count,C('ADMIN_PAGE_NUM'));// 实例化分页类 传入总记录数和每页显示的记录数(25)
-			$total = ceil($count / C('ADMIN_PAGE_NUM'));
-			$Page->setConfig('theme','%HEADER% %FIRST% %UP_PAGE% %LINK_PAGE% %DOWN_PAGE% %END%');
-			$Page->setConfig('prev','上一页');
-	        $Page->setConfig('next','下一页');
-	        $Page->setConfig('first','第一页');
-	        $Page->setConfig('last','最后一页');
-	        $role = M('AuthGroup')->order('sort asc')->limit($Page->firstRow.','.$Page->listRows)->select();
-	        $show = $Page->show();// 分页显示输出	        
-	        S($roleListKey,$role,C('ADMIN_ROLE_MANAGE_TIME'));
-	        S($roleListPageKey,$show,C('ADMIN_ROLE_MANAGE_TIME'));
-	        S($roleListPageCount,$total,C('ADMIN_ROLE_MANAGE_TIME'));
-	    }
-        $this->assign("rolelist", $role);
-        $this->assign("page", $show);
-		$this->display();
+		//使用Builder建立数据列表页面
+        $builder = new \Common\Builder\ListBuilder();
+        $data = $builder->getDataList('AuthGroup',null,'sort','asc',null);
+        $builder->setMetaTitle('角色管理')
+                ->addTopButton('refresh')
+        		->addTopButton('add','addRole')
+        		->addBottomButton('sort','sortRole',null,null,'角色')
+        		->addBottomButton('delBatch','delRole',null,'批量删除','角色')
+        		->addRightButton('edit','setRole','&#xe617;','权限设置','角色','title')
+        		->addRightButton('edit','editRole',null,null,'角色','title')
+        		->addRightButton('del','delRole',null,null,'角色','title')
+        		->alterTableData(//修改当角色ID为1是不可以对他进行任何操作
+        			['key' => 'id', 'value' => '1'],
+        			['key' => 'right_button', 'value' => '<a class="black"><i class="iconfont iconfont_btn">&#xe617;</i>&nbsp;&nbsp;权限设置</a>&nbsp;&nbsp;&nbsp;<a class="black"><i class="iconfont iconfont_btn">&#xe615;</i>&nbsp;&nbsp;修改</a>&nbsp;&nbsp;&nbsp;<a class="black"><i class="iconfont iconfont_btn">&#xe614;</i>&nbsp;&nbsp;删除</a>&nbsp;&nbsp;&nbsp;']
+        		)
+        		->setSearch(1)
+        		->setCheckboxSort(1,'sort')
+        		->addTableColumn('id','编号',null,null,null,40)
+        		->addTableColumn('title','角色名称',null,null,null,150)
+        		->addTableColumn('status','是否启用','status',null,null,100)
+        		->addTableColumn('remark','备注','remark',null,null,100)        		
+        		->addTableColumn('right_button', '操作管理', 'btn',null,null,200)
+        		->setTableDataList($data['list'])    // 数据列表
+                ->setTableDataPage($data['show']) // 数据列表分页
+        		->display();
 	}
 	//添加或修改角色
 	public function addEditRole(){
@@ -502,30 +534,24 @@ class SiteController extends AuthController {
 	}
 	//开发日志管理
 	public function version(){
-		$p = !empty(I('p')) ? I('p') : 1;
-		$versionListKey = 'version-list.cache'.$p;
-		$versionListPageKey = 'version-list-page.cache'.$p;
-		$versionListPageCount = 'version-list-page-count.cache';
-	    $version = S($versionListKey);
-	    $show = S($versionListPageKey);
-	    if($version == null){
-			$count = M('version')->count();
-			$Page  = new \Think\Page($count,C('ADMIN_PAGE_NUM'));// 实例化分页类 传入总记录数和每页显示的记录数(25)
-			$total = ceil($count / C('ADMIN_PAGE_NUM'));
-			$Page->setConfig('theme','%HEADER% %FIRST% %UP_PAGE% %LINK_PAGE% %DOWN_PAGE% %END%');
-			$Page->setConfig('prev','上一页');
-	        $Page->setConfig('next','下一页');
-	        $Page->setConfig('first','第一页');
-	        $Page->setConfig('last','最后一页');
-	        $version = M('version')->order('time desc')->limit($Page->firstRow.','.$Page->listRows)->select();
-	        $show = $Page->show();// 分页显示输出	        
-	        S($versionListKey,$version,C('ADMIN_VERSION_MANAGE_TIME'));
-	        S($versionListPageKey,$show,C('ADMIN_VERSION_MANAGE_TIME'));
-	        S($versionListPageCount,$total,C('ADMIN_VERSION_MANAGE_TIME'));
-	    }
-        $this->assign("versionlist", $version);
-        $this->assign("page", $show);
-		$this->display();
+		//使用Builder建立数据列表页面
+        $builder = new \Common\Builder\ListBuilder();
+        $data = $builder->getDataList('Version',null,'time','desc',null);
+        $builder->setMetaTitle('开发日志管理')
+                ->addTopButton('refresh')
+        		->addTopButton('add','addVersion')
+        		->addBottomButton('delBatch','delVersion',null,'批量删除','开发日志')
+        		->addRightButton('edit','editVersion',null,null,'开发日志','id')
+        		->addRightButton('del','delVersion',null,null,'开发日志','id')        		
+        		->setCheckboxSort(1,null)
+        		->addTableColumn('id','编号',null,null,null,40)
+        		->addTableColumn('version','版本号',null,null,null,150)
+        		->addTableColumn('time','日志时间','timestamp',null,null,100)
+        		->addTableColumn('remark','更新内容','remark',null,null,100)        		
+        		->addTableColumn('right_button', '操作管理', 'btn',null,null,300)
+        		->setTableDataList($data['list'])    // 数据列表
+                ->setTableDataPage($data['show']) // 数据列表分页
+        		->display();
 	}
 	//添加或修改开发日志
 	public function addEditVersion(){
@@ -591,50 +617,26 @@ class SiteController extends AuthController {
 			exit(json_encode($msg));
 		}
 	}
+	//登录日志管理
 	public function loginLog(){
-		$p = !empty(I('p')) ? I('p') : 1;
-		$username = I('username');
-        $start_time = I('start_time');
-        $end_time = I('end_time');
-        $loginip = I('loginip');
-        $status = I('status');
-        if (!empty($username)) {
-            $where['username'] = array('like', '%' . $username . '%');
-        }
-        if (!empty($start_time) && !empty($end_time)) {
-            $start_time = strtotime($start_time);
-            $end_time = strtotime($end_time) + 86399;
-            $where['logintime'] = array(array('GT', $start_time), array('LT', $end_time), 'AND');
-        }
-        if (!empty($loginip)) {
-            $where['loginip '] = array('like', "%{$loginip}%");
-        }
-        if ($status != '') {
-            $where['status'] = $status;
-        }
-        $search = md5(serialize($where));        
-		$data = S('loginlog');		
-	    $login = $data['login-list.cache'.$p.$search];
-	    $show = $data['login-list-page.cache'.$p.$search];
-	    unset($data);
-	    if($login == null){
-			$count = M('LoginLog')->where($where)->count();
-			$Page  = new \Think\Page($count,C('ADMIN_PAGE_NUM'));// 实例化分页类 传入总记录数和每页显示的记录数(25)
-			$total = ceil($count / C('ADMIN_PAGE_NUM'));
-			$Page->setConfig('theme','%HEADER% %FIRST% %UP_PAGE% %LINK_PAGE% %DOWN_PAGE% %END%');
-			$Page->setConfig('prev','上一页');
-	        $Page->setConfig('next','下一页');
-	        $Page->setConfig('first','第一页');
-	        $Page->setConfig('last','最后一页');
-	        $login = M('LoginLog')->where($where)->order('id desc')->limit($Page->firstRow.','.$Page->listRows)->select();
-	        $show = $Page->show();// 分页显示输出
-	        $data['login-list.cache'.$p.$search] =$login;
-	        $data['login-list-page.cache'.$p.$search] =$show;  	
-	        S('loginlog',$data,C('ADMIN_LOGIN_MANAGE_TIME'));     
-	    }
-        $this->assign("loginlist", $login);
-        $this->assign("page", $show);
-		$this->display();
+		//使用Builder建立数据列表页面
+        $builder = new \Common\Builder\ListBuilder();
+        $data = $builder->getDataList('LoginLog',null,null,null,null,'loginip','logintime');
+        $builder->setMetaTitle('登录日志管理')
+                ->addTopButton('refresh')
+        		->addBottomButton('del','delLoginLog',null,'删除一个月前的登录日志','登录日志','一个月前')
+        		->setSearch(1,1,1,1)
+        		->addTableColumn('id','编号')
+        		->addTableColumn('username','用户名')
+        		->addTableColumn('info','登录信息')
+        		->addTableColumn('status','状态','status')
+        		->addTableColumn('useragent','用户浏览器信息')
+        		->addTableColumn('logintime','时间','timestamp')
+        		->addTableColumn('loginip','IP')
+        		->addTableColumn('country','用户登录地区')
+        		->setTableDataList($data['list'])    // 数据列表
+                ->setTableDataPage($data['show']) // 数据列表分页
+        		->display();
 	}
 	// 删除上月登录日志
 	public function delLoginLog()
@@ -648,49 +650,25 @@ class SiteController extends AuthController {
 	}
 	//操作日志管理
 	public function operateLog(){
-		$p = !empty(I('p')) ? I('p') : 1;
-		$username = I('username');
-        $start_time = I('start_time');
-        $end_time = I('end_time');
-        $ip = I('ip');
-        $status = I('status');
-        if (!empty($username)) {
-            $where['username'] = array('like', '%' . $username . '%');
-        }
-        if (!empty($start_time) && !empty($end_time)) {
-            $start_time = strtotime($start_time);
-            $end_time = strtotime($end_time) + 86399;
-            $where['time'] = array(array('GT', $start_time), array('LT', $end_time), 'AND');
-        }
-        if (!empty($loginip)) {
-            $where['ip '] = array('like', "%{$ip}%");
-        }
-        if ($status != '') {
-            $where['status'] = $status;
-        }
-        $search = md5(serialize($where));        
-		$data = S('operatelog');		
-	    $operate = $data['operate-list.cache'.$p.$search];
-	    $show = $data['operate-list-page.cache'.$p.$search];
-	    unset($data);
-	    if($operate == null){
-			$count = M('OperateLog')->where($where)->count();
-			$Page  = new \Think\Page($count,C('ADMIN_PAGE_NUM'));// 实例化分页类 传入总记录数和每页显示的记录数(25)
-			$total = ceil($count / C('ADMIN_PAGE_NUM'));
-			$Page->setConfig('theme','%HEADER% %FIRST% %UP_PAGE% %LINK_PAGE% %DOWN_PAGE% %END%');
-			$Page->setConfig('prev','上一页');
-	        $Page->setConfig('next','下一页');
-	        $Page->setConfig('first','第一页');
-	        $Page->setConfig('last','最后一页');
-	        $operate = M('OperateLog')->where($where)->order('id desc')->limit($Page->firstRow.','.$Page->listRows)->select();
-	        $show = $Page->show();// 分页显示输出
-	        $data['operate-list.cache'.$p.$search] =$login;
-	        $data['operate-list-page.cache'.$p.$search] =$show;  	
-	        S('operatelog',$data,C('ADMIN_OPERATE_MANAGE_TIME'));     
-	    }
-        $this->assign("operatelist", $operate);
-        $this->assign("page", $show);
-		$this->display();
+		//使用Builder建立数据列表页面
+        $builder = new \Common\Builder\ListBuilder();
+        $data = $builder->getDataList('OperateLog',null,null,null,'username','ip','time');
+        $builder->setMetaTitle('操作日志管理')
+                ->addTopButton('refresh')
+        		->addBottomButton('del','delOperateLog',null,'删除一个月前的操作日志','操作日志','一个月前')
+        		->setSearch(1,1,1,1)
+        		->addTableColumn('id','编号',null,null,'center',40)
+        		->addTableColumn('username','用户名',null,null,'center',100)
+        		->addTableColumn('info','操作说明',null,null,'center',400)
+        		->addTableColumn('get','请求路径',null,null,'center',400)
+        		->addTableColumn('status','状态','status',null,'center',40)
+        		->addTableColumn('useragent','用户浏览器信息',null,null,'center',150)
+        		->addTableColumn('time','时间','timestamp',null,'center',110)
+        		->addTableColumn('ip','IP',null,null,'center',100)
+        		->addTableColumn('country','用户登录地区',null,null,'center',100)
+        		->setTableDataList($data['list'])    // 数据列表
+                ->setTableDataPage($data['show']) // 数据列表分页
+        		->display();
 	}
 	// 删除上月操作日志
 	public function delOperateLog()
@@ -1073,6 +1051,28 @@ class SiteController extends AuthController {
 			'info' => "已删除：" . $file . "耗时：{$time} 秒",
 			'url' => U('SysData/imgFileList'),
 		));
+    }
+    // 添加站点配置
+    public function addConfig(){
+    	//使用Builder建立数据列表页面
+        $builder = new \Common\Builder\TreeBuilder();
+        $data = $builder->getDataList('Config');
+        $builder->setMetaTitle('菜单设置')
+                ->addTopButton('refresh')
+		        ->addTopButton('add','addMenu')
+                ->addTopButton('export','exportMenu')
+                ->addTopButton('import','importMenu')
+		        ->addBottomButton('sort','sortMenu',null,null,'菜单')
+                ->addRightButton('add','addMenu',null,null,'菜单','id')
+				->addRightButton('edit','editMenu',null,null,'菜单','id')
+				->addRightButton('del','delMenu',null,null,'菜单','id')        		
+				->addTableColumn('id','编号',null,null,null,40)
+				->addTableColumn('title','菜单名称','title',null,'left',240)
+				->addTableColumn('name','控制器方法',null,null,null,160)
+				->addTableColumn('isshow','是否显示','status',null,null,20)        		
+				->addTableColumn('right_button', '操作管理', 'btn',null,null,160)
+				->setTableDataList($data)    // 数据列表
+		        ->display();
     }
     // 站点配置
 	public function config(){

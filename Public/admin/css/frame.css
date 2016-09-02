@@ -7,19 +7,31 @@
     font-style: normal;
 }
 em,i{text-decoration: none;}
-@font-face {font-family: 'iconfont';
-    src: url('../font/iconfont.eot'); /* IE9*/
-    src: url('../font/iconfont.eot?#iefix') format('embedded-opentype'), /* IE6-IE8 */
-    url('../font/iconfont.woff') format('woff'), /* chrome、firefox */
-    url('../font/iconfont.ttf') format('truetype'), /* chrome、firefox、opera、Safari, Android, iOS 4.2+*/
-    url('../font/iconfont.svg#iconfont') format('svg'); /* iOS 4.1- */
+/*@font-face {
+    font-family: 'iconfont';
+    src: url('../font/iconfont.eot'); 
+    src: url('../font/iconfont.eot?#iefix') format('embedded-opentype'), 
+    url('../font/iconfont.woff') format('woff'), 
+    url('../font/iconfont.ttf') format('truetype'), 
+    url('../font/iconfont.svg#iconfont') format('svg'); 
+}*/
+@font-face {
+  font-family: 'iconfont';
+  src: url('//at.alicdn.com/t/font_1471767741_733564.eot'); /* IE9*/
+  src: url('//at.alicdn.com/t/font_1471767741_733564.eot?#iefix') format('embedded-opentype'), /* IE6-IE8 */
+  url('//at.alicdn.com/t/font_1471767741_733564.woff') format('woff'), /* chrome、firefox */
+  url('//at.alicdn.com/t/font_1471767741_733564.ttf') format('truetype'), /* chrome、firefox、opera、Safari, Android, iOS 4.2+*/
+  url('//at.alicdn.com/t/font_1471767741_733564.svg#iconfont') format('svg'); /* iOS 4.1- */
 }
+                    
 .iconfont{
     font-family:"iconfont" !important;
     font-size:16px;font-style:normal;
     -webkit-font-smoothing: antialiased;
     -webkit-text-stroke-width: 0.2px;
     -moz-osx-font-smoothing: grayscale;}
+.iconfont.iconfont_btn{color:white;font-size: 16px;}
+.iconfont.out{color:#09C;font-size: 24px;font-weight:bold;}
 body{
     background: white;
 }
@@ -192,7 +204,7 @@ td, th, div {
     line-height: 18px;
     border: 1px solid #ccc;
     background-color: #fff;
-    box-shadow: 2px 2px 2px #f0f0f0 inset;
+    /*box-shadow: 2px 2px 2px #f0f0f0 inset;*/
     /* border-radius: 1px; */
     vertical-align: middle;
     margin: 0;
@@ -237,6 +249,14 @@ td, th, div {
     background: #c9302c;
     border-color: #ac2925;
 }
+.frame-table-list a.black{
+    height: 32px;
+    line-height: 32px;
+    padding: 4px 8px;
+    background: #666;
+    border: 1px solid #666;
+    border-radius: 2px;
+}
 .frame-table-list span.green{
     color:green;
 }
@@ -256,6 +276,9 @@ td, th, div {
     color: white;
 }
 .frame-table-list tbody tr:hover .icon{
+    color:white;
+}
+.frame-table-list tbody tr:hover .out{
     color:white;
 }
 .frame-table-list div.title{
@@ -350,6 +373,7 @@ button.btn{
     font-size: 14px;
     font-weight: bold;
     cursor: pointer;
+    margin-right: 10px;
 }
 button.btn:hover{
     background: #337ab7;

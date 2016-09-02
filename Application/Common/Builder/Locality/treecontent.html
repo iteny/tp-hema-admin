@@ -1,0 +1,34 @@
+<form name="ids" class="ajax-form" action="" method="post">
+    <div class="frame-table-list">
+    	<table width="100%">
+            <thead>
+            <tr pid=0>
+                <td align="center" width="40">排序</td>
+                <td align="center" width="20">展开</td>
+                <volist name="table_column_list" id="column">
+			        <td align="{$column.align}" width="{$column.width}">{$column.title|htmlspecialchars}</td>
+			    </volist>
+            </tr>
+            </thead>
+            <tbody>
+                <volist name="table_data_list" id="data">
+                    <tr id="{$data[$table_data_list_key]}" pid="{$data['pid']}">              
+                        <td align="center" width="40"><input style="text-align: center" name="sort[{$data[$table_data_list_key]}]" type="text" size="3" value="{$data[$sort]}" class="input"></td>
+                        <td align="center" width="20"><a href="javascript:void(0)" class="show"><i class="iconfont out">&#xe61f;</i></a></td>
+                        <volist name="table_column_list" id="column">
+                            <td align="{$column.align}" width="{$column.width}">{$data[$column['name']]}</td>
+                        </volist>
+                    </tr>
+                </volist>
+            </tbody>
+        </table>
+        
+    </div>
+    <notempty name="bottom_toolbar">
+    <div class="frame-table-btn">
+    	<volist name="bottom_toolbar" id="bottom_button">
+        <button class="{$bottom_button.class}" href="{$bottom_button.href}" data-type="{$bottom_button.datatype}" data-title="{$bottom_button.datatitle}" type="submit"><i class="iconfont iconfont_btn">{$bottom_button.bicon}</i>&nbsp;{$bottom_button.title}</button>
+        </volist>
+    </div>
+    </notempty>
+</form>

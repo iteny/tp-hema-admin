@@ -1,0 +1,165 @@
+<extend name="$admin_public_layout" />
+
+<block name="css">
+    <!-- <link rel="stylesheet" type="text/css" href="__CUI__/css/cui.extend.min.css"> -->
+    
+</block>
+<block name="tollbar">
+<notempty name="tab_nav">
+<div id="frame-toolbar">
+    <ul class="idTabs">
+    	<volist name="list" id="title">
+    	<li><a href="#tab{$title.id}"><i class="iconfont" style="color:white;font-size: 16px;">&#xe611;</i>&nbsp;&nbsp;{$title.title}</a></li>
+    	</volist>
+
+        <!-- <li><a href="#admin-cache"><i class="iconfont" style="color:white;font-size: 16px;">&#xe611;</i>&nbsp;&nbsp;后台缓存设置</a></li>
+        <li><a href="#backup"><i class="iconfont" style="color:white;font-size: 16px;">&#xe611;</i>&nbsp;&nbsp;数据备份设置</a></li>
+        <li><a href="#email"><i class="iconfont" style="color:white;font-size: 16px;">&#xe610;</i>&nbsp;&nbsp;邮箱设置</a></li> -->
+    </ul>
+</div>
+</notempty>
+</block>
+<block name="main">
+    <include file="./Application/Common/Builder/Locality/formcontent.html" />
+</block>
+
+<block name="js">
+<script src="/public/common/js/jquery/jquery-1.12.3.min.js"></script>
+<script src="/public/common/js/jquery.validate.min.js"></script>
+<script src="/public/common/js/layer/layer.js"></script>
+<script src="/public/admin/js/admin.common.js"></script>
+<script src="/public/admin/js/common.ajax.js"></script>
+<script src="/public/common/js/poshytip/src/jquery.poshytip.min.js"></script>
+<script src="/public/common/js/jquery.idTabs.min.js"></script>
+<script src="/public/common/js/radio/source/jquery-labelauty.js"></script>
+<link href="/public/common/js/radio/source/jquery-labelauty.css" rel="stylesheet"></link>
+<script type="text/javascript">
+// $('#frame-content').style('margin-top','')
+var configmanage = '/Intendant/Site/config';
+//添加超管ID组
+	function Admin_User_Ids(){
+		// e.preventDefault();
+		//添加相关文章
+		layer.open({
+		  title:'选择用户为超管',
+		  type: 2,
+		  offset: 'rb',
+		  area: ['700px', '100%'],
+		  fix: false, //不固定
+		  maxmin: true,
+		  btn: '关闭',
+		  content: '/Intendant/SiteCom/userIds',
+		});
+	}
+$(function(){
+	$(":radio").labelauty();
+	
+    jQuery.validator.addMethod("chinaese", function(value, element) {
+        var chinaese = /^[\u4e00-\u9fa5]+$/;
+        return this.optional(element) || (chinaese.test(value));
+    }, "请输入中文");
+    jQuery.validator.addMethod("english", function(value, element) {
+        var english = /^[A-Za-z]+$/;
+        return this.optional(element) || (english.test(value));
+    }, "请输入英文字符串");
+    $('form[name=setconfig]').validate({
+        errorElement : 'span',
+        validClass: "success",	//非常重要
+        success : function (label) {
+            label.addClass('success');
+        },
+        rules : {
+            // title : {
+            //     required : true,
+            //     chinaese : true,
+            //     remote : {
+            //         url : checkAddMTit,
+            //         type : 'post',
+            //         dataType : 'json',
+            //         data : {
+            //             name : function(){
+            //                 return $('#title').val();
+            //             }
+            //         }
+            //     }
+            // },
+            // name : {
+            //     required : true,
+            //     remote : {
+            //      url : checkAddMname,
+            //      type : 'post',
+            //      dataType : 'json',
+            //      data : {
+            //        name : function(){
+            //          return $('#name').val();
+            //        }
+            //      }
+            //     }
+            // },
+            // pid : {
+            //     required : true,
+            //     digits : true
+            // },
+            // sort : {
+            //     required : true,
+            //     digits : true
+            // }
+        },
+        messages : {
+            // title : {
+            //     required : "请输入菜单名称",
+            //     remote : '菜单名称已存在'
+            // },
+            // name : {
+            //     required : "请输入控制器/方法",
+            //     remote : '控制器/方法已存在'
+            // },
+            // pid : {
+            //     required : "请输入父ID",
+            //     digits : '请输入整数'
+            // },
+            // sort : {
+            //     required : "请输入排序号",
+            //     digits : '请输入整数'
+            // }
+        },
+        submitHandler: function(form)
+        {
+            if($('button.btn').attr("disabledSubmit")){
+                $('button.btn').text('请勿重复提交...').prop('disabled', true).addClass('disabled');
+                return false;
+            }
+            $('button.btn').attr("disabledSubmit",true);
+            var param = $('form[name=setconfig]').serialize();
+            $.ajax({
+                url: $('form[name=setconfig]').attr('action'),
+                dataType:'json',
+                type:'POST',
+                data:param,
+                beforeSend: function(){
+                    myload = layer.load(0,{time:3*1000});
+                },
+                success: function(data) {
+                    layer.close(layer.load(1));
+                    if (data.status == true) {
+                    	admin.countdown(3);
+                        admin.alert('操作提示', data.info+'<div>程序将在<b style="color:red;" id="second_show">03秒</b>后为你跳转！</div>', 1, '3000');
+                        setTimeout(function () {
+                            window.location.href = configmanage;
+                        }, 3000);                            
+                    }else{
+                        admin.alert('操作提示',''+data.info,2,'8000');
+                        $('button.btn').text('添加').removeProp('disabled').removeClass('disabled');
+                        $('button.btn').attr("disabledSubmit",'');
+                    }
+                },
+                error: function(data){
+                    layer.close(layer.load(1));
+                    admin.alert('提示信息',data.responseText,1,'3000');
+                }
+            });
+        }
+    });
+});
+</script>
+</block>

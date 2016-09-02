@@ -1,0 +1,17 @@
+<case value="select_page">
+	<tr>
+	    <td width="240">{$me.title}:</td>
+	    <td>
+	    <select name="{$me.key}" class="length_3">              	
+	    	<option value="5" <if condition='$me.value eq 5'>selected</if>>5条</option>
+        	<option value="10" <if condition='$me.value eq 10'>selected</if>>10条</option>
+        	<option value="15" <if condition='$me.value eq 15'>selected</if>>15条</option>
+        	<option value="20" <if condition='$me.value eq 20'>selected</if>>20条</option>
+        	<option value="30" <if condition='$me.value eq 30'>selected</if>>30条</option>
+        	<option value="50" <if condition='$me.value eq 50'>selected</if>>50条</option>
+        	<option value="100" <if condition='$me.value eq 100'>selected</if>>100条</option>
+        	<option value="1000" <if condition='$me.value eq 1000'>selected</if>>1000条</option>
+	    </select>&nbsp;&nbsp;&nbsp;{$me.tip}
+	    </td>	                    
+	</tr> 
+</case>

@@ -13,6 +13,43 @@ function get_all_child($array,$id)
 	}
 	return $arr;
 }
+//得到某表的所有数据
+function get_table_data($table,$selectid = null,$id = 'id'){
+	$cacheKey = $table.'.cache';
+	$data = S($cacheKey);
+	if($data == null){
+		$data = M('AuthGroup')->order($id.' asc')->select();				
+		S($cacheKey,$data,C('ADMIN_USER_MANAGE_TIME'));
+	}
+	if($selectid){
+		$data['selectid'] = $selectid;
+	}
+	return $data;
+}
+/**
+ * 获取上传文件路径
+ * @param  int $id 文件ID
+ * @return string
+ */
+function get_cover($id, $type) {
+    if ((int)$id) {
+        $upload_info = D('Admin/Upload')->find($id);
+        $url = $upload_info['real_path'];
+    }
+    if (!$url) {
+        switch ($type) {
+            case 'default' : //默认图片
+                $url = C('TMPL_PARSE_STRING.__HOME_IMG__').'/default/default.gif';
+                break;
+            case 'avatar' : //用户头像
+                $url = C('TMPL_PARSE_STRING.__HOME_IMG__').'/default/avatar.gif';
+                break;
+            default: //文档列表默认图片
+                break;
+        }
+    }
+    return $url;
+}
 //获取浏览器版本号
 function getBrowser(){
 	$agent=$_SERVER["HTTP_USER_AGENT"];
@@ -53,7 +90,7 @@ function returnMsg($success = '成功',$error = '失败',$status){
 	return $msg;
 }
 /**
- * 递归重新排序无限极分类数组
+ * 递归重新排序无限极分类数组(父节点查询所有子节点)
  */
 function recursive($array,$pid=0,$level=0)
 {
@@ -71,6 +108,29 @@ function recursive($array,$pid=0,$level=0)
 		}
 	}
 	return $arr;
+}
+/**
+ * 递归重新排序无限极分类数组(子节点查询所有父节点)
+ */
+function reverse($array,$pid=0,$level=0)
+{
+	$arr = array();
+	foreach($array as $v)
+	{
+		if($v['id'] == $pid)
+		{			
+			$arr[] = $v;
+			$arr = array_merge($arr,reverse($array,$v['pid']));			
+		}
+	}
+	return $arr;
+}
+//获得当前方法的规则pid
+function getThisRulePid(){
+	$arr = array();
+	$action = CONTROLLER_NAME.'/'.ACTION_NAME;
+	$rule = M('AuthRule')->where(['name'=>$action])->field('id')->find();
+	return $rule['id'];
 }
 function category($array,$pid=0,$level=0)
 {

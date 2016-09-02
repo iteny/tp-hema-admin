@@ -1,0 +1,13 @@
+<case value="select_cnt">
+	<tr>
+	    <td width="240">{$me.title}:</td>
+	    <td>
+	    <select name="{$me.key}" class="length_3">              	
+	    	<option value="3" <if condition='$me.value eq 3'>selected</if>>3次</option>
+        	<option value="6" <if condition='$me.value eq 6'>selected</if>>6次</option>
+        	<option value="10" <if condition='$me.value eq 10'>selected</if>>10次</option>
+        	<option value="20" <if condition='$me.value eq 20'>selected</if>>20次</option>
+	    </select>&nbsp;&nbsp;&nbsp;{$me.tip}
+	    </td>	                    
+	</tr> 
+</case>

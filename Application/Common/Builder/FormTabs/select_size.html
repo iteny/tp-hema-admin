@@ -1,0 +1,12 @@
+<case value="select_size">
+	<tr>
+	    <td width="240">{$me.title}:</td>
+	    <td>
+	    <select name="{$me.key}" class="length_3">              	
+	    	<option value="20971520" <if condition='$me.value eq 20971520'>selected</if>>20MB</option>
+        	<option value="52428800" <if condition='$me.value eq 52428800'>selected</if>>50MB</option>
+        	<option value="104857600" <if condition='$me.value eq 104857600'>selected</if>>100MB</option> 
+	    </select>&nbsp;&nbsp;&nbsp;{$me.tip}
+	    </td>	                    
+	</tr> 
+</case>

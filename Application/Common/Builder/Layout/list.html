@@ -1,0 +1,19 @@
+<extend name="$admin_public_layout"/>
+
+<block name="css">
+    <!-- <link rel="stylesheet" type="text/css" href="__CUI__/css/cui.extend.min.css"> -->
+    
+</block>
+
+<block name="main">
+    <include file="./Application/Common/Builder/Locality/listcontent.html" />
+</block>
+
+<block name="js">
+	<script src="/public/common/js/datetimepicker/build/jquery.datetimepicker.full.min.js"></script><!--时间插件-->
+	<link href="/public/common/js/datetimepicker/jquery.datetimepicker.css" rel="stylesheet" /> <!--时间插件CSS-->
+    <script>
+	    $.datetimepicker.setLocale('ch');
+	    $('.my-date').datetimepicker({lang:'ch'});
+	</script>
+</block>

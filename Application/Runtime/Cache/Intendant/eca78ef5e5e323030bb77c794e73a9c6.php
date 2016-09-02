@@ -7,25 +7,24 @@
 </head>
 <body>
 <div id="frame-top">
-    当前位置&nbsp;<i class="iconfont" style="color:#666;font-size: 12px;">&#xe60e;</i>&nbsp;&nbsp;设置&nbsp;&nbsp;<i class="iconfont" style="color:#666;font-size: 12px;">&#xe60f;</i>&nbsp;&nbsp;用户设置&nbsp;&nbsp;<i class="iconfont" style="color:#666;font-size: 12px;">&#xe60f;</i>&nbsp;&nbsp;用户管理&nbsp;&nbsp;<i class="iconfont" style="color:#666;font-size: 12px;">&#xe60f;</i>&nbsp;&nbsp;修改用户(<?php echo ($user["username"]); ?>)
+    当前位置&nbsp;<i class="iconfont" style="color:#666;font-size: 12px;">&#xe60e;</i>&nbsp;&nbsp;设置&nbsp;&nbsp;<i class="iconfont" style="color:#666;font-size: 12px;">&#xe60f;</i>&nbsp;&nbsp;用户设置&nbsp;&nbsp;<i class="iconfont" style="color:#666;font-size: 12px;">&#xe60f;</i>&nbsp;&nbsp;用户管理&nbsp;&nbsp;<i class="iconfont" style="color:#666;font-size: 12px;">&#xe60f;</i>&nbsp;&nbsp;添加用户
 </div>
 <div id="frame-toolbar">
     <ul>
         <li><a href="/Intendant/Site/user"><i class="iconfont" style="color:white;font-size: 16px;">&#xe611;</i>&nbsp;&nbsp;用户管理</a></li>
-        <li><a href="/Intendant/Site/addEditUser"><i class="iconfont" style="color:white;font-size: 16px;">&#xe610;</i>&nbsp;&nbsp;添加用户</a></li>
+        <li><a class="active" href="/Intendant/Site/addEditUser"><i class="iconfont" style="color:white;font-size: 16px;">&#xe610;</i>&nbsp;&nbsp;添加用户</a></li>
     </ul>
 </div>
 <div id="frame-content">
-    <form name="editUser" method="post" class="J_ajaxForm" action="/Intendant/Site/addEditUser" novalidate="novalidate">
+    <form name="addUser" method="post" class="J_ajaxForm" action="/Intendant/Site/addEditUser" novalidate="novalidate">
         <input type="hidden" name="addEditUser" value="addEditUser">
-        <input type="hidden" name="uid" value="<?php echo ($user["uid"]); ?>">
         <div class="frame-table-list">
-            <div class="input-title">修改用户</div>
+            <div class="input-title">添加用户</div>
             <table cellpadding="0" cellspacing="0" class="table_form" width="100%">
                 <tbody>
                 <tr>
                     <td width="140">用户名:</td>
-                    <td><input type="text" class="input length_5" name="username" value="<?php echo ($user["username"]); ?>" id="username"></td>
+                    <td><input type="text" class="input length_5" name="username" value="" id="username"></td>
                 </tr>
                 <tr>
                     <td>密码:</td>
@@ -37,42 +36,42 @@
                 </tr>
                 <tr>
                     <td width="140">昵称:</td>
-                    <td><input type="text" class="input length_5" name="nickname" value="<?php echo ($user["nickname"]); ?>" id="nickname"></td>
+                    <td><input type="text" class="input length_5" name="nickname" value="" id="nickname"></td>
                 </tr>
                 <tr>
                     <td width="140">E-Mail:</td>
-                    <td><input type="text" class="input length_5" name="email" value="<?php echo ($user["email"]); ?>" id="email"></td>
+                    <td><input type="text" class="input length_5" name="email" value="" id="email"></td>
                 </tr>
                 <tr>
                     <td>备注:</td>
-                    <td><textarea name="remark" rows="2" cols="20" id="remark" class="inputtext" style="height:100px;width:300px;"><?php echo ($user["remark"]); ?></textarea></td>
+                    <td><textarea name="remark" rows="2" cols="20" id="remark" class="inputtext" style="height:100px;width:300px;"></textarea></td>
                 </tr>
                 <tr>
                     <td>所属用户组</td>
                     <td>
                         <select name="group_id[][uid]">
-                            <?php if(is_array($group)): $i = 0; $__LIST__ = $group;if( count($__LIST__)==0 ) : echo "" ;else: foreach($__LIST__ as $key=>$group): $mod = ($i % 2 );++$i;?><option value="<?php echo ($group["id"]); ?>" <?php if($group['id'] == $user['usergroup'][0]['id']): ?>selected<?php endif; ?>><?php echo ($group["title"]); ?></option><?php endforeach; endif; else: echo "" ;endif; ?>
+                            <?php if(is_array($group)): $i = 0; $__LIST__ = $group;if( count($__LIST__)==0 ) : echo "" ;else: foreach($__LIST__ as $key=>$group): $mod = ($i % 2 );++$i;?><option value="<?php echo ($group["id"]); ?>" <?php if($group['id'] == 2): ?>selected<?php endif; ?>><?php echo ($group["title"]); ?></option><?php endforeach; endif; else: echo "" ;endif; ?>
                         </select>
                     </td>
                 </tr>
                 <tr>
                     <td>是否启用:</td>
-                    <td><input class="chk-none" type="radio" name="status" value="1" <?php if($user['status'] == 1): ?>checked<?php endif; ?>>启用<label>  &nbsp;&nbsp;&nbsp;&nbsp;<input class="chk-none" type="radio" name="status" value="0" <?php if($user['status'] == 0): ?>checked<?php endif; ?>>禁止</label></td>
+                    <td><input class="chk-none" type="radio" name="status" value="1" checked>启用<label>  &nbsp;&nbsp;&nbsp;&nbsp;<input class="chk-none" type="radio" name="status" value="0">禁止</label></td>
                 </tr>
                 </tbody>
             </table>
         </div>
         <div class="frame-table-btn">
-            <button class="btn ajax-add" type="submit">修改</button>
+            <button class="btn ajax-add" type="submit">添加</button>
         </div>
     </form>
 </div>
 </body>
 <script>
     var usermanage = '/Intendant/Site/user';
-    var checkEditUsername = '/Intendant/SiteCom/checkEditUsername/?uid=<?php echo ($user["uid"]); ?>';
-    var checkEditNickname = '/Intendant/SiteCom/checkEditNickname/?uid=<?php echo ($user["uid"]); ?>';
-    var checkEditEmail = '/Intendant/SiteCom/checkEditEmail/?uid=<?php echo ($user["uid"]); ?>';
+    var checkAddUsername = '/Intendant/SiteCom/checkAddUsername';
+    var checkAddNickname = '/Intendant/SiteCom/checkAddNickname';
+    var checkAddEmail = '/Intendant/SiteCom/checkAddEmail';
 </script>
 <script src="/public/common/js/jquery/jquery-1.12.3.min.js"></script>
 <script src="/public/common/js/jquery.validate.min.js"></script>
@@ -96,7 +95,7 @@
             var tel = /^[a-zA-Z][\w]{7,16}$/;
             return this.optional(element) || (tel.test(value));
         }, "以字母开头,8-17 字母、数字、下划线'_'");
-        $('form[name=editUser]').validate({
+        $('form[name=addUser]').validate({
             errorElement : 'span',
             validClass: "success",	//非常重要
             success : function (label) {
@@ -107,7 +106,7 @@
                     required : true,
                     username : true,
                     remote : {
-                        url : checkEditUsername,
+                        url : checkAddUsername,
                         type : 'post',
                         dataType : 'json',
                         data : {
@@ -122,7 +121,7 @@
                     rangelength : [2,6],
                     chinaese : true,
                     remote : {
-                        url : checkEditNickname,
+                        url : checkAddNickname,
                         type : 'post',
                         dataType : 'json',
                         data : {
@@ -133,16 +132,18 @@
                     }
                 },
                 password : {
+                    required : true,
                     password : true
                 },
                 passworded : {
+                    required : true,
                     equalTo : "#password"
                 },
                 email : {
                     required : true,
                     email : true,
                     remote : {
-                        url : checkEditEmail,
+                        url : checkAddEmail,
                         type : 'post',
                         dataType : 'json',
                         data : {
@@ -166,8 +167,10 @@
                     remote : '昵称已存在'
                 },
                 password : {
+                    required : "请输入密码"
                 },
                 passworded : {
+                    required : '请确认密码',
                     equalTo : '两次密码不一致'
                 },
                 email : {
@@ -183,9 +186,9 @@
                     return false;
                 }
                 $('button.btn').attr("disabledSubmit",true);
-                var param = $('form[name=editUser]').serialize();
+                var param = $('form[name=addUser]').serialize();
                 $.ajax({
-                    url: $('form[name=editUser]').attr('action'),
+                    url: $('form[name=addUser]').attr('action'),
                     dataType:'json',
                     type:'POST',
                     data:param,
@@ -196,11 +199,11 @@
                         layer.close(layer.load(1));
                         if (!data.status) {
                             admin.alert('操作提示',''+data.info,2,'8000');
-                            $('button.btn').text('修改').removeProp('disabled').removeClass('disabled');
+                            $('button.btn').text('添加').removeProp('disabled').removeClass('disabled');
                             $('button.btn').attr("disabledSubmit",'');
                         }else{
                             admin.countdown(3);
-                            admin.alert('操作提示', '修改用户成功!'+'<div>程序将在<b style="color:red;" id="second_show">03秒</b>后为你跳转！</div>', 1, '3000');
+                            admin.alert('操作提示', '添加用户成功!'+'<div>程序将在<b style="color:red;" id="second_show">03秒</b>后为你跳转！</div>', 1, '3000');
                             setTimeout(function () {
                                 window.location.href = usermanage;
                             }, 3000);
