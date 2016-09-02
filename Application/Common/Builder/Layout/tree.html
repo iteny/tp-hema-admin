@@ -76,7 +76,7 @@
 	        if(data >= 3){e.preventDefault();admin.alert('提示信息','对不起，菜单最多4级！',2,'3000');}
 	    });    
 	    //导出菜单
-	    $('#export').on('click', function (e) {
+	    $('.export').on('click', function (e) {
 	        e.preventDefault();
 	        var btn = $(this),
 	            submit = btn.attr('href');
@@ -96,7 +96,7 @@
 	        });
 	    });
 	    //导入菜单
-	    $('#import').on('click', function (e) {
+	    $('.import').on('click', function (e) {
 	        e.preventDefault();
 	        layer.confirm('该操作将清空所有数据，请备份好数据之后再进行导入，确定要继续吗？', {icon: 3,offset:'200px', title:'导入菜单提示'}, function(index){
 	            layer.close(index);
